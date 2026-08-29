@@ -1,0 +1,1898 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0620">
+<meta name="description" content="عالم المبتكرين — منصة تجمع أصحاب الأفكار بالمبرمجين والمصممين ورواد الأعمال. شارك فكرتك، كوّن فريقك، وحوّلها إلى مشروع حقيقي.">
+<meta property="og:title" content="عالم المبتكرين | فكرة • فريق • مشروع">
+<meta property="og:description" content="حوّل فكرتك اليوم إلى مشروع حقيقي مع مجتمع من المبتكرين حول العالم.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%A8%3C/text%3E%3C/svg%3E">
+<title>عالم المبتكرين | فكرة • فريق • مشروع</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;800;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0620;--bg2:#150a33;
+  --surface:rgba(255,255,255,.045);--surface2:rgba(255,255,255,.09);--surface3:rgba(255,255,255,.14);
+  --text:#f6f3ff;--muted:#a79cd1;--muted2:#7c6fa3;
+  --primary:#8b5cf6;--primary2:#5b21b6;--accent:#f472b6;--accent2:#fb923c;
+  --success:#22c55e;--danger:#f43f5e;
+  --border:rgba(255,255,255,.11);--border-strong:rgba(255,255,255,.2);
+  --grad-cta:linear-gradient(135deg,#ec4899,#f97316);
+  --grad-brand:linear-gradient(135deg,#8b5cf6,#ec4899);
+  --grad-text:linear-gradient(90deg,#fff,#c4b5fd 45%,#f9a8d4);
+  --shadow:0 25px 70px rgba(0,0,0,.45);
+  --shadow-sm:0 8px 22px rgba(0,0,0,.28);
+  --shadow-glow:0 12px 34px rgba(139,92,246,.28);
+  --r:16px;--r-sm:11px;--r-lg:22px;
+  --ease:cubic-bezier(.22,.85,.32,1);--ease-out:cubic-bezier(.16,1,.3,1);
+  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;--sp-6:32px;
+}
+html[data-theme="light"]{
+  --bg:#f6f3fb;--bg2:#ffffff;
+  --surface:rgba(20,10,50,.035);--surface2:rgba(20,10,50,.06);--surface3:rgba(20,10,50,.1);
+  --text:#1c1033;--muted:#6b5f8a;--muted2:#9086ab;
+  --border:rgba(20,10,50,.1);--border-strong:rgba(20,10,50,.18);
+  --shadow:0 25px 60px rgba(80,60,140,.14);
+  --shadow-sm:0 8px 20px rgba(80,60,140,.1);
+}
+html[data-theme="light"] body{background:
+    radial-gradient(ellipse 900px 500px at 15% -5%,rgba(139,92,246,.13),transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 10%,rgba(244,114,182,.1),transparent 55%),
+    radial-gradient(ellipse 900px 600px at 50% 100%,rgba(91,33,182,.08),transparent 60%),
+    var(--bg)}
+html[data-theme="light"] body::before{opacity:.25}
+html[data-theme="light"] .modalbox,html[data-theme="light"] .detailbox{background:#fff}
+html[data-theme="light"] header{background:rgba(246,243,251,.78)}
+html[data-theme="light"] header.scrolled{background:rgba(246,243,251,.94)}
+html[data-theme="light"] .toast{background:#fff}
+html[data-theme="light"] .mobile-nav{background:rgba(246,243,251,.96)}
+.themetoggle{width:38px;height:38px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center;font-size:15px;transition:.2s var(--ease)}
+.themetoggle:hover{background:var(--surface3);transform:rotate(15deg)}
+body,header,.modalbox,.card,.toast{transition:background .35s var(--ease),color .35s var(--ease),border-color .35s var(--ease)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden;max-width:100vw}
+body{overflow-x:hidden;max-width:100vw;font-family:'Tajawal',system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -5%,rgba(139,92,246,.35),transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 10%,rgba(244,114,182,.22),transparent 55%),
+    radial-gradient(ellipse 900px 600px at 50% 100%,rgba(91,33,182,.25),transparent 60%),
+    var(--bg);
+  color:var(--text);min-height:100vh;letter-spacing:.01em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.5;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E")}
+h1,h2,h3{font-family:'Cairo',system-ui,sans-serif;letter-spacing:-.01em}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+a{color:inherit;text-decoration:none}
+.container{width:min(1180px,calc(100% - 28px));margin:auto}
+::selection{background:var(--primary);color:#fff}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:6px}
+::-webkit-scrollbar{width:10px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:99px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:var(--primary)}
+*{scrollbar-color:var(--surface3) transparent;scrollbar-width:thin}
+.skip-link{position:fixed;top:-60px;right:16px;z-index:999;background:var(--primary);color:#fff;padding:10px 18px;border-radius:0 0 10px 10px;font-weight:800;transition:top .2s var(--ease)}
+.skip-link:focus{top:0}
+
+/* ---------- motion ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(6px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes sheetIn{from{opacity:0;transform:translateY(100%)}to{opacity:1;transform:translateY(0)}}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes shimmer{0%{background-position:-300% 0}100%{background-position:300% 0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes twinkle{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes ringspin{to{transform:rotate(360deg)}}
+@keyframes popHeart{0%{transform:scale(1)}35%{transform:scale(1.45) rotate(-8deg)}65%{transform:scale(.92)}100%{transform:scale(1)}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 8px 24px rgba(236,72,153,.28)}50%{box-shadow:0 10px 32px rgba(236,72,153,.5)}}
+.page.active{animation:fadeUp .45s var(--ease-out) both}
+.card{animation:fadeUp .4s var(--ease-out) both}
+.grid .card:nth-child(1){animation-delay:.02s}.grid .card:nth-child(2){animation-delay:.06s}.grid .card:nth-child(3){animation-delay:.1s}.grid .card:nth-child(4){animation-delay:.14s}
+.grid .card:nth-child(5){animation-delay:.18s}.grid .card:nth-child(6){animation-delay:.22s}.grid .card:nth-child(7){animation-delay:.26s}.grid .card:nth-child(8){animation-delay:.3s}
+.modalbox{animation:modalIn .28s var(--ease-out) both}
+.toast{animation:toastIn .3s var(--ease-out) both}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s var(--ease-out),transform .7s var(--ease-out)}
+.reveal.in{opacity:1;transform:translateY(0)}
+.liked-pop{animation:popHeart .45s var(--ease-out)}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001s!important;transition-duration:.001s!important;scroll-behavior:auto!important}}
+.skeleton{background:linear-gradient(100deg,rgba(255,255,255,.045) 30%,rgba(255,255,255,.1) 45%,rgba(255,255,255,.045) 60%);background-size:300% 100%;animation:shimmer 1.6s ease infinite;border-radius:var(--r);height:255px;border:1px solid var(--border)}
+.spinner{width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;display:inline-block;animation:spin .7s linear infinite;vertical-align:-3px}
+#appLoader{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:radial-gradient(ellipse 900px 500px at 15% -5%,rgba(139,92,246,.32),transparent 60%),radial-gradient(ellipse 700px 500px at 100% 10%,rgba(244,114,182,.16),transparent 55%),var(--bg);transition:opacity .35s var(--ease),visibility .35s var(--ease)}
+#appLoader.hide{opacity:0;visibility:hidden;pointer-events:none}
+#appLoader .loadermark{width:56px;height:56px;border-radius:16px;background:var(--grad-brand);display:flex;align-items:center;justify-content:center;font-size:26px;animation:loaderpulse 1.4s ease-in-out infinite}
+#appLoader .loaderbar{width:120px;height:3px;border-radius:99px;background:var(--surface2);overflow:hidden}
+#appLoader .loaderbar span{display:block;width:40%;height:100%;background:var(--grad-brand);border-radius:99px;animation:loaderslide 1.1s ease-in-out infinite}
+@keyframes loaderpulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.08);opacity:.85}}
+@keyframes loaderslide{0%{transform:translateX(-120%)}100%{transform:translateX(340%)}}
+
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:100;background:rgba(9,5,25,.72);backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid var(--border);transition:box-shadow .3s var(--ease),background .3s var(--ease),padding .3s var(--ease)}
+header.scrolled{box-shadow:0 10px 34px rgba(0,0,0,.45);background:rgba(9,5,25,.92)}
+header.scrolled .nav{min-height:60px}
+.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:10px;transition:min-height .3s var(--ease)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Cairo';font-size:19px;font-weight:900;white-space:nowrap;flex:none}
+.logo .mark{width:36px;height:36px;border-radius:11px;background:var(--grad-brand);display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 6px 18px rgba(139,92,246,.45);transition:transform .3s var(--ease)}
+.logo:hover .mark{transform:rotate(-8deg) scale(1.06)}
+.logo span{background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent}
+.navlinks{display:flex;align-items:center;gap:2px;position:relative}
+.navlinks button,.mobile-nav button{background:transparent;border:0;color:var(--muted);padding:10px 14px;border-radius:10px;font-weight:700;font-size:14.5px;transition:.18s var(--ease);position:relative}
+.navlinks button:hover,.mobile-nav button:hover{background:var(--surface2);color:var(--text)}
+.navlinks button:active{transform:scale(.96)}
+.headerauth{display:flex;align-items:center;gap:8px;flex:none;min-width:0}
+.headerauth .btn{white-space:nowrap}
+.headerauth img.avatar{transition:transform .2s var(--ease);cursor:pointer}
+.headerauth img.avatar:hover{transform:scale(1.08)}
+.accountbtn{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:999px;padding:5px 12px 5px 5px;max-width:180px;min-width:0;transition:.18s var(--ease)}
+.accountbtn:hover{background:var(--surface3);border-color:var(--border-strong)}
+.accountbtn img.avatar{width:28px;height:28px;flex:none}
+.accountbtn-name{font-size:13px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.notifbadge{position:absolute;top:-4px;left:-4px;background:var(--danger);color:#fff;border-radius:999px;font-size:10px;padding:1px 5px;font-weight:800}
+.accountmenu{display:flex;flex-direction:column;gap:4px}
+.accountmenu-item{display:block;width:100%;text-align:right;background:var(--surface2);border:1px solid var(--border);padding:11px 14px;border-radius:12px;font-weight:700;font-size:14px;transition:.15s var(--ease)}
+.accountmenu-item:hover{background:var(--surface3)}
+.accountlist{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow:auto}
+.accountrow{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:12px;border:1px solid var(--border);cursor:pointer;transition:.15s var(--ease)}
+.accountrow:hover{background:var(--surface2)}
+.accountrow.is-current{border-color:var(--primary);background:rgba(139,92,246,.1);cursor:default}
+.accountrow img.avatar{width:34px;height:34px;flex:none}
+.stepbar{display:flex;align-items:center;gap:6px;margin-bottom:18px}
+.stepdot{display:flex;flex-direction:column;align-items:center;gap:6px;background:transparent;color:var(--muted);font-size:11px;font-weight:700;flex:1;min-width:0;text-align:center;transition:.2s var(--ease)}
+.stepdot .stepnum{width:26px;height:26px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--muted);transition:.2s var(--ease)}
+.stepdot.active{color:var(--text)}
+.stepdot.active .stepnum{background:var(--grad-brand);border-color:transparent;color:#fff;box-shadow:0 0 0 4px rgba(139,92,246,.18)}
+.stepdot.done .stepnum{background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.4);color:#4ade80}
+.stepline{height:1px;background:var(--border);flex:0 0 24px;margin-bottom:16px}
+
+/* ---------- buttons ---------- */
+.btn{border:0;border-radius:var(--r-sm);padding:11px 19px;color:#fff;font-weight:800;background:var(--grad-cta);box-shadow:0 10px 26px rgba(236,72,153,.28);white-space:nowrap;transition:transform .16s var(--ease),filter .16s var(--ease),box-shadow .16s var(--ease);position:relative;letter-spacing:.01em}
+.btn:disabled{opacity:.55;pointer-events:none;filter:saturate(.6)}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 14px 32px rgba(236,72,153,.38)}
+.btn:active{transform:translateY(0) scale(.98);filter:brightness(.98)}
+.btn.secondary{background:var(--surface2);border:1px solid var(--border);box-shadow:none;color:var(--text)}
+.btn.secondary:hover{background:var(--surface3);border-color:var(--border-strong);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.btn.ghost{background:transparent;border:1px solid var(--border);box-shadow:none;color:var(--text)}
+.btn.ghost:hover{background:var(--surface);border-color:var(--border-strong)}
+.btn.danger{background:var(--danger);box-shadow:0 10px 24px rgba(244,63,94,.3)}
+.btn.success{background:var(--success);box-shadow:0 10px 24px rgba(34,197,94,.3)}
+.btn.sm{padding:8px 14px;font-size:13px;border-radius:9px}
+.btn:focus-visible{outline-offset:3px}
+
+/* ---------- hero ---------- */
+.hero{padding:60px 0 34px;position:relative;overflow:hidden}
+.herogrid{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:8px 15px;border:1px solid rgba(139,92,246,.4);background:rgba(139,92,246,.14);color:#d8c9ff;border-radius:999px;font-size:13px;font-weight:800;margin-bottom:20px;animation:fadeUp .5s var(--ease-out) both}
+.hero h1{font-size:clamp(32px,4.6vw,52px);line-height:1.16;font-weight:900;background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:18px;animation:fadeUp .55s var(--ease-out) .05s both}
+.hero p{color:var(--muted);line-height:1.9;font-size:16.5px;max-width:520px;margin-bottom:26px;animation:fadeUp .55s var(--ease-out) .1s both}
+.actions{display:flex;gap:10px;flex-wrap:wrap;animation:fadeUp .55s var(--ease-out) .15s both}
+.heroSocial{display:flex;align-items:center;gap:10px;margin-top:28px;animation:fadeUp .55s var(--ease-out) .2s both}
+.avatarstack{display:flex}
+.avatarstack img{width:34px;height:34px;border-radius:50%;border:2px solid var(--bg);object-fit:cover;margin-inline-start:-10px;background:var(--surface2);transition:transform .2s var(--ease)}
+.avatarstack:hover img{transform:translateY(-3px)}
+.avatarstack img:first-child{margin-inline-start:0}
+.heroSocial .txt{color:var(--muted);font-size:13.5px;font-weight:700}
+.heroSocial .txt b{color:var(--text)}
+
+.heroart{position:relative;height:390px}
+.heroart svg{width:100%;height:100%;animation:drift 6s ease-in-out infinite}
+.heroart .tw{animation:twinkle 2.6s ease-in-out infinite}
+.heroart .tw:nth-child(2){animation-delay:.4s}.heroart .tw:nth-child(3){animation-delay:.9s}.heroart .tw:nth-child(4){animation-delay:1.3s}
+.heroart .tw:nth-child(5){animation-delay:.2s}.heroart .tw:nth-child(6){animation-delay:1.7s}.heroart .tw:nth-child(7){animation-delay:.6s}
+.ring-orbit{transform-origin:345px 70px;animation:ringspin 14s linear infinite}
+
+/* ---------- feature strip ---------- */
+.featurebar{background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid var(--border);border-radius:var(--r-lg);padding:24px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 48px;box-shadow:var(--shadow)}
+.featitem{display:flex;align-items:center;gap:13px;padding:9px 11px;border-radius:14px;transition:background .2s var(--ease)}
+.featitem:hover{background:rgba(255,255,255,.04)}
+.featitem .ico{width:46px;height:46px;flex:none;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:21px;transition:transform .25s var(--ease)}
+.featitem:hover .ico{transform:scale(1.1) rotate(-4deg)}
+.featitem:nth-child(1) .ico{background:rgba(139,92,246,.16)}
+.featitem:nth-child(2) .ico{background:rgba(244,114,182,.16)}
+.featitem:nth-child(3) .ico{background:rgba(251,146,60,.16)}
+.featitem:nth-child(4) .ico{background:rgba(34,197,94,.16)}
+.featitem h4{font-size:15px;margin-bottom:3px}
+.featitem p{color:var(--muted);font-size:12.5px;line-height:1.6}
+
+/* ---------- sections ---------- */
+.section{padding:22px 0 56px}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:22px;flex-wrap:wrap}
+.section-head h2{font-size:25px;font-weight:900}
+.section-head .sub{color:var(--muted);font-size:13.5px;margin-top:5px}
+.muted{color:var(--muted)}
+
+/* ---------- category rail ---------- */
+.catrail{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 18px;scroll-snap-type:x proximity}
+.catcard{flex:none;width:168px;scroll-snap-align:start;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:19px 15px;text-align:center;cursor:pointer;transition:transform .22s var(--ease),border-color .22s var(--ease),background .22s var(--ease),box-shadow .22s var(--ease)}
+.catcard:hover{transform:translateY(-5px);border-color:rgba(139,92,246,.55);background:var(--surface2);box-shadow:var(--shadow-glow)}
+.catcard:active{transform:translateY(-2px) scale(.98)}
+.catcard .ico{width:54px;height:54px;margin:0 auto 12px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:25px;transition:transform .25s var(--ease)}
+.catcard:hover .ico{transform:scale(1.12)}
+.catcard h4{font-size:14px;margin-bottom:4px}
+.catcard span{color:var(--muted);font-size:12px}
+
+/* ---------- stats banner ---------- */
+.statsbanner{background:linear-gradient(120deg,#160b38,#1e0f3f 55%,#2a0f3d);border:1px solid var(--border);border-radius:var(--r-lg);padding:32px;display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;margin:8px 0 56px;overflow:hidden;position:relative;box-shadow:var(--shadow)}
+.statsbanner::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,rgba(244,114,182,.16),transparent 55%);pointer-events:none}
+.statsbanner .sart{width:130px;height:130px;flex:none;animation:drift 5s ease-in-out infinite}
+.statsgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.statitem{text-align:center;transition:transform .2s var(--ease)}
+.statitem:hover{transform:translateY(-3px)}
+.statitem .ico{width:44px;height:44px;margin:0 auto 8px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px}
+.statitem b{display:block;font-family:'Cairo';font-size:25px;font-weight:900;font-variant-numeric:tabular-nums}
+.statitem span{color:var(--muted);font-size:12px}
+
+/* ---------- feed tabs ---------- */
+.feedtabs{display:flex;gap:8px;flex-wrap:wrap}
+.feedtabs button{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:9px 16px;border-radius:11px;font-weight:800;font-size:13.5px;transition:.2s var(--ease)}
+.feedtabs button:hover{border-color:var(--border-strong);color:var(--text)}
+.feedtabs button.active{background:var(--grad-brand);color:#fff;border-color:transparent;box-shadow:0 8px 20px rgba(139,92,246,.35)}
+
+/* ---------- cards / inputs ---------- */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+input,textarea,select{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:var(--r-sm);outline:0;transition:border-color .18s var(--ease),box-shadow .18s var(--ease),background .18s var(--ease)}
+input::placeholder,textarea::placeholder{color:var(--muted2)}
+input:hover,textarea:hover,select:hover{border-color:var(--border-strong)}
+input:focus,textarea:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 4px rgba(139,92,246,.16);background:rgba(255,255,255,.06)}
+.search{flex:1;min-width:220px}.select{width:210px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-sm);transition:transform .28s var(--ease),border-color .28s var(--ease),box-shadow .28s var(--ease);content-visibility:auto;contain-intrinsic-size:0 360px;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-6px);border-color:rgba(139,92,246,.5);box-shadow:var(--shadow-glow)}
+.card .cardimgwrap{overflow:hidden}
+.cardimg{width:100%;height:155px;object-fit:cover;background:#0d0724;display:block;transition:transform .5s var(--ease)}
+.card:hover .cardimg{transform:scale(1.07)}
+.cardbody{padding:16px;display:flex;flex-direction:column;flex:1}
+.author{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12.5px;margin-bottom:10px}
+.avatar{width:30px;height:30px;border-radius:50%;object-fit:cover;border:1px solid var(--border)}
+.card h3{font-size:16.5px;margin-bottom:7px;line-height:1.4;transition:color .18s}
+.card h3:hover{color:#d8c9ff}
+.desc{color:var(--muted);line-height:1.75;font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+.tag{font-size:11px;color:#d8c9ff;background:rgba(139,92,246,.16);padding:5px 10px;border-radius:7px;font-weight:700}
+.cardfoot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:13px;border-top:1px solid var(--border)}
+.mini{font-size:12.5px;color:var(--muted);display:flex;gap:10px;font-variant-numeric:tabular-nums}
+.empty{padding:50px 20px;text-align:center;border:1px dashed var(--border);border-radius:var(--r);color:var(--muted);grid-column:1/-1;font-size:14.5px}
+.hidden{display:none!important}
+.page{display:none}.page.active{display:block}
+
+/* ---------- like/save icon buttons ---------- */
+.iconbtn{width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;padding:0!important;font-size:15px}
+
+/* ---------- cta banner ---------- */
+.ctabanner{position:relative;overflow:hidden;background:linear-gradient(120deg,#1a0b3c,#2b0f3f 60%,#3a0f2e);border-radius:var(--r-lg);padding:50px 30px;text-align:center;margin:12px 0 22px;box-shadow:var(--shadow)}
+.ctabanner::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 20%,rgba(139,92,246,.22),transparent 50%),radial-gradient(circle at 80% 80%,rgba(244,114,182,.18),transparent 50%)}
+.ctabanner h2{font-size:clamp(23px,3.6vw,33px);margin-bottom:10px;font-weight:900;position:relative}
+.ctabanner p{color:var(--muted);margin-bottom:24px;position:relative}
+.ctabanner .actions{justify-content:center;position:relative}
+.ctabanner .deco{position:absolute;font-size:34px;opacity:.5;animation:drift 4s ease-in-out infinite}
+
+/* ---------- forms / modals ---------- */
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.full{grid-column:1/-1}
+label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px;font-weight:600}
+.formgroup{margin-bottom:13px}
+.modal{position:fixed;inset:0;background:rgba(5,2,15,.8);backdrop-filter:blur(10px);z-index:200;display:none;align-items:center;justify-content:center;padding:15px}
+.modal.open{display:flex}
+.modalbox{width:min(620px,100%);max-height:92vh;overflow:auto;background:#140a30;border:1px solid var(--border);border-radius:20px;padding:24px;box-shadow:var(--shadow)}
+.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.close{background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:22px;width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;line-height:1;transition:.18s var(--ease)}
+.close:hover{background:var(--danger);color:#fff;border-color:transparent;transform:rotate(90deg)}
+.divider{height:1px;background:var(--border);margin:18px 0}
+.detail{max-width:850px;margin:35px auto}.detail img{width:100%;max-height:420px;object-fit:cover;border-radius:18px;border:1px solid var(--border)}
+.detailmodalbox{width:min(880px,100%);padding:0;overflow-y:auto;overflow-x:hidden;position:relative}
+.detailmodalbox #detailContent img{width:100%;max-height:380px;object-fit:cover;display:block}
+.detailmodalbox .detailbox{padding:26px}
+.detailmodalbox .close{position:absolute;top:14px;left:14px;background:rgba(10,6,32,.65);backdrop-filter:blur(6px);float:none!important}
+.detailmodalbox .close:hover{transform:none;background:var(--danger)}
+@media(max-width:650px){.detailmodalbox #detailContent img{max-height:230px}.detailmodalbox .detailbox{padding:19px}}
+.detailbox{background:#140a30;border:1px solid var(--border);padding:22px;border-radius:18px;margin-top:15px}
+.detail h1{font-size:clamp(26px,4.6vw,38px);margin:10px 0;font-weight:900}.detailtext{white-space:pre-wrap;color:#d7cdf0;line-height:1.9}
+.comment{padding:13px 0;border-bottom:1px solid var(--border);transition:background .15s}.comment:last-child{border:0}
+.commenthead{display:flex;align-items:center;gap:8px;font-weight:700}.comment p{color:var(--muted);margin-top:5px;line-height:1.7}
+.profilebox{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;background:var(--surface);border:1px solid var(--border);padding:24px;border-radius:var(--r-lg)}
+.bigavatar{width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--primary);box-shadow:0 0 0 5px rgba(139,92,246,.15)}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}.pill{background:var(--surface2);border:1px solid var(--border);padding:6px 11px;border-radius:999px;font-size:12px;font-weight:700}
+.pill.badge-pill{background:rgba(251,191,36,.14);border-color:rgba(251,191,36,.35);color:#fde68a}
+.dmbubble{max-width:78%;padding:10px 13px;border-radius:14px;margin-bottom:8px;font-size:13.5px;line-height:1.6}
+.dmbubble.me{background:var(--grad-brand);color:#fff;margin-inline-start:auto;border-bottom-left-radius:4px}
+.dmbubble.them{background:var(--surface2);border:1px solid var(--border);border-bottom-right-radius:4px}
+.followbtn.following{background:var(--surface2);border:1px solid var(--border);color:var(--text)}
+.authorlink{cursor:pointer}
+.authorlink:hover span{color:var(--text)}
+.adminnav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.adminnav button{background:var(--surface2);color:var(--muted);border:1px solid var(--border);padding:9px 13px;border-radius:9px;font-weight:700;transition:.18s var(--ease)}
+.adminnav button:hover{border-color:var(--border-strong)}
+.adminnav button.active{color:#fff;border-color:var(--primary);background:rgba(139,92,246,.2)}
+.tablewrap{overflow:auto;border:1px solid var(--border);border-radius:14px}.table{width:100%;border-collapse:collapse;min-width:650px}.table th,.table td{padding:13px;text-align:right;border-bottom:1px solid var(--border);font-size:13px}.table th{color:#e5defc;background:var(--surface2);font-weight:800}.table td{color:var(--muted)}.table tr:hover td{background:rgba(255,255,255,.02)}
+.toast{position:fixed;bottom:22px;left:22px;z-index:500;background:#140a30;border:1px solid var(--border);padding:14px 17px;border-radius:14px;display:none;box-shadow:var(--shadow);max-width:min(340px,calc(100vw - 44px))}
+.toast.show{display:block}
+footer{border-top:1px solid var(--border);margin-top:44px;padding:34px 0;color:var(--muted);text-align:center;font-size:13px}
+.mobile-nav{display:none}
+.supportbox{text-align:center;padding:16px}
+.supportbox .heart{font-size:46px;animation:drift 2.4s ease-in-out infinite}
+
+/* ---------- scroll-to-top ---------- */
+.scrolltop{position:fixed;bottom:24px;left:24px;z-index:140;width:46px;height:46px;border-radius:50%;background:var(--grad-brand);color:#fff;border:0;box-shadow:var(--shadow-glow);display:flex;align-items:center;justify-content:center;font-size:18px;opacity:0;pointer-events:none;transform:translateY(12px) scale(.85);transition:opacity .25s var(--ease),transform .25s var(--ease)}
+.scrolltop.show{opacity:1;pointer-events:auto;transform:translateY(0) scale(1)}
+.scrolltop:hover{filter:brightness(1.1);transform:translateY(-3px) scale(1.03)}
+
+@media(max-width:960px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .herogrid{grid-template-columns:1fr}
+  .heroart{height:260px;order:-1}
+  .featurebar{grid-template-columns:repeat(2,1fr)}
+  .statsbanner{grid-template-columns:1fr;text-align:center}
+  .statsbanner .sart{margin:0 auto}
+  .statsgrid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:650px){
+  .navlinks{display:none}
+  .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:rgba(9,5,25,.96);backdrop-filter:blur(18px) saturate(1.3);border-top:1px solid var(--border);z-index:150;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+  .mobile-nav button{font-size:10.5px;padding:7px 8px;border-radius:12px;line-height:1.5;min-width:52px}
+  .mobile-nav button.active{color:#d8c9ff;background:rgba(139,92,246,.14)}
+  .mobile-nav button:nth-child(3){background:var(--grad-cta);color:#fff;width:50px;height:50px;border-radius:50%;margin-top:-22px;box-shadow:0 8px 22px rgba(236,72,153,.5);font-size:18px;padding:0;display:flex;align-items:center;justify-content:center;animation:pulseGlow 3s ease-in-out infinite}
+  .mobile-nav button:nth-child(3) br{display:none}
+  .grid{grid-template-columns:1fr}
+  .formgrid{grid-template-columns:1fr}.full{grid-column:auto}
+  .profilebox{grid-template-columns:1fr;text-align:center}
+  .bigavatar{margin:auto}
+  .hero{padding-top:36px}
+  body{padding-bottom:70px}
+  .scrolltop{bottom:78px;left:14px;width:42px;height:42px}
+  .modalbox:not(.detailmodalbox){width:100%;align-self:flex-end;border-radius:22px 22px 0 0;max-height:88vh;animation:sheetIn .32s var(--ease-out) both;margin-bottom:0}
+  .modal:has(.modalbox:not(.detailmodalbox)){align-items:flex-end}
+}
+@media(max-width:420px){
+  .logo{font-size:15.5px;gap:6px}
+  .logo .mark{width:28px;height:28px;font-size:13px;border-radius:9px}
+  .headerauth{gap:6px}
+  .headerauth .btn{padding:8px 11px;font-size:12px;border-radius:9px}
+  .headerauth img.avatar{width:26px;height:26px}
+  .accountbtn{max-width:118px;padding:4px 9px 4px 4px}
+}
+@media(min-width:651px) and (max-width:960px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:360px){.accountbtn-name{display:none}.accountbtn{max-width:none;padding:4px}}
+
+/* ==== إضافات: كانبان، تقييمات، متحف، إحالة، أسئلة شائعة ==== */
+.verified-badge{display:inline-flex;align-items:center;gap:2px;color:#38bdf8;font-size:13px}
+.starrow{display:flex;gap:2px;font-size:15px;cursor:pointer;user-select:none}
+.starrow span{opacity:.35;transition:.15s}
+.starrow span.on{opacity:1}
+.starrow.readonly{cursor:default}
+.kanbanwrap{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px}
+@media(max-width:650px){.kanbanwrap{grid-template-columns:1fr}}
+.kanbancol{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px;min-height:70px}
+.kanbancol h4{font-size:13px;margin-bottom:8px;color:var(--muted)}
+.kanbancard{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 10px;margin-bottom:8px;font-size:13px}
+.kanbancard .krow{display:flex;justify-content:space-between;align-items:center;margin-top:6px;gap:4px}
+.kanbancard button{font-size:11px;padding:3px 7px;border-radius:7px;background:var(--surface3);border:0;color:var(--text);cursor:pointer}
+.museumcard{opacity:.8;filter:grayscale(.35)}
+.museumcard .cardbody{position:relative}
+.faqitem{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;margin-bottom:10px}
+.faqitem b{display:block;margin-bottom:4px}
+.refbox{display:flex;gap:8px;align-items:center;background:var(--surface);border:1px dashed var(--border-strong);border-radius:var(--r-sm);padding:12px 14px;margin-top:14px;flex-wrap:wrap}
+.refbox input{flex:1;min-width:180px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:8px 10px;color:var(--text);font-size:12.5px}
+.stale-tag{background:rgba(251,146,60,.85)!important}
+</style>
+</head>
+<body>
+
+<div id="appLoader" aria-hidden="true">
+  <div class="loadermark">✨</div>
+  <div class="loaderbar"><span></span></div>
+</div>
+
+<a href="#home" class="skip-link" onclick="showPage('home')">تخطَّ إلى المحتوى</a>
+
+<header>
+  <div class="container nav">
+    <div class="logo"><span class="mark">✨</span>عالم <span>المبتكرين</span></div>
+    <div class="navlinks">
+      <button onclick="showPage('home')">الرئيسية</button>
+      <button onclick="showPage('ideas')">الأفكار</button>
+      <button onclick="showPage('projects')">المشاريع</button>
+      <button onclick="showPage('stories')">✨ قصص نجاح</button>
+      <button onclick="showPage('museum')">🏛️ المتحف</button>
+      <button onclick="showPage('learn')">📚 تعلّم</button>
+      <button onclick="showPage('leaderboard')">🏆 المتصدرون</button>
+      <button onclick="showPage('profile')">ملفي</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="themetoggle" id="themeToggleBtn" onclick="toggleTheme()" aria-label="تبديل المظهر" title="تبديل المظهر الداكن/الفاتح">🌙</button>
+      <div id="desktopAuth" class="headerauth"></div>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section id="home" class="page active">
+
+    <div class="hero">
+      <div class="herogrid">
+        <div>
+          <div class="badge">💡 فكرة &nbsp;+&nbsp; 👥 فريق &nbsp;+&nbsp; 🚀 مشروع</div>
+          <h1>حوّل فكرتك اليوم إلى مشروع حقيقي</h1>
+          <p>مجتمع يجمع أصحاب الأفكار بالمبرمجين والمصممين ورواد الأعمال. شارك فكرتك، ابحث عن شركاء، وابدأ رحلتك نحو مشروع لا حدود له.</p>
+          <div class="actions">
+            <button class="btn" onclick="requireAuth('idea')">🚀 ابدأ الآن مجانًا</button>
+            <button class="btn secondary" onclick="showPage('ideas')">استكشف الأفكار</button>
+          </div>
+          <div class="heroSocial">
+            <div class="avatarstack" id="heroAvatars"></div>
+            <span class="txt"><b id="heroUserCount">+0</b> مبتكر حول العالم</span>
+          </div>
+        </div>
+        <div class="heroart">
+          <svg viewBox="0 0 420 380" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="skyG" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#3b1b78"/><stop offset="1" stop-color="#1a0b3c"/>
+              </linearGradient>
+              <linearGradient id="rockG" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#4c2a8f"/><stop offset="1" stop-color="#2a1550"/>
+              </linearGradient>
+              <linearGradient id="hoodieG" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#6d28d9"/>
+              </linearGradient>
+              <radialGradient id="planetG" cx=".35" cy=".3" r=".8">
+                <stop offset="0" stop-color="#fb923c"/><stop offset="1" stop-color="#ea580c"/>
+              </radialGradient>
+            </defs>
+            <circle cx="210" cy="185" r="175" fill="url(#skyG)" opacity=".55"/>
+            <g opacity=".85">
+              <circle class="tw" cx="60" cy="60" r="2" fill="#fff"/><circle class="tw" cx="120" cy="30" r="1.6" fill="#fff"/>
+              <circle class="tw" cx="350" cy="55" r="2" fill="#fff"/><circle class="tw" cx="30" cy="180" r="1.6" fill="#fff"/>
+              <circle class="tw" cx="390" cy="150" r="2" fill="#fff"/><circle class="tw" cx="370" cy="260" r="1.6" fill="#fff"/>
+              <circle class="tw" cx="50" cy="290" r="2" fill="#fff"/>
+            </g>
+            <circle cx="345" cy="70" r="26" fill="url(#planetG)"/>
+            <ellipse class="ring-orbit" cx="345" cy="70" rx="40" ry="9" fill="none" stroke="#fdba74" stroke-width="2.5" opacity=".7" transform="rotate(-18 345 70)"/>
+            <circle cx="55" cy="120" r="15" fill="#f472b6" opacity=".85"/>
+            <circle cx="70" cy="290" r="10" fill="#8b5cf6" opacity=".7"/>
+            <path d="M255 120 L300 95 L285 108 L305 112 L262 132 Z" fill="#fbbf24"/>
+            <ellipse cx="210" cy="330" rx="120" ry="16" fill="#000" opacity=".25"/>
+            <path d="M120 300 Q120 255 165 250 Q185 205 235 220 Q270 190 300 225 Q320 245 300 300 Z" fill="url(#rockG)"/>
+            <g transform="translate(150,150)">
+              <path d="M40 150 q-6 -60 40 -80 q46 -20 62 15 q10 22 -6 40 l-10 8 q6 20 -8 32 q-14 12 -30 2 l-8 -6 q-24 8 -40 -11 Z" fill="url(#hoodieG)"/>
+              <circle cx="86" cy="55" r="20" fill="#f2c9a0"/>
+              <path d="M66 48 q4 -26 30 -22 q22 4 20 24 q-2 -14 -18 -14 q-20 0 -24 16 Z" fill="#2a1a12"/>
+              <rect x="60" y="95" width="66" height="42" rx="10" fill="#2a1550"/>
+              <rect x="66" y="90" width="54" height="14" rx="6" fill="#4c2a8f"/>
+              <circle cx="40" cy="60" r="9" fill="#fde68a"/>
+              <path d="M40 69 q0 26 24 30" fill="none" stroke="#fde68a" stroke-width="2.5" opacity=".8"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="featurebar reveal">
+      <div class="featitem"><div class="ico">💡</div><div><h4>شارك فكرتك</h4><p>عبّر عن مشروعك بطريقتك الخاصة</p></div></div>
+      <div class="featitem"><div class="ico">👥</div><div><h4>كوّن فريقك</h4><p>تعرّف على شركاء تكمّل مهاراتهم فكرتك</p></div></div>
+      <div class="featitem"><div class="ico">🤝</div><div><h4>تعاون بذكاء</h4><p>ناقش وطوّر الفكرة مع المهتمين بها</p></div></div>
+      <div class="featitem"><div class="ico">🚀</div><div><h4>أطلق مشروعك</h4><p>حوّل النقاش إلى مشروع قائم فعليًا</p></div></div>
+    </div>
+
+    <div class="section reveal">
+      <div class="section-head">
+        <div><h2>اكتشف ما يثير شغفك</h2><div class="sub">مجالات متنوعة تناسب اهتماماتك وتولّد لك أفكارًا جديدة</div></div>
+        <button class="btn secondary" onclick="showPage('ideas')">عرض كل المجالات</button>
+      </div>
+      <div class="catrail" id="catRail"></div>
+    </div>
+
+    <div class="statsbanner reveal">
+      <svg class="sart" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="hoodie2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fb923c"/><stop offset="1" stop-color="#ea580c"/></linearGradient></defs>
+        <circle cx="65" cy="65" r="60" fill="#241049"/>
+        <path d="M30 110 q35 -18 70 0" fill="none" stroke="#3a2266" stroke-width="10" stroke-linecap="round"/>
+        <path d="M40 95 q-4 -38 28 -46 q30 -8 40 12 q8 16 -6 28 l-8 6 q4 14 -8 20 q-12 6 -22 -2 l-6 -5 q-16 6 -18 -13 Z" fill="url(#hoodie2)"/>
+        <circle cx="70" cy="42" r="15" fill="#f2c9a0"/>
+        <path d="M55 38 q3 -18 22 -15 q15 3 13 16 q-2 -9 -14 -9 q-14 0 -16 11 Z" fill="#2a1a12"/>
+        <path d="M92 60 l16 -22" stroke="#f2c9a0" stroke-width="8" stroke-linecap="round"/>
+      </svg>
+      <div class="statsgrid">
+        <div class="statitem"><div class="ico" style="background:rgba(34,197,94,.16)">💡</div><b id="statIdeas">0</b><span>فكرة منشورة</span></div>
+        <div class="statitem"><div class="ico" style="background:rgba(139,92,246,.16)">🌍</div><b id="statUsers">0</b><span>مبتكر نشط</span></div>
+        <div class="statitem"><div class="ico" style="background:rgba(251,146,60,.16)">🚀</div><b id="statProjects">0</b><span>مشروع انطلق</span></div>
+        <div class="statitem"><div class="ico" style="background:rgba(244,114,182,.16)">❤️</div><b id="statLikes">0</b><span>تفاعل</span></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin:14px 0 40px"><button class="btn ghost sm" onclick="showPage('leaderboard')">🏆 عرض المتصدرين هذا الشهر</button></div>
+
+    <div class="section reveal">
+      <div class="section-head">
+        <div><h2>أحدث الأفكار من مجتمعنا</h2><div class="sub">استلهم من أفكار الآخرين وشارك بفكرتك</div></div>
+        <div class="feedtabs">
+          <button class="active" onclick="setFeedTab('latest',this)">الأحدث</button>
+          <button onclick="setFeedTab('foryou',this)">✨ لك</button>
+          <button onclick="setFeedTab('ideas',this)">الأفكار</button>
+          <button onclick="setFeedTab('projects',this)">المشاريع</button>
+          <button onclick="setFeedTab('popular',this)">الأكثر تفاعلاً</button>
+        </div>
+      </div>
+      <div id="homeIdeas" class="grid"></div>
+    </div>
+
+    <div class="ctabanner reveal">
+      <div class="deco" style="top:18px;right:8%">🪐</div>
+      <div class="deco" style="bottom:16px;left:6%">🚀</div>
+      <h2>جاهز لتحويل شغفك إلى إنجاز؟</h2>
+      <p class="muted">انضم الآن لآلاف المبتكرين حول العالم وابدأ رحلتك</p>
+      <div class="actions"><button class="btn" onclick="requireAuth('idea')">🚀 انضم الآن مجانًا</button></div>
+    </div>
+
+  </section>
+
+  <section id="ideas" class="page section">
+    <div class="section-head"><div><h2>💡 استكشاف الأفكار</h2></div><button class="btn" onclick="requireAuth('idea')">+ نشر فكرة</button></div>
+    <div class="toolbar">
+      <input id="search" class="search" placeholder="ابحث عن فكرة، مهارة، أو مجال..." oninput="onSearchInput()">
+      <select id="category" class="select" onchange="renderIdeas()">
+        <option value="all">كل المجالات</option><option>التقنية والبرمجة</option><option>الذكاء الاصطناعي</option>
+        <option>ريادة الأعمال</option><option>التصميم والإبداع</option><option>السفر والمغامرات</option>
+      </select>
+      <select id="sortBy" class="select" style="width:170px" onchange="renderIdeas()">
+        <option value="new">الأحدث</option><option value="likes">الأكثر إعجابًا</option><option value="comments">الأكثر تعليقًا</option>
+      </select>
+      <button class="btn ghost sm" onclick="$('advFilters').classList.toggle('hidden')">🔍 فلاتر متقدمة</button>
+    </div>
+    <div id="advFilters" class="toolbar hidden" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px">
+      <select id="filterStage" class="select" onchange="renderIdeas()">
+        <option value="all">كل المراحل</option><option value="idea">💡 فكرة</option><option value="team">👥 بحث عن فريق</option>
+        <option value="progress">🛠️ قيد التطوير</option><option value="launched">🚀 مشروع مُطلق</option>
+      </select>
+      <select id="filterInterested" class="select" onchange="renderIdeas()">
+        <option value="0">أي عدد مهتمين</option><option value="1">1+ مهتم</option><option value="5">5+ مهتمين</option><option value="10">10+ مهتمين</option>
+      </select>
+      <input id="filterFrom" type="date" class="select" style="width:160px" onchange="renderIdeas()" title="من تاريخ">
+      <input id="filterTo" type="date" class="select" style="width:160px" onchange="renderIdeas()" title="إلى تاريخ">
+      <button class="btn ghost sm" onclick="clearAdvFilters()">مسح الفلاتر</button>
+    </div>
+    <div id="ideasGrid" class="grid"></div>
+    <div style="text-align:center;margin-top:22px"><button id="loadMoreBtn" class="btn secondary hidden" onclick="ideasPage++;renderIdeas()">تحميل المزيد</button></div>
+  </section>
+
+  <section id="projects" class="page section">
+    <div class="section-head"><h2>🚀 المشاريع</h2></div>
+    <div id="projectsGrid" class="grid"></div>
+  </section>
+
+  <section id="stories" class="page section">
+    <div class="section-head"><div><h2>✨ قصص نجاح</h2><div class="sub">أفكار وصلت لمرحلة الإطلاق فعليًا، بكلام أصحابها</div></div></div>
+    <div id="storiesGrid" class="grid"></div>
+  </section>
+
+  <section id="museum" class="page section">
+    <div class="section-head"><div><h2>🏛️ متحف الأفكار</h2><div class="sub">أرشيف محترم للأفكار المتوقفة، بدل الحذف الكامل — شفافية ودرس لغيرها</div></div></div>
+    <div id="museumGrid" class="grid"></div>
+  </section>
+
+  <section id="learn" class="page section">
+    <div class="section-head"><div><h2>📚 مكتبة الموارد</h2><div class="sub">مقالات قصيرة تساعدك تبني فكرتك وتقنع بيها الناس</div></div></div>
+    <div id="learnGrid" class="grid"></div>
+  </section>
+
+  <section id="leaderboard" class="page section">
+    <div class="section-head"><div><h2>🏆 المتصدرون هذا الشهر</h2><div class="sub">الأكثر نشاطًا وتفاعلًا خلال آخر 30 يومًا</div></div></div>
+    <div id="leaderboardList"></div>
+  </section>
+
+  <section id="profile" class="page section">
+    <div id="profileContent"></div>
+  </section>
+
+  <section id="publicProfile" class="page section">
+    <div id="publicProfileContent"></div>
+  </section>
+
+  <section id="notifications" class="page section">
+    <div class="section-head"><h2>🔔 الإشعارات</h2></div>
+    <div id="notificationsList" class="card" style="padding:18px"></div>
+  </section>
+
+  <section id="admin" class="page section">
+    <div class="section-head"><h2>👑 لوحة الإدارة</h2><span class="badge">ADMIN</span></div>
+    <div class="adminnav">
+      <button class="active" onclick="adminTab('overview',this)">نظرة عامة</button>
+      <button onclick="adminTab('users',this)">المستخدمون</button>
+      <button onclick="adminTab('ideas',this)">الأفكار</button>
+      <button onclick="adminTab('reports',this)">البلاغات</button>
+    </div>
+    <div id="adminContent"></div>
+  </section>
+</main>
+
+<div class="mobile-nav" role="navigation" aria-label="التنقل الرئيسي">
+  <button data-nav="home" onclick="showPage('home')" aria-label="الرئيسية">🏠<br>الرئيسية</button>
+  <button data-nav="ideas" onclick="showPage('ideas')" aria-label="الأفكار">💡<br>الأفكار</button>
+  <button onclick="requireAuth('idea')" aria-label="نشر فكرة جديدة">➕<br>نشر</button>
+  <button data-nav="notifications" onclick="showPage('notifications')" style="position:relative" aria-label="الإشعارات">🔔<span id="notifDotMobile" class="hidden" style="position:absolute;top:2px;left:22px;width:8px;height:8px;border-radius:50%;background:var(--danger)"></span><br>تنبيهات</button>
+  <button data-nav="profile" onclick="showPage('profile')" aria-label="ملفي الشخصي">👤<br>ملفي</button>
+</div>
+
+<footer><div class="container">
+ <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:10px">
+  <a onclick="showPage('stories')">✨ قصص نجاح</a><a onclick="showPage('museum')">🏛️ المتحف</a><a onclick="showPage('learn')">📚 تعلّم</a><a onclick="showPage('leaderboard')">🏆 المتصدرون</a>
+ </div>
+ جميع الحقوق محفوظة © 2026 | عالم المبتكرين والرحالة</div></footer>
+
+<!-- الحساب: قائمة سريعة + تبديل الحسابات -->
+<div id="accountModal" class="modal">
+<div class="modalbox" style="max-width:380px">
+  <div class="modalhead"><h2>حسابي</h2><button class="close" onclick="closeModal('accountModal')">×</button></div>
+  <div id="accountSheetContent"></div>
+</div>
+</div>
+
+<!-- Auth -->
+<div id="authModal" class="modal">
+<div class="modalbox">
+  <div class="modalhead"><h2 id="authTitle">تسجيل الدخول</h2><button class="close" onclick="closeModal('authModal')">×</button></div>
+  <div class="formgroup"><label>البريد الإلكتروني</label><input id="authEmail" type="email" autocomplete="email"></div>
+  <div class="formgroup"><label>كلمة المرور</label><input id="authPassword" type="password" autocomplete="current-password"></div>
+  <p style="text-align:left;margin:-6px 0 14px"><a style="color:#c4b5fd;font-size:12.5px;font-weight:700" onclick="resetPassword()">نسيت كلمة المرور؟</a></p>
+  <button id="authBtn" class="btn" style="width:100%" onclick="emailAuth()">دخول</button>
+  <div class="divider"></div>
+  <button class="btn secondary" style="width:100%" onclick="googleAuth()">🔵 المتابعة باستخدام Google</button>
+  <p style="text-align:center;margin-top:14px;color:var(--muted);font-size:13px"><span id="authSwitch">ليس لديك حساب؟</span> <a style="color:#c4b5fd;font-weight:800" onclick="toggleAuth()">تسجيل حساب جديد</a></p>
+</div>
+</div>
+
+<!-- Idea -->
+<div id="ideaModal" class="modal">
+<div class="modalbox">
+  <div class="modalhead"><h2 id="ideaModalTitle">💡 نشر فكرة</h2><button class="close" onclick="closeModal('ideaModal')">×</button></div>
+  <div class="stepbar" id="ideaStepBar">
+    <button type="button" class="stepdot active" data-step="1" onclick="goToIdeaStep(1)"><span class="stepnum">1</span>الأساسيات</button>
+    <div class="stepline"></div>
+    <button type="button" class="stepdot" data-step="2" onclick="goToIdeaStep(2)"><span class="stepnum">2</span>تفاصيل أكتر</button>
+    <div class="stepline"></div>
+    <button type="button" class="stepdot" data-step="3" onclick="goToIdeaStep(3)"><span class="stepnum">3</span>الصورة والنشر</button>
+  </div>
+  <div class="formgrid">
+    <div class="ideastep" data-step="1">
+      <div class="formgroup full"><label>عنوان الفكرة</label><input id="ideaTitle" maxlength="100" placeholder="مثلاً: منصة تربط المطورين بالمؤسسين"></div>
+      <div class="formgroup"><label>التصنيف</label><select id="ideaCategory"><option>التقنية والبرمجة</option><option>الذكاء الاصطناعي</option><option>ريادة الأعمال</option><option>التصميم والإبداع</option><option>السفر والمغامرات</option></select></div>
+      <div class="formgroup"><label>المهارات المطلوبة</label><input id="ideaSkills" placeholder="Python, UI/UX, Marketing"></div>
+      <div class="formgroup full" id="ideaStageWrap">
+        <label>مرحلة المشروع الحالية</label>
+        <select id="ideaStage">
+          <option value="idea">💡 فكرة</option>
+          <option value="team">👥 بحث عن فريق</option>
+          <option value="progress">🛠️ قيد التطوير</option>
+          <option value="launched">🚀 مشروع مُطلق</option>
+        </select>
+      </div>
+      <div class="formgroup full"><label>وصف سريع (يظهر في كارت الفكرة)</label><textarea id="ideaDesc" rows="3" maxlength="400" placeholder="جملتين أو ثلاثة تلخّص فكرتك..."></textarea></div>
+    </div>
+    <div class="ideastep hidden" data-step="2">
+      <p class="muted" style="font-size:12.5px;margin-bottom:12px">الحقول دي اختيارية، لكنها بتخلّي فكرتك أوضح لأي حد هيدخل يشوفها.</p>
+      <div class="formgroup full"><label>🧩 المشكلة (اختياري)</label><textarea id="ideaProblem" rows="3" maxlength="1000" placeholder="إيه المشكلة اللي فكرتك بتحلها؟"></textarea></div>
+      <div class="formgroup full"><label>💡 الحل (اختياري)</label><textarea id="ideaSolution" rows="3" maxlength="1000" placeholder="إزاي فكرتك بتحل المشكلة دي؟"></textarea></div>
+      <div class="formgroup full"><label>🎯 السوق المستهدف (اختياري)</label><textarea id="ideaMarket" rows="2" maxlength="600" placeholder="مين المستخدمين أو العملاء المستهدفين؟"></textarea></div>
+    </div>
+    <div class="ideastep hidden" data-step="3">
+      <div class="formgroup full">
+        <label>صورة الفكرة (اختياري)</label>
+        <input id="ideaImageFile" type="file" accept="image/*" class="hidden" onchange="handleImageUpload(this)">
+        <div id="imgPreviewWrap" class="hidden" style="position:relative;margin-bottom:10px">
+          <img id="imgPreview" style="width:100%;height:170px;object-fit:cover;border-radius:14px;border:1px solid var(--border)">
+          <button type="button" class="btn danger sm" style="position:absolute;top:8px;left:8px" onclick="removeImage()">إزالة</button>
+        </div>
+        <div id="uploadRow" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <button type="button" class="btn secondary sm" onclick="$('ideaImageFile').click()">📷 ارفع صورة من جهازك</button>
+          <span id="uploadStatus" class="muted" style="font-size:12px"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button id="ideaBackBtn" class="btn ghost hidden" style="flex:none" onclick="ideaStepBack()">◀ رجوع</button>
+    <button id="ideaNextBtn" class="btn" style="flex:1" onclick="ideaStepNext()">التالي ▶</button>
+    <button id="draftBtn" class="btn secondary hidden" style="flex:none" onclick="publishIdea(true)">💾 حفظ كمسودة</button>
+    <button id="publishBtn" class="btn hidden" style="flex:1" onclick="publishIdea(false)">🚀 نشر الفكرة</button>
+  </div>
+</div>
+</div>
+
+<!-- Detail -->
+<div id="detailModal" class="modal"><div class="modalbox detailmodalbox"><div id="detailContent"></div></div></div>
+
+<!-- Support -->
+<div id="supportModal" class="modal">
+<div class="modalbox supportbox">
+<button class="close" style="float:left" onclick="closeModal('supportModal')">×</button>
+<div class="heart">❤️</div><h2>ساعدنا نبني المنصة</h2>
+<p class="muted" style="line-height:1.8;margin:12px 0 18px">دعمك يساعد في الاستضافة، التطوير، والأدوات اللازمة لتحويل هذه الفكرة إلى منصة حقيقية.</p>
+<div class="formgroup"><input id="supportAmount" type="number" min="1" placeholder="قيمة الدعم"></div>
+<button class="btn" style="width:100%" onclick="supportAction()">متابعة الدعم</button>
+<p class="muted" style="font-size:11px;margin-top:12px">ضع رابط بوابة الدفع الخاصة بك داخل إعدادات SUPPORT_URL في أسفل الكود.</p>
+</div></div>
+
+<!-- Report -->
+<div id="reportModal" class="modal"><div class="modalbox">
+<div class="modalhead"><h2>🚨 إبلاغ</h2><button class="close" onclick="closeModal('reportModal')">×</button></div>
+<div class="formgroup"><label>سبب البلاغ</label><select id="reportReason"><option>محتوى مخالف</option><option>Spam</option><option>احتيال أو تضليل</option><option>حقوق ملكية</option><option>سبب آخر</option></select></div>
+<button class="btn danger" style="width:100%" onclick="submitReport()">إرسال البلاغ</button>
+</div></div>
+
+<!-- Direct Message -->
+<div id="dmModal" class="modal"><div class="modalbox">
+<div class="modalhead"><h2 id="dmTitle">💬 رسالة</h2><button class="close" onclick="closeModal('dmModal')">×</button></div>
+<div id="dmList" style="max-height:340px;overflow-y:auto;margin-bottom:14px"></div>
+<div style="display:flex;gap:8px"><input id="dmText" placeholder="اكتب رسالتك..." onkeydown="if(event.key==='Enter')sendDM()"><button class="btn" onclick="sendDM()">إرسال</button></div>
+</div></div>
+
+<!-- Archive (المتحف) -->
+<div id="archiveModal" class="modal"><div class="modalbox">
+<div class="modalhead"><h2>🏛️ أرشفة الفكرة</h2><button class="close" onclick="closeModal('archiveModal')">×</button></div>
+<p class="muted" style="margin-bottom:12px">بدل الحذف الكامل، الفكرة هتتنقل لـ"متحف الأفكار" مع سبب التوقف، عشان تفيد غيرك بدرس مفيد.</p>
+<div class="formgroup"><label>توقفت هنا وليه؟</label><textarea id="archiveReason" rows="4" maxlength="500" placeholder="مثلاً: قلة الوقت، تغيير الأولويات، صعوبة تقنية معينة..."></textarea></div>
+<button class="btn danger" style="width:100%" onclick="submitArchive()">🏛️ أرشفة الفكرة الآن</button>
+</div></div>
+
+<!-- Success Story -->
+<div id="storyModal" class="modal"><div class="modalbox">
+<div class="modalhead"><h2>✨ قصة النجاح</h2><button class="close" onclick="closeModal('storyModal')">×</button></div>
+<div class="formgroup"><label>احكِ قصة وصول فكرتك لمرحلة الإطلاق</label><textarea id="storyText" rows="5" maxlength="800" placeholder="إزاي بدأت الفكرة؟ إيه أكبر تحدي واجهته؟ نصيحة لمين هيبدأ بعدك؟"></textarea></div>
+<button class="btn" style="width:100%" onclick="submitStory()">✅ حفظ القصة</button>
+</div></div>
+
+<!-- Join Request -->
+<div id="joinModal" class="modal"><div class="modalbox">
+<div class="modalhead"><h2>🙋 طلب انضمام</h2><button class="close" onclick="closeModal('joinModal')">×</button></div>
+<div class="formgroup"><label>ليه مهتم بالفكرة دي؟</label><textarea id="joinWhy" rows="2" maxlength="300" placeholder="مثلاً: بحب المجال ده وعندي خبرة فيه..."></textarea></div>
+<div class="formgroup"><label>هتقدم إيه للفريق؟</label><textarea id="joinOffer" rows="2" maxlength="300" placeholder="مثلاً: أقدر أساهم بتصميم الواجهات وربطها بالباك إند"></textarea></div>
+<div class="formgroup"><label>مستوى خبرتك في المجال ده</label>
+ <select id="joinLevel"><option value="مبتدئ">🌱 مبتدئ</option><option value="متوسط" selected>🔧 متوسط</option><option value="محترف">🏆 محترف</option></select>
+</div>
+<button class="btn" style="width:100%" onclick="submitJoinRequest()">🙋 إرسال طلب الانضمام</button>
+</div></div>
+
+<!-- Onboarding: اختيار الاهتمامات -->
+<div id="onboardModal" class="modal"><div class="modalbox">
+<div class="modalhead"><h2>✨ إيه اللي بيثير شغفك؟</h2><button class="close" onclick="closeModal('onboardModal')">×</button></div>
+<p class="muted" style="margin-bottom:14px">اختر 3 مجالات على الأقل عشان نرشحلك أفكارًا تناسبك في تبويب "لك"</p>
+<div id="onboardCats" class="formgrid"></div>
+<button class="btn" style="width:100%;margin-top:8px" onclick="saveOnboarding()">✅ حفظ ومتابعة</button>
+</div></div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<button id="scrollTopBtn" class="scrolltop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="العودة لأعلى الصفحة" title="العودة لأعلى">↑</button>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import { getDatabase, ref, push, set, update, remove, onValue, get } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyAAM11KB7jbdZC0EiPyOgIawxzGZITgMA8",
+  authDomain:"flash-feedback-9c529.firebaseapp.com",
+  databaseURL:"https://flash-feedback-9c529-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"flash-feedback-9c529",
+  storageBucket:"flash-feedback-9c529.firebasestorage.app",
+  messagingSenderId:"1026286586523",
+  appId:"1:1026286586523:web:b76e33473c260fc4d7143e",
+  measurementId:"G-R93914YBXY"
+};
+
+// ====== إعدادات بسيطة قبل الإطلاق ======
+let SUPPORT_URL = ""; // يُقرأ ويُحدَّث من admin.html
+const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1000&q=80";
+const CATEGORIES = [
+  {name:"التقنية والبرمجة", icon:"💻", bg:"rgba(139,92,246,.16)"},
+  {name:"الذكاء الاصطناعي", icon:"🤖", bg:"rgba(244,114,182,.16)"},
+  {name:"ريادة الأعمال",    icon:"🚀", bg:"rgba(251,146,60,.16)"},
+  {name:"التصميم والإبداع", icon:"🎨", bg:"rgba(34,197,94,.16)"},
+  {name:"السفر والمغامرات", icon:"🧭", bg:"rgba(56,189,248,.16)"}
+];
+// مراحل تقدم الفكرة، بترتيب واضح من فكرة خام لمشروع مُطلق فعليًا
+const STAGES = [
+  {key:"idea",     label:"💡 فكرة",          short:"فكرة"},
+  {key:"team",     label:"👥 بحث عن فريق",   short:"بحث عن فريق"},
+  {key:"progress", label:"🛠️ قيد التطوير",   short:"قيد التطوير"},
+  {key:"launched", label:"🚀 مشروع مُطلق",   short:"مُطلق"}
+];
+function stageIndex(status){const i=STAGES.findIndex(s=>s.key===status);return i<0?0:i}
+function stageInfo(status){return STAGES[stageIndex(status)]}
+
+const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getDatabase(app);
+const provider=new GoogleAuthProvider();
+let currentUser=null, allIdeas=[], allUsers=[], allReports=[], selectedIdeaId=null, editingIdeaId=null, signup=false, feedTab="latest", commentCounts={}, pendingAction=null, authReady=false, adminMap={}, verifiedMap={}, notifMap={}, savesMap={}, notifUnsub=null, ideasPage=1, searchDebounce=null, uploadedImageUrl="", followsMap={}, blocksMap={}, viewingProfileUid=null, dmTargetUid=null, dmUnsub=null, profilePhotoUploading=false, reviewsCache={}, joinTargetId=null;
+const IMGBB_KEY="c9abb72da3c37b1c5cc01736f78ac808";
+const PAGE_SIZE=12;
+// ====== إعدادات الحماية والحدود ======
+const IDEA_COOLDOWN_MS=2*60*1000;      // مهلة بين نشر فكرة وأخرى لكل مستخدم
+const COMMENT_COOLDOWN_MS=8*1000;      // مهلة بين تعليق وآخر
+const MAX_OPEN_IDEAS=6;                // أقصى عدد أفكار غير مؤرشفة/مطلقة لكل مستخدم
+// المصادر التعليمية (مكتبة موارد ثابتة، بدون قاعدة بيانات)
+const LEARN_ARTICLES=[
+ {icon:"✍️",title:"إزاي تكتب فكرة تقنع الناس",body:"ابدأ بالمشكلة قبل الحل، وضّح مين المتضرر منها ولماذا الحل الحالي غير كافٍ. اكتب وصفك في جملتين تجيبان على: مين، مشكلة إيه، وليه دلوقتي. استخدم أرقام أو أمثلة حقيقية بدل الكلام العام، وخلّي عنوان الفكرة يوضح النتيجة مش بس الأداة."},
+ {icon:"🛠️",title:"إزاي تبني MVP بأقل إمكانيات",body:"اختر أصغر نسخة تحل جزء واحد حقيقي من المشكلة، ولو محتاج تعمله يدويًا الأول (Concierge MVP) قبل ما تكتب كود. حدد مقياس نجاح واحد قبل البدء، وحاول تطلقه خلال أسبوعين لا أكتر."},
+ {icon:"👥",title:"إزاي تكوّن فريق مناسب لفكرتك",body:"ابحث عن مهارات تكمّل نقاط ضعفك مش تكرر نفس مهاراتك. كن واضح من البداية عن الوقت المطلوب والتوقعات، واتفقوا على طريقة تواصل ثابتة (اجتماع أسبوعي مثلاً) من أول يوم."},
+ {icon:"🎯",title:"إزاي تحدد السوق المستهدف بدقة",body:"تجنب وصف عام زي 'كل الناس'. حدد شريحة أولى ضيقة تقدر توصلها فعليًا، وجرّب تتكلم مع 5-10 أشخاص منها قبل ما تبدأ التطوير عشان تتأكد إن المشكلة حقيقية."},
+ {icon:"🤝",title:"إزاي تعرض فكرتك على مستثمر أو شريك",body:"استخدم وضع 'العرض التقديمي' في صفحة الفكرة لعرض نسخة نظيفة بدون واجهة المنصة. ركّز على المشكلة، الحل، وليه أنت الشخص المناسب لتنفيذه، في أقل من دقيقتين كلام."}
+];
+
+const $=id=>document.getElementById(id);
+function toast(msg,type){
+ const icons={success:"✅",error:"⚠️",info:"💬"};
+ const colors={success:"#22c55e",error:"#f43f5e",info:"#8b5cf6"};
+ $("toast").innerHTML=`${icons[type]||"💬"} <span>${msg}</span>`;
+ $("toast").style.borderInlineStart=`3px solid ${colors[type]||"#8b5cf6"}`;
+ $("toast").classList.add("show");
+ clearTimeout(window.__toastT);
+ window.__toastT=setTimeout(()=>$("toast").classList.remove("show"),3000);
+}
+function skeletons(n){return Array.from({length:n}).map(()=>'<div class="skeleton"></div>').join("")}
+let dataReady=false;
+window.toggleTheme=()=>{
+ const cur=document.documentElement.getAttribute("data-theme")==="light"?"dark":"light";
+ document.documentElement.setAttribute("data-theme",cur);
+ localStorage.setItem("theme",cur);
+ $("themeToggleBtn").textContent=cur==="light"?"☀️":"🌙";
+};
+(()=>{const saved=localStorage.getItem("theme");if(saved==="light"){document.documentElement.setAttribute("data-theme","light");}})();
+if(localStorage.getItem("theme")==="light")$("themeToggleBtn").textContent="☀️";
+function openModal(id){$(id).classList.add("open")}
+function closeModal(id){$(id).classList.remove("open");if(id==="detailModal"&&location.hash.startsWith("#idea-"))history.pushState(null,"",location.pathname);if(id==="ideaModal")resetIdeaForm();if(id==="dmModal"&&dmUnsub){dmUnsub();dmUnsub=null;dmTargetUid=null}}
+window.closeModal=closeModal;
+
+window.showPage=(id)=>{
+  if((id==="profile"||id==="notifications"||id==="admin")&&!currentUser){pendingAction="page:"+id;toast("سجّل الدخول أولاً","info");openAuthMode("login");return}
+  if(id==="admin"&&!isAdmin()){toast("هذه الصفحة للأدمن فقط");return}
+  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+  $(id)?.classList.add("active"); window.scrollTo({top:0,behavior:"smooth"});
+  document.querySelectorAll(".mobile-nav [data-nav]").forEach(b=>b.classList.toggle("active",b.dataset.nav===id));
+  if(id==="ideas")renderIdeas(); if(id==="projects")renderProjects(); if(id==="profile")renderProfile();
+  if(id==="notifications")renderNotifications(); if(id==="admin")renderAdmin("overview");
+  if(id==="leaderboard")renderLeaderboard();
+  if(id==="stories")renderStories(); if(id==="museum")renderMuseum(); if(id==="learn")renderLearn();
+};
+window.openAuth=()=>openModal("authModal");
+window.openAuthMode=(mode)=>{
+ signup=(mode==="signup");
+ $("authTitle").textContent=signup?"إنشاء حساب":"تسجيل الدخول";
+ $("authBtn").textContent=signup?"إنشاء الحساب":"دخول";
+ $("authSwitch").textContent=signup?"لديك حساب بالفعل؟":"ليس لديك حساب؟";
+ document.querySelector("#authSwitch + a").textContent=signup?"تسجيل الدخول":"تسجيل حساب جديد";
+ openModal("authModal");
+};
+window.openSupport=()=>openModal("supportModal");
+
+function isAdmin(){return currentUser && !!adminMap[currentUser.uid]}
+function renderHeaderAuth(){
+ const user=currentUser;
+ const unread=user?Object.values(notifMap).filter(n=>!n.read).length:0;
+ $("desktopAuth").innerHTML=user?
+ `<button class="btn ghost sm iconbtn" style="position:relative" onclick="showPage('notifications')" aria-label="الإشعارات">🔔${unread?`<span class="notifbadge">${unread}</span>`:""}</button>
+ <button class="accountbtn" onclick="openAccountSheet()" aria-label="حسابي وإعدادات الحساب">
+   <img class="avatar" src="${safeAttr(user.photoURL||avatar(user.uid))}">
+   <span class="accountbtn-name">${escapeHtml(user.displayName||"حسابي")}${isAdmin()?" 👑":""}</span>
+ </button>`
+ :`<div style="display:flex;gap:8px"><button class="btn" onclick="openAuthMode('signup')">انضم الآن</button><button class="btn ghost sm" onclick="openAuthMode('login')">تسجيل الدخول</button></div>`;
+ $("notifDotMobile")?.classList.toggle("hidden",!unread);
+ if(user)upsertSavedAccount(user);
+}
+
+/* ---------- حساب: قائمة الحساب + تبديل الحسابات ---------- */
+function getSavedAccounts(){try{return JSON.parse(localStorage.getItem("savedAccounts")||"[]")}catch(e){return[]}}
+function setSavedAccounts(list){try{localStorage.setItem("savedAccounts",JSON.stringify(list.slice(0,6)))}catch(e){}}
+function upsertSavedAccount(user){
+ if(!user)return;
+ const list=getSavedAccounts().filter(a=>a.uid!==user.uid);
+ list.unshift({uid:user.uid,email:user.email||"",displayName:user.displayName||(user.email?user.email.split("@")[0]:"مستخدم"),photoURL:user.photoURL||avatar(user.uid)});
+ setSavedAccounts(list);
+}
+window.removeSavedAccount=(uid,ev)=>{
+ ev?.stopPropagation();
+ setSavedAccounts(getSavedAccounts().filter(a=>a.uid!==uid));
+ renderAccountSheet();
+};
+window.openAccountSheet=()=>{if(!currentUser)return;renderAccountSheet();openModal("accountModal")};
+function renderAccountSheet(){
+ const user=currentUser;
+ if(!user)return;
+ const saved=getSavedAccounts();
+ $("accountSheetContent").innerHTML=`
+ <div style="display:flex;align-items:center;gap:12px;padding:2px 0 16px">
+  <img class="avatar" style="width:52px;height:52px" src="${safeAttr(user.photoURL||avatar(user.uid))}">
+  <div style="flex:1;min-width:0">
+    <b style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(user.displayName||"مستخدم")}${isAdmin()?" 👑":""}</b>
+    <span class="muted" style="font-size:12.5px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(user.email||"")}</span>
+  </div>
+ </div>
+ <div class="accountmenu">
+   <button class="accountmenu-item" onclick="closeModal('accountModal');showPage('profile')">👤 ملفي الشخصي</button>
+   <button class="accountmenu-item" onclick="closeModal('accountModal');showPage('notifications')">🔔 الإشعارات</button>
+   ${isAdmin()?`<button class="accountmenu-item" onclick="closeModal('accountModal');showPage('admin')">👑 لوحة الإدارة</button>`:""}
+ </div>
+ <div class="section-head" style="margin-top:16px;margin-bottom:8px"><h3 style="font-size:14px">🔁 تبديل الحساب</h3></div>
+ <div class="accountlist">
+ ${saved.map(a=>`<div class="accountrow ${a.uid===user.uid?"is-current":""}" ${a.uid===user.uid?"":`onclick="switchAccount('${a.uid}','${safeAttr(a.email)}')"`}>
+   <img class="avatar" src="${safeAttr(a.photoURL||avatar(a.uid))}">
+   <div style="flex:1;min-width:0"><b style="display:block;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(a.displayName)}</b><span class="muted" style="font-size:11.5px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(a.email)}</span></div>
+   ${a.uid===user.uid?'<span class="pill" style="font-size:10.5px">الحالي</span>':`<button class="btn ghost sm" onclick="removeSavedAccount('${a.uid}',event)" aria-label="إزالة من القائمة" title="إزالة من القائمة">✕</button>`}
+ </div>`).join("")}
+ </div>
+ <button class="btn secondary" style="width:100%;margin-top:12px" onclick="addAnotherAccount()">➕ إضافة حساب آخر</button>
+ <button class="btn danger" style="width:100%;margin-top:10px" onclick="logout()">🚪 تسجيل الخروج</button>`;
+}
+window.switchAccount=async(uid,email)=>{
+ closeModal("accountModal");
+ await signOut(auth);
+ openAuthMode("login");
+ setTimeout(()=>{if($("authEmail")){$("authEmail").value=email;$("authPassword")?.focus()}},60);
+ toast("أدخل كلمة المرور للتبديل لهذا الحساب","info");
+};
+window.addAnotherAccount=async()=>{
+ closeModal("accountModal");
+ await signOut(auth);
+ openAuthMode("login");
+};
+window.requireAuth=(action)=>{
+  if(!currentUser){pendingAction=action;toast("سجّل الدخول أولاً","info");openAuthMode("login");return}
+  if(action==="idea"){resetIdeaForm();openModal("ideaModal")}
+};
+
+window.toggleAuth=()=>{
+ signup=!signup;
+ $("authTitle").textContent=signup?"إنشاء حساب":"تسجيل الدخول";
+ $("authBtn").textContent=signup?"إنشاء الحساب":"دخول";
+ $("authSwitch").textContent=signup?"لديك حساب بالفعل؟":"ليس لديك حساب؟";
+ document.querySelector("#authSwitch + a").textContent=signup?"تسجيل الدخول":"تسجيل حساب جديد";
+};
+window.emailAuth=async()=>{
+ const email=$("authEmail").value.trim(), password=$("authPassword").value;
+ if(!email||!email.includes("@")){toast("أدخل بريدًا إلكترونيًا صحيحًا");return}
+ if(password.length<6){toast("كلمة المرور 6 أحرف على الأقل");return}
+ $("authBtn").disabled=true;
+ try{
+  if(signup){
+   const c=await createUserWithEmailAndPassword(auth,email,password);
+   await updateProfile(c.user,{displayName:email.split("@")[0]});
+   const refUid=getReferrerUid();
+   await set(ref(db,"users/"+c.user.uid),{uid:c.user.uid,email,displayName:email.split("@")[0],createdAt:Date.now(),...(refUid?{referredBy:refUid}:{})});
+   if(refUid&&refUid!==c.user.uid)set(ref(db,`referrals/${refUid}/${c.user.uid}`),Date.now());
+   toast("🎉 تم إنشاء الحساب بنجاح","success");
+   setTimeout(openOnboarding,400);
+  }else{
+   await signInWithEmailAndPassword(auth,email,password);
+   toast("👋 مرحبًا بعودتك","success");
+  }
+  $("authEmail").value="";$("authPassword").value="";
+  closeModal("authModal");
+ }catch(e){toast("خطأ: "+friendlyError(e),"error")}
+ finally{$("authBtn").disabled=false}
+};
+window.googleAuth=async()=>{
+ try{
+  const cred=await signInWithPopup(auth,provider);
+  closeModal("authModal");toast("👋 تم تسجيل الدخول","success");
+  const snap=await get(ref(db,"users/"+cred.user.uid));
+  const data=snap.val();
+  if(!data){
+   const refUid=getReferrerUid();
+   await set(ref(db,"users/"+cred.user.uid),{uid:cred.user.uid,email:cred.user.email,displayName:cred.user.displayName||cred.user.email.split("@")[0],createdAt:Date.now(),...(refUid?{referredBy:refUid}:{})});
+   if(refUid&&refUid!==cred.user.uid)set(ref(db,`referrals/${refUid}/${cred.user.uid}`),Date.now());
+  }
+  if(!data?.interests)setTimeout(openOnboarding,400);
+ }catch(e){toast("فشل Google: "+friendlyError(e),"error")}
+};
+window.resetPassword=async()=>{
+ const email=$("authEmail").value.trim();
+ if(!email||!email.includes("@")){toast("اكتب بريدك الإلكتروني أولًا فوق");return}
+ try{await sendPasswordResetEmail(auth,email);toast("📩 تم إرسال رابط استعادة كلمة المرور إلى بريدك","success")}
+ catch(e){toast("خطأ: "+friendlyError(e),"error")}
+};
+window.logout=async()=>{closeModal("accountModal");await signOut(auth);toast("تم تسجيل الخروج","info");showPage("home")};
+function friendlyError(e){
+ const m=e?.code||"";
+ if(m.includes("auth/invalid-credential")||m.includes("auth/wrong-password")||m.includes("auth/user-not-found"))return"بيانات الدخول غير صحيحة";
+ if(m.includes("auth/email-already-in-use"))return"البريد مستخدم بالفعل، جرّب تسجيل الدخول";
+ if(m.includes("auth/weak-password"))return"كلمة المرور ضعيفة";
+ if(m.includes("auth/too-many-requests"))return"محاولات كثيرة، حاول لاحقًا";
+ if(m.includes("auth/popup-closed-by-user"))return"تم إغلاق نافذة Google قبل إتمام الدخول";
+ return e?.message||"حدث خطأ";
+}
+
+onAuthStateChanged(auth,user=>{
+ currentUser=user;
+ renderHeaderAuth();
+ renderProfile(); renderNotifications();
+ if(user){
+  onValue(ref(db,`notifications/${user.uid}`),snap=>{notifMap=snap.val()||{};renderHeaderAuth();renderNotifications()});
+  onValue(ref(db,`saves/${user.uid}`),snap=>{savesMap=snap.val()||{};renderIdeas();renderHome();renderProjects();renderProfile()});
+  onValue(ref(db,`follows/${user.uid}`),snap=>{followsMap=snap.val()||{};if(viewingProfileUid)renderPublicProfile(viewingProfileUid)});
+  onValue(ref(db,`blocks/${user.uid}`),snap=>{blocksMap=snap.val()||{};if(viewingProfileUid)renderPublicProfile(viewingProfileUid)});
+  onValue(ref(db,`referrals/${user.uid}`),snap=>{referralsMap=snap.val()||{};renderProfile()});
+ }else{notifMap={};savesMap={};followsMap={};blocksMap={};referralsMap={};renderHeaderAuth()}
+ if(user&&authReady&&pendingAction){
+  if(pendingAction==="idea")openModal("ideaModal");
+  else if(pendingAction.startsWith("page:"))showPage(pendingAction.split(":")[1]);
+  pendingAction=null;
+ }
+ authReady=true;
+ hideAppLoader();
+});
+function hideAppLoader(){$("appLoader")?.classList.add("hide")}
+setTimeout(hideAppLoader,4000); // شبكة بطيئة أو مشكلة اتصال: منعرّض المستخدم لسبينر بلا نهاية
+onValue(ref(db,"admins"),snap=>{adminMap=snap.val()||{};renderHeaderAuth();renderProfile();renderAdmin("overview")});
+onValue(ref(db,"verified"),snap=>{verifiedMap=snap.val()||{};renderProfile();if(viewingProfileUid)renderPublicProfile(viewingProfileUid)});
+function verifiedBadge(uid){return verifiedMap[uid]?' <span class="verified-badge" title="حساب موثّق">✔️</span>':""}
+window.toggleVerified=async(uid)=>{
+ if(!isAdmin())return;
+ if(verifiedMap[uid]){await remove(ref(db,"verified/"+uid));verifiedMap={...verifiedMap};delete verifiedMap[uid]}
+ else{await set(ref(db,"verified/"+uid),true);verifiedMap={...verifiedMap,[uid]:true}}
+ renderAdmin("users");
+};
+onValue(ref(db,"config"),snap=>{const c=snap.val()||{};if(c.supportUrl)SUPPORT_URL=c.supportUrl});
+function notify(toUid,type,ideaId,ideaTitle){
+ if(!toUid||toUid===currentUser?.uid)return;
+ const msgs={like:"أعجب بفكرتك",comment:"علّق على فكرتك",join:"مهتم بالانضمام لفكرتك",update:"أضاف تحديثًا جديدًا",follow:"بدأ متابعتك",message:"أرسل لك رسالة",accepted:"قبِلك في فريق مشروعه"};
+ push(ref(db,`notifications/${toUid}`),{type,ideaId,ideaTitle,fromName:currentUser.displayName||currentUser.email.split("@")[0],text:msgs[type]||"",createdAt:Date.now(),read:false});
+}
+function renderTeamSection(x,interested,isOwner){
+ const accepted=interested.filter(([,v])=>v.status==="accepted");
+ const pending=interested.filter(([,v])=>!v.status||v.status==="pending");
+ const rejected=interested.filter(([,v])=>v.status==="rejected");
+ let html="";
+ if(accepted.length){
+  html+=`<div class="divider"></div><h3>👥 الفريق الحالي (${accepted.length})</h3><div style="margin-top:10px">${accepted.map(([uid,v])=>`
+   <div class="comment"><div class="commenthead"><img class="avatar" src="${safeAttr(v.avatar||avatar(v.name))}">${escapeHtml(v.name)}${v.role?` <span class="tag" style="margin-inline-start:6px">${escapeHtml(v.role)}</span>`:""}${isOwner?`<button class="btn ghost sm" style="margin-inline-start:auto;padding:3px 8px" onclick="openDM('${uid}','${escapeHtml(v.name).replace(/'/g,"")}')">💬 رسالة</button>`:""}</div></div>`).join("")}</div>`;
+ }
+ if(isOwner){
+  html+=`<div class="divider"></div><h3>🙋 طلبات الانضمام (${pending.length})</h3>
+  <div style="margin-top:10px">${pending.length?pending.map(([uid,v])=>`<div class="comment"><div class="commenthead"><img class="avatar" src="${safeAttr(v.avatar||avatar(v.name))}">${escapeHtml(v.name)}${v.level?` <span class="tag" style="margin-inline-start:4px">${escapeHtml(v.level)}</span>`:""} <span class="muted" style="font-size:11px">${fmt(v.createdAt)}</span></div><p>${escapeHtml(v.message||"")}</p>
+   <div class="actions" style="margin-top:8px"><button class="btn success sm" onclick="acceptRequest('${x.id}','${uid}')">✅ قبول</button><button class="btn ghost sm" onclick="rejectRequest('${x.id}','${uid}')">✖️ رفض</button><button class="btn ghost sm" onclick="openDM('${uid}','${escapeHtml(v.name).replace(/'/g,"")}')">💬 رسالة</button></div></div>`).join(""):`<p class="muted">لسه محدش أبدى اهتمامه، شارك الفكرة عشان توصلك شراكات 🚀</p>`}</div>
+  ${rejected.length?`<p class="muted" style="font-size:12px;margin-top:10px">${rejected.length} طلب مرفوض سابقًا</p>`:""}`;
+ }
+ return html;
+}
+window.acceptRequest=async(ideaId,uid)=>{
+ const idea=allIdeas.find(x=>x.id===ideaId); if(!idea||!currentUser||idea.authorId!==currentUser.uid)return;
+ const role=prompt("حدد دور هذا العضو في الفريق (اختياري):","")||"";
+ await update(ref(db,`ideas/${ideaId}/interested/${uid}`),{status:"accepted",role:role.trim()});
+ notify(uid,"accepted",ideaId,idea.title);
+ toast("✅ تم قبول العضو في الفريق","success"); openIdea(ideaId,true,true);
+};
+window.rejectRequest=async(ideaId,uid)=>{
+ const idea=allIdeas.find(x=>x.id===ideaId); if(!idea||!currentUser||idea.authorId!==currentUser.uid)return;
+ await update(ref(db,`ideas/${ideaId}/interested/${uid}`),{status:"rejected"});
+ toast("تم رفض الطلب","info"); openIdea(ideaId,true,true);
+};
+function dmThreadId(a,b){return [a,b].sort().join("_")}
+function getReferrerUid(){
+ try{const m=new URLSearchParams(location.search).get("ref");return m&&m.length>10?m:(sessionStorage.getItem("refUid")||null)}catch(e){return null}
+}
+(()=>{try{const m=new URLSearchParams(location.search).get("ref");if(m)sessionStorage.setItem("refUid",m)}catch(e){}})();
+let referralsMap={};
+window.copyReferralLink=async()=>{
+ if(!currentUser)return;
+ const url=location.origin+location.pathname+"?ref="+currentUser.uid;
+ try{await navigator.clipboard.writeText(url);toast("🔗 تم نسخ رابط الدعوة الخاص بك","success")}
+ catch(e){prompt("انسخ رابط الدعوة:",url)}
+};
+window.openOnboarding=()=>{
+ $("onboardCats").innerHTML=CATEGORIES.map((c,i)=>`<label class="formgroup full" style="display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:12px 14px;cursor:pointer;margin-bottom:0">
+  <input type="checkbox" value="${escapeHtml(c.name)}" style="width:auto" id="onboardCat${i}"><span>${c.icon} ${escapeHtml(c.name)}</span></label>`).join("");
+ openModal("onboardModal");
+};
+window.saveOnboarding=async()=>{
+ if(!currentUser)return;
+ const picked=CATEGORIES.filter((c,i)=>$("onboardCat"+i)?.checked).map(c=>c.name);
+ if(picked.length<1){toast("اختر مجالًا واحدًا على الأقل");return}
+ const interests={}; picked.forEach(name=>interests[name]=true);
+ await update(ref(db,"users/"+currentUser.uid),{uid:currentUser.uid,interests});
+ closeModal("onboardModal"); toast("✨ تم حفظ اهتماماتك","success");
+};
+function userInterests(){
+ const me=allUsers.find(u=>u.uid===currentUser?.uid);
+ return me?.interests||{};
+}
+window.toggleFollow=async(uid)=>{
+ if(!currentUser){openAuth();return}
+ if(uid===currentUser.uid)return;
+ const isFollowing=!!followsMap[uid];
+ if(isFollowing){
+  await remove(ref(db,`follows/${currentUser.uid}/${uid}`));
+  await remove(ref(db,`followers/${uid}/${currentUser.uid}`));
+ }else{
+  await set(ref(db,`follows/${currentUser.uid}/${uid}`),true);
+  await set(ref(db,`followers/${uid}/${currentUser.uid}`),true);
+  notify(uid,"follow");
+ }
+};
+function badgesFor(mine,totalLikes){
+ const b=[];
+ if(mine.length>=1)b.push("🌱 أول فكرة");
+ if(mine.length>=5)b.push("💡 5 أفكار");
+ if(mine.length>=15)b.push("🧠 15 فكرة");
+ if(totalLikes>=10)b.push("🔥 10 إعجابات");
+ if(totalLikes>=50)b.push("⭐ 50 إعجابًا");
+ if(mine.some(x=>x.status==="launched"))b.push("🚀 مشروع مُطلق");
+ return b;
+}
+window.openPublicProfile=async(uid)=>{
+ if(!uid)return;
+ if(currentUser&&uid===currentUser.uid){showPage("profile");return}
+ viewingProfileUid=uid;
+ document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+ $("publicProfile").classList.add("active"); window.scrollTo({top:0,behavior:"smooth"});
+ history.pushState(null,"","#user-"+uid);
+ renderPublicProfile(uid);
+};
+window.toggleBlock=async(uid)=>{
+ if(!currentUser||uid===currentUser.uid)return;
+ const isBlocked=!!blocksMap[uid];
+ if(isBlocked)await remove(ref(db,`blocks/${currentUser.uid}/${uid}`));
+ else{await set(ref(db,`blocks/${currentUser.uid}/${uid}`),true);toast("🚫 تم حظر هذا المستخدم، لن تقدر تتواصل معه","info")}
+ renderPublicProfile(uid);
+};
+function renderPublicProfile(uid){
+ const info=allUsers.find(u=>u.uid===uid)||allIdeas.find(x=>x.authorId===uid)&&{uid,displayName:allIdeas.find(x=>x.authorId===uid).authorName,photoURL:allIdeas.find(x=>x.authorId===uid).authorAvatar};
+ const mine=allIdeas.filter(x=>x.authorId===uid&&x.status!=="draft");
+ const totalLikes=mine.reduce((n,x)=>n+likesCount(x),0);
+ const followerCount=Object.keys(followersCache[uid]||{}).length;
+ const isFollowing=!!followsMap[uid];
+ const isBlocked=!!blocksMap[uid];
+ $("publicProfileContent").innerHTML=`<div class="profilebox"><img class="bigavatar" src="${safeAttr(info?.photoURL||avatar(uid))}">
+ <div><h1>${escapeHtml(info?.displayName||"مستخدم")}${verifiedBadge(uid)}</h1>
+ <div class="pills"><span class="pill">💡 ${mine.length} أفكار</span><span class="pill">❤️ ${totalLikes} إعجاب</span><span class="pill">👥 ${followerCount} متابع</span>${badgesFor(mine,totalLikes).map(b=>`<span class="pill badge-pill">${b}</span>`).join("")}</div>
+ <div class="actions" style="justify-content:flex-start;margin-top:14px">
+ ${currentUser?`<button class="btn followbtn ${isFollowing?"following":""}" onclick="toggleFollow('${uid}')">${isFollowing?"إلغاء المتابعة":"➕ متابعة"}</button>${!isBlocked?`<button class="btn secondary" onclick="openDM('${uid}','${escapeHtml(info?.displayName||"مستخدم").replace(/'/g,"")}')">💬 مراسلة</button>`:""}<button class="btn ghost sm" onclick="toggleBlock('${uid}')">${isBlocked?"✅ إلغاء الحظر":"🚫 حظر"}</button>`:""}
+ </div></div></div>
+ <div class="section-head" style="margin-top:25px"><h2>أفكاره</h2></div><div class="grid">${mine.length?mine.map(card).join(""):`<div class="empty">لا توجد أفكار منشورة بعد.</div>`}</div>`;
+ onValue(ref(db,`followers/${uid}`),snap=>{followersCache[uid]=snap.val()||{};if(viewingProfileUid===uid)renderPublicProfile(uid)},{onlyOnce:true});
+}
+let followersCache={};
+window.openDM=(uid,name)=>{
+ if(!currentUser){openAuth();return}
+ if(blocksMap[uid]){toast("لقد حظرت هذا المستخدم، ألغِ الحظر أولاً للمراسلة","info");return}
+ dmTargetUid=uid; $("dmTitle").textContent="💬 "+name;
+ openModal("dmModal");
+ if(dmUnsub)dmUnsub();
+ dmUnsub=onValue(ref(db,`dm/${dmThreadId(currentUser.uid,uid)}`),snap=>{
+  const d=snap.val()||{}; const arr=Object.values(d).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+  $("dmList").innerHTML=arr.length?arr.map(m=>`<div class="dmbubble ${m.from===currentUser.uid?"me":"them"}">${escapeHtml(m.text)}</div>`).join(""):`<p class="muted" style="text-align:center;padding:20px 0">ابدأ المحادثة الآن 👋</p>`;
+  $("dmList").scrollTop=$("dmList").scrollHeight;
+ });
+};
+window.sendDM=async()=>{
+ const text=$("dmText").value.trim(); if(!text||!currentUser||!dmTargetUid)return;
+ await push(ref(db,`dm/${dmThreadId(currentUser.uid,dmTargetUid)}`),{from:currentUser.uid,text,createdAt:Date.now()});
+ notify(dmTargetUid,"message");
+ $("dmText").value="";
+};
+
+function avatar(seed){return "https://api.dicebear.com/9.x/initials/svg?seed="+encodeURIComponent(seed)}
+function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function safeAttr(v){return escapeHtml(v).replace(/javascript:/gi,"")}
+function fmt(ts){return new Date(ts||Date.now()).toLocaleDateString("ar-EG",{year:"numeric",month:"short",day:"numeric"})}
+function likesCount(x){return Object.keys(x.likes||{}).length}
+function isStale(x){
+ if(x.status!=="team"&&x.status!=="progress")return false;
+ return (Date.now()-(x.lastUpdateAt||x.createdAt||0))>30*24*60*60*1000;
+}
+
+let hashRouteChecked=false;
+onValue(ref(db,"ideas"),snap=>{
+ const d=snap.val()||{}; allIdeas=Object.entries(d).map(([id,v])=>({id,...v})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+ renderIdeas();renderHome();renderProjects();renderStats();renderCategories();renderHeroAvatars();
+ if(!hashRouteChecked&&allIdeas.length){hashRouteChecked=true;checkHashRoute()}
+});
+onValue(ref(db,"users"),snap=>{allUsers=Object.values(snap.val()||{});renderStats();renderAdmin("overview");renderHeroAvatars()});
+onValue(ref(db,"reports"),snap=>{allReports=Object.entries(snap.val()||{}).map(([id,v])=>({id,...v}));renderAdmin("reports")});
+onValue(ref(db,"comments"),snap=>{
+ const d=snap.val()||{}; commentCounts={};
+ Object.entries(d).forEach(([ideaId,c])=>{commentCounts[ideaId]=Object.keys(c||{}).length});
+ renderHome();renderIdeas();renderProjects();
+});
+
+function renderStats(){
+ $("statIdeas").textContent=allIdeas.length;
+ $("statUsers").textContent=allUsers.length;
+ $("statProjects").textContent=allIdeas.filter(x=>x.status==="launched").length;
+ $("statLikes").textContent=allIdeas.reduce((n,x)=>n+likesCount(x),0);
+ $("heroUserCount").textContent="+"+allUsers.length;
+}
+function renderHeroAvatars(){
+ const pool=(allUsers.length?allUsers:allIdeas.map(x=>({uid:x.authorId,photoURL:x.authorAvatar,displayName:x.authorName}))).slice(0,4);
+ $("heroAvatars").innerHTML=pool.length?pool.map(u=>`<img src="${safeAttr(u.photoURL||avatar(u.uid||u.displayName||"مبتكر"))}">`).join(""):`<img src="${avatar("مبتكر")}">`;
+}
+function renderCategories(){
+ $("catRail").innerHTML=CATEGORIES.map(c=>{
+  const count=allIdeas.filter(x=>x.category===c.name&&x.status!=="draft").length;
+  return `<div class="catcard" onclick="showPage('ideas');document.getElementById('category').value='${escapeHtml(c.name)}';renderIdeas()">
+   <div class="ico" style="background:${c.bg}">${c.icon}</div>
+   <h4>${escapeHtml(c.name)}</h4><span>${count} مشروع</span>
+  </div>`;
+ }).join("");
+}
+function card(idea){
+ const likes=likesCount(idea);
+ const liked=currentUser&&idea.likes?.[currentUser.uid];
+ const saved=currentUser&&savesMap[idea.id];
+ const comments=commentCounts[idea.id]||0;
+ const trending=likes>=5;
+ const tags=(idea.skills||idea.category||"").split(",").map(x=>x.trim()).filter(Boolean).slice(0,3);
+ return `<article class="card">
+ <div style="position:relative">
+ <img class="cardimg" src="${safeAttr(idea.imageUrl||DEFAULT_IMAGE)}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${DEFAULT_IMAGE}'" onclick="openIdea('${idea.id}')" style="cursor:pointer">
+ ${trending?'<span style="position:absolute;top:9px;right:9px;background:var(--grad-cta);color:#fff;font-size:11px;font-weight:800;padding:4px 9px;border-radius:8px">🔥 رائجة</span>':""}
+ ${idea.status==="draft"?'<span style="position:absolute;top:9px;left:9px;background:rgba(120,113,108,.85);color:#fff;font-size:11px;font-weight:800;padding:4px 9px;border-radius:8px">📝 مسودة</span>':(idea.status&&idea.status!=="idea"?`<span style="position:absolute;top:9px;left:9px;background:${idea.status==="launched"?"rgba(34,197,94,.85)":"rgba(139,92,246,.85)"};color:#fff;font-size:11px;font-weight:800;padding:4px 9px;border-radius:8px">${stageInfo(idea.status).label}</span>`:"")}
+ ${idea.teamFull?'<span style="position:absolute;bottom:9px;right:9px;background:rgba(244,63,94,.85);color:#fff;font-size:11px;font-weight:800;padding:4px 9px;border-radius:8px">🔒 الفريق مكتمل</span>':""}
+ ${isStale(idea)?'<span class="stale-tag" style="position:absolute;bottom:9px;left:9px;color:#fff;font-size:11px;font-weight:800;padding:4px 9px;border-radius:8px">🕒 محتاجة تحديث</span>':""}
+ </div>
+ <div class="cardbody">
+ <div class="author authorlink" onclick="openPublicProfile('${idea.authorId}')"><img class="avatar" src="${safeAttr(idea.authorAvatar||avatar(idea.authorName||"user"))}" onerror="this.onerror=null;this.src='${avatar(idea.authorName||"user")}'"><span>${escapeHtml(idea.authorName||"مبتكر")}${verifiedBadge(idea.authorId)} · ${fmt(idea.createdAt)}</span></div>
+ <h3 onclick="openIdea('${idea.id}')" style="cursor:pointer">${escapeHtml(idea.title)}</h3>
+ <p class="desc">${escapeHtml(idea.desc)}</p>
+ <div class="tags">${tags.map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("")}</div>
+ <div class="cardfoot">
+ <span class="mini"><span>💬 ${comments}</span><span>❤️ ${likes}</span><span>👁️ ${idea.views||0}</span></span>
+ <div style="display:flex;gap:6px"><button class="btn secondary sm iconbtn" onclick="toggleSave('${idea.id}')" aria-label="حفظ">${saved?"🔖":"📑"}</button><button class="btn secondary sm iconbtn" onclick="toggleLike('${idea.id}',this)" aria-label="إعجاب">${liked?"💖":"🤍"}</button><button class="btn sm" onclick="openIdea('${idea.id}')">فتح</button></div>
+ </div></div></article>`;
+}
+window.setFeedTab=(tab,btn)=>{
+ feedTab=tab; document.querySelectorAll(".feedtabs button").forEach(b=>b.classList.remove("active")); btn.classList.add("active"); renderHome();
+};
+function renderHome(){
+ let list=allIdeas.filter(x=>x.status!=="draft");
+ if(feedTab==="popular")list.sort((a,b)=>likesCount(b)-likesCount(a));
+ else if(feedTab==="ideas")list=list.filter(x=>x.status!=="launched");
+ else if(feedTab==="projects")list=list.filter(x=>x.status==="launched");
+ else if(feedTab==="foryou"){
+  if(!currentUser){$("homeIdeas").innerHTML=`<div class="empty">سجّل الدخول واختر اهتماماتك عشان نرشحلك أفكارًا تناسبك ✨</div>`;return}
+  const interests=userInterests();
+  if(!Object.keys(interests).length){$("homeIdeas").innerHTML=`<div class="empty">لسه ما اخترتش اهتماماتك<br><button class="btn sm" style="margin-top:10px" onclick="openOnboarding()">✨ اختر اهتماماتك الآن</button></div>`;return}
+  list=list.filter(x=>interests[x.category]);
+ }
+ $("homeIdeas").innerHTML=list.length?list.slice(0,8).map(card).join(""):`<div class="empty">${feedTab==="foryou"?"لسه مفيش أفكار في المجالات اللي اخترتها، جرّب تصفح الأحدث 🚀":"كن أول من ينشر فكرة 🚀"}</div>`;
+}
+window.onSearchInput=()=>{clearTimeout(searchDebounce);searchDebounce=setTimeout(()=>{ideasPage=1;renderIdeas()},300)};
+window.clearAdvFilters=()=>{
+ $("filterStage").value="all";$("filterInterested").value="0";$("filterFrom").value="";$("filterTo").value="";
+ ideasPage=1;renderIdeas();
+};
+window.renderIdeas=()=>{
+ const q=($("search")?.value||"").toLowerCase().trim(),cat=$("category")?.value||"all",sortBy=$("sortBy")?.value||"new";
+ const stageF=$("filterStage")?.value||"all",minInterested=Number($("filterInterested")?.value||0);
+ const fromV=$("filterFrom")?.value,toV=$("filterTo")?.value;
+ const fromTs=fromV?new Date(fromV).getTime():null, toTs=toV?new Date(toV).getTime()+86399999:null;
+ let list=allIdeas.filter(x=>{
+  if(x.status==="draft")return false;
+  const text=[x.title,x.desc,x.category,x.skills,x.authorName].join(" ").toLowerCase();
+  if(q&&!text.includes(q))return false;
+  if(cat!=="all"&&x.category!==cat)return false;
+  if(stageF!=="all"&&(x.status||"idea")!==stageF)return false;
+  if(minInterested&&Object.keys(x.interested||{}).length<minInterested)return false;
+  if(fromTs&&(x.createdAt||0)<fromTs)return false;
+  if(toTs&&(x.createdAt||0)>toTs)return false;
+  return true;
+ });
+ if(sortBy==="likes")list=[...list].sort((a,b)=>likesCount(b)-likesCount(a));
+ else if(sortBy==="comments")list=[...list].sort((a,b)=>(commentCounts[b.id]||0)-(commentCounts[a.id]||0));
+ const visible=list.slice(0,ideasPage*PAGE_SIZE);
+ $("ideasGrid").innerHTML=visible.length?visible.map(card).join(""):`<div class="empty">لا توجد نتائج مطابقة. جرّب كلمات بحث مختلفة 🔍</div>`;
+ $("loadMoreBtn").classList.toggle("hidden",visible.length>=list.length);
+};
+window.toggleLike=async(id,btn)=>{
+ if(!currentUser){openAuth();return}
+ const idea=allIdeas.find(x=>x.id===id); if(!idea)return;
+ const path=ref(db,`ideas/${id}/likes/${currentUser.uid}`);
+ const el=btn instanceof HTMLElement?btn:event?.currentTarget;
+ if(idea.likes?.[currentUser.uid])await remove(path);
+ else{await set(path,true);notify(idea.authorId,"like",id,idea.title);if(el){el.classList.remove("liked-pop");void el.offsetWidth;el.classList.add("liked-pop")}}
+};
+window.toggleSave=async id=>{
+ if(!currentUser){openAuth();return}
+ const path=ref(db,`saves/${currentUser.uid}/${id}`);
+ if(savesMap[id])await remove(path);else await set(path,true);
+};
+window.openIdea=(id,skipHash,refresh)=>{
+ selectedIdeaId=id; const x=allIdeas.find(i=>i.id===id);if(!x)return;
+ const isOwner=currentUser&&currentUser.uid===x.authorId;
+ if(x.status==="draft"&&!isOwner){toast("هذه الفكرة لسه مسودة ومش منشورة","info");return}
+ const likes=likesCount(x),saved=currentUser&&savesMap[id];
+ const interested=Object.entries(x.interested||{});
+ if(!refresh)update(ref(db,"ideas/"+id),{views:(x.views||0)+1});
+ if(!skipHash)history.pushState(null,"","#idea-"+id);
+ $("detailContent").innerHTML=`<button class="close" style="float:left" onclick="closeModal('detailModal')">×</button>
+ <img src="${safeAttr(x.imageUrl||DEFAULT_IMAGE)}" onerror="this.onerror=null;this.src='${DEFAULT_IMAGE}'"><div class="detailbox">
+ <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+ <div class="author authorlink" onclick="openPublicProfile('${x.authorId}')"><img class="avatar" src="${safeAttr(x.authorAvatar||avatar(x.authorName))}" onerror="this.onerror=null;this.src='${avatar(x.authorName)}'"><span>${escapeHtml(x.authorName)} · ${fmt(x.createdAt)}</span></div>
+ <span class="mini">👁️ ${(x.views||0)+1} مشاهدة</span>
+ </div>
+ <h1>${escapeHtml(x.title)}</h1>
+ <div class="tags"><span class="tag">${escapeHtml(x.category)}</span>${(x.skills||"").split(",").filter(Boolean).map(s=>`<span class="tag">${escapeHtml(s.trim())}</span>`).join("")}</div>
+ ${renderStageBar(x.status)}
+ ${renderMilestones(x,likes,interested.length,commentCounts[x.id]||0)}
+ <p class="detailtext">${escapeHtml(x.desc)}</p>
+ ${(x.problem||x.solution||x.market)?`<div class="divider"></div>${x.problem?`<h3>🧩 المشكلة</h3><p class="detailtext" style="margin-bottom:14px">${escapeHtml(x.problem)}</p>`:""}${x.solution?`<h3>💡 الحل</h3><p class="detailtext" style="margin-bottom:14px">${escapeHtml(x.solution)}</p>`:""}${x.market?`<h3>🎯 السوق المستهدف</h3><p class="detailtext">${escapeHtml(x.market)}</p>`:""}`:""}
+ <div class="actions" style="justify-content:flex-start;margin-top:15px;flex-wrap:wrap">
+ <button class="btn secondary" onclick="toggleLike('${x.id}')">${x.likes?.[currentUser?.uid]?"💖":"🤍"} ${likes}</button>
+ <button class="btn secondary" onclick="toggleSave('${x.id}')">${saved?"🔖 محفوظة":"📑 حفظ"}</button>
+ <button class="btn secondary" onclick="shareIdea('${x.id}','${escapeHtml(x.title).replace(/'/g,"")}')">🔗 مشاركة</button>
+ <button class="btn secondary iconbtn" title="مشاركة واتساب" onclick="shareWhatsApp('${x.id}','${escapeHtml(x.title).replace(/'/g,"")}')">💚</button>
+ <button class="btn secondary iconbtn" title="مشاركة تويتر" onclick="shareTwitter('${x.id}','${escapeHtml(x.title).replace(/'/g,"")}')">🐦</button>
+ ${!isOwner&&!x.teamFull?`<button class="btn" onclick="requestJoin('${x.id}')">🙋 أنا مهتم بالمشروع</button>`:""}
+ ${!isOwner&&x.teamFull?`<button class="btn secondary" disabled>🔒 الفريق مكتمل حاليًا</button>`:""}
+ ${!isOwner?`<button class="btn secondary" onclick="openDM('${x.authorId}','${escapeHtml(x.authorName).replace(/'/g,"")}')">💬 راسل صاحب الفكرة</button>`:""}
+ ${!isOwner?`<button class="btn ghost" onclick="openReport('${x.id}')">🚨 إبلاغ</button>`:""}
+ ${isOwner?`<button class="btn secondary" onclick="editIdea('${x.id}')">✏️ تعديل</button><button class="btn ${x.teamFull?"success":"secondary"}" onclick="toggleTeamFull('${x.id}')">${x.teamFull?"🔓 فتح استقبال الطلبات":"🔒 إغلاق استقبال الطلبات"}</button>${x.status!=="archived"?`<button class="btn ghost" onclick="openArchive('${x.id}')">🏛️ أرشفة (إيقاف)</button>`:""}${x.status==="launched"?`<button class="btn secondary" onclick="openStoryEditor('${x.id}')">✨ قصة النجاح</button>`:""}<button class="btn danger" onclick="deleteIdea('${x.id}')">🗑️ حذف</button>`:""}
+ <button class="btn ghost" onclick="openPresentation('${x.id}')">🖥️ وضع العرض التقديمي</button>
+ </div>
+ ${x.status==="archived"&&x.archiveReason?`<div class="divider"></div><div class="card" style="padding:14px;background:rgba(244,63,94,.07);border-color:rgba(244,63,94,.25)"><b>🏛️ توقفت هنا وليه:</b><p class="detailtext" style="margin-top:6px">${escapeHtml(x.archiveReason)}</p></div>`:""}
+ ${x.status==="launched"&&x.successStory?`<div class="divider"></div><div class="card" style="padding:14px;background:rgba(34,197,94,.07);border-color:rgba(34,197,94,.25)"><b>✨ قصة النجاح (بكلام صاحب الفكرة):</b><p class="detailtext" style="margin-top:6px">${escapeHtml(x.successStory)}</p></div>`:""}
+ ${renderTeamSection(x,interested,isOwner)}
+ ${renderKanban(x,interested,isOwner)}
+ ${renderReviewsSection(x,interested,isOwner)}
+ ${renderFaq(x,isOwner)}
+ ${renderSimilarIdeas(x)}
+ <div class="divider"></div><h3>📈 تحديثات المشروع</h3>
+ <div id="ideaUpdates" style="margin-top:10px"></div>
+ ${isOwner?`<div style="display:flex;gap:8px;margin-top:12px"><input id="updateText" placeholder="شارك تحديثًا جديدًا عن تقدّم المشروع..." onkeydown="if(event.key==='Enter')postUpdate('${x.id}')"><button class="btn secondary" onclick="postUpdate('${x.id}')">نشر</button></div>`:""}
+ <div class="divider"></div><h3>💬 التعليقات</h3><div id="comments">جارٍ التحميل...</div>
+ ${currentUser?`<div style="display:flex;gap:8px;margin-top:15px"><input id="commentText" placeholder="اكتب تعليقًا..." onkeydown="if(event.key==='Enter')addComment()"><button class="btn" onclick="addComment()">إرسال</button></div>`:`<p class="muted" style="margin-top:12px">سجّل الدخول لإضافة تعليق.</p>`}
+ </div>`;
+ openModal("detailModal");loadComments(id);loadUpdates(id);loadReviewsForIdea(id);
+};
+async function loadReviewsForIdea(ideaId){
+ const snap=await get(ref(db,`reviews/${ideaId}`)); const d=snap.val()||{};
+ Object.entries(d).forEach(([revieweeUid,reviewers])=>{
+  reviewsCache[`${ideaId}_${revieweeUid}`]=reviewers||{};
+  const myRating=(reviewers||{})[currentUser?.uid]?.rating||0;
+  const el=$("stars_"+ideaId+"_"+revieweeUid);
+  if(el)el.innerHTML=[1,2,3,4,5].map(n=>`<span class="${n<=myRating?"on":""}" onclick="rateUser('${ideaId}','${revieweeUid}',${n})">⭐</span>`).join("");
+ });
+}
+function renderStageBar(status){
+ const cur=stageIndex(status);
+ return `<div style="margin:16px 0 4px"><div style="display:flex;gap:4px">${STAGES.map((s,i)=>`<div style="flex:1;height:6px;border-radius:99px;background:${i<=cur?"var(--grad-brand)":"var(--surface3)"}"></div>`).join("")}</div>
+ <div style="display:flex;justify-content:space-between;margin-top:6px">${STAGES.map((s,i)=>`<span style="font-size:11px;font-weight:${i===cur?"800":"600"};color:${i<=cur?"var(--text)":"var(--muted2)"}">${s.short}</span>`).join("")}</div></div>`;
+}
+function renderMilestones(x,likes,interestedCount,commentsCount){
+ const m=[];
+ if(interestedCount>=1)m.push("🙋 أول شخص مهتم");
+ if(interestedCount>=10)m.push("🎉 10 مهتمين بالمشروع");
+ if(commentsCount>=1)m.push("💬 أول تعليق");
+ if(likes>=10)m.push("🔥 10 إعجابات");
+ if(likes>=50)m.push("⭐ 50 إعجابًا");
+ if((x.views||0)>=100)m.push("👁️ 100 مشاهدة");
+ if(x.status==="launched")m.push("🚀 وصلت لمرحلة الإطلاق");
+ if(!m.length)return "";
+ return `<div class="pills" style="margin:14px 0 4px">${m.map(t=>`<span class="pill badge-pill">${t}</span>`).join("")}</div>`;
+}
+// ====== أرشفة (المتحف) ======
+window.openArchive=(id)=>{joinTargetId=id;$("archiveReason").value="";openModal("archiveModal")};
+window.submitArchive=async()=>{
+ const id=joinTargetId; const reason=$("archiveReason").value.trim();
+ if(!reason){toast("اكتب سبب التوقف عشان يفيد غيرك","error");return}
+ const x=allIdeas.find(i=>i.id===id); if(!x||!currentUser||x.authorId!==currentUser.uid)return;
+ await update(ref(db,"ideas/"+id),{status:"archived",archiveReason:reason,archivedAt:Date.now()});
+ closeModal("archiveModal");closeModal("detailModal");
+ toast("🏛️ تم نقل الفكرة إلى متحف الأفكار","success");
+};
+// ====== قصص النجاح ======
+window.openStoryEditor=(id)=>{
+ const x=allIdeas.find(i=>i.id===id); joinTargetId=id; $("storyText").value=x?.successStory||""; openModal("storyModal");
+};
+window.submitStory=async()=>{
+ const id=joinTargetId; const text=$("storyText").value.trim();
+ const x=allIdeas.find(i=>i.id===id); if(!x||!currentUser||x.authorId!==currentUser.uid)return;
+ await update(ref(db,"ideas/"+id),{successStory:text});
+ closeModal("storyModal"); toast("✨ تم حفظ قصة النجاح","success"); openIdea(id,true,true);
+};
+function renderStories(){
+ const list=allIdeas.filter(x=>x.status==="launched"&&x.successStory);
+ $("storiesGrid").innerHTML=list.length?list.map(x=>`<article class="card"><img class="cardimg" src="${safeAttr(x.imageUrl||DEFAULT_IMAGE)}" onclick="openIdea('${x.id}')" style="cursor:pointer"><div class="cardbody">
+  <div class="author authorlink" onclick="openPublicProfile('${x.authorId}')"><img class="avatar" src="${safeAttr(x.authorAvatar||avatar(x.authorName))}"><span>${escapeHtml(x.authorName)}${verifiedBadge(x.authorId)}</span></div>
+  <h3 onclick="openIdea('${x.id}')" style="cursor:pointer">${escapeHtml(x.title)}</h3>
+  <p class="desc">${escapeHtml(x.successStory)}</p>
+  <div class="cardfoot"><span class="mini">🚀 مُطلق · ${fmt(x.createdAt)}</span><button class="btn sm" onclick="openIdea('${x.id}')">اقرأ القصة كاملة</button></div>
+ </div></article>`).join(""):`<div class="empty">لسه مفيش قصص نجاح موثّقة. أول مشروع يوصل للإطلاق ويحكي قصته هيظهر هنا ✨</div>`;
+}
+// ====== متحف الأفكار المؤرشفة ======
+function renderMuseum(){
+ const list=allIdeas.filter(x=>x.status==="archived").sort((a,b)=>(b.archivedAt||0)-(a.archivedAt||0));
+ $("museumGrid").innerHTML=list.length?list.map(x=>`<article class="card museumcard"><img class="cardimg" src="${safeAttr(x.imageUrl||DEFAULT_IMAGE)}" onclick="openIdea('${x.id}')" style="cursor:pointer;filter:grayscale(.5)"><div class="cardbody">
+  <div class="author authorlink" onclick="openPublicProfile('${x.authorId}')"><img class="avatar" src="${safeAttr(x.authorAvatar||avatar(x.authorName))}"><span>${escapeHtml(x.authorName)} · ${fmt(x.archivedAt||x.createdAt)}</span></div>
+  <h3 onclick="openIdea('${x.id}')" style="cursor:pointer">${escapeHtml(x.title)}</h3>
+  <p class="desc"><b>توقفت هنا وليه:</b> ${escapeHtml(x.archiveReason||"-")}</p>
+ </div></article>`).join(""):`<div class="empty">لسه مفيش أفكار مؤرشفة. الأفكار اللي بتتوقف هتظهر هنا بدل الحذف الكامل، بشفافية كاملة 🏛️</div>`;
+}
+// ====== مكتبة الموارد ======
+function renderLearn(){
+ $("learnGrid").innerHTML=LEARN_ARTICLES.map(a=>`<article class="card"><div class="cardbody"><div class="ico" style="font-size:26px;margin-bottom:8px">${a.icon}</div><h3>${escapeHtml(a.title)}</h3><p class="desc" style="-webkit-line-clamp:unset">${escapeHtml(a.body)}</p></div></article>`).join("");
+}
+// ====== وضع العرض التقديمي ======
+window.openPresentation=(id)=>{
+ const x=allIdeas.find(i=>i.id===id); if(!x)return;
+ const html=`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>${escapeHtml(x.title)}</title>
+ <style>body{font-family:'Tajawal',Tahoma,Arial,sans-serif;max-width:760px;margin:40px auto;padding:0 24px;color:#1c1033;line-height:1.9}
+ img{width:100%;border-radius:16px;margin-bottom:24px} h1{font-size:30px;margin-bottom:6px} h3{margin:22px 0 6px;color:#5b21b6} .tag{display:inline-block;background:#f3f0ff;color:#5b21b6;padding:4px 12px;border-radius:8px;font-size:13px;margin-inline-end:6px}
+ .meta{color:#6b5f8a;font-size:14px;margin-bottom:18px} @media print{body{margin:0;padding:24px}}</style></head>
+ <body><img src="${safeAttr(x.imageUrl||DEFAULT_IMAGE)}"><h1>${escapeHtml(x.title)}</h1>
+ <div class="meta">بواسطة ${escapeHtml(x.authorName)} · ${escapeHtml(x.category)}</div>
+ <div>${(x.skills||"").split(",").filter(Boolean).map(s=>`<span class="tag">${escapeHtml(s.trim())}</span>`).join("")}</div>
+ <h3>نبذة</h3><p>${escapeHtml(x.desc)}</p>
+ ${x.problem?`<h3>🧩 المشكلة</h3><p>${escapeHtml(x.problem)}</p>`:""}
+ ${x.solution?`<h3>💡 الحل</h3><p>${escapeHtml(x.solution)}</p>`:""}
+ ${x.market?`<h3>🎯 السوق المستهدف</h3><p>${escapeHtml(x.market)}</p>`:""}
+ <p style="margin-top:34px;color:#9086ab;font-size:12px">تم إنشاء هذا العرض من منصة عالم المبتكرين</p>
+ </body></html>`;
+ const blob=new Blob([html],{type:"text/html"}); const url=URL.createObjectURL(blob);
+ window.open(url,"_blank");
+};
+// ====== تصدير بيانات المستخدم ======
+window.exportMyData=async()=>{
+ if(!currentUser)return;
+ const uid=currentUser.uid;
+ const mine=allIdeas.filter(x=>x.authorId===uid);
+ const saved=Object.keys(savesMap||{});
+ let myComments=[];
+ try{
+  const snap=await get(ref(db,"comments"));
+  const d=snap.val()||{};
+  Object.entries(d).forEach(([ideaId,c])=>Object.entries(c||{}).forEach(([cid,v])=>{if(v.authorId===uid)myComments.push({ideaId,cid,...v})}));
+ }catch(e){}
+ const payload={exportedAt:new Date().toISOString(),profile:{uid,email:currentUser.email,displayName:currentUser.displayName},ideas:mine,savedIdeaIds:saved,comments:myComments};
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+ const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="my-data-export.json"; a.click();
+ toast("📦 تم تجهيز ملف بياناتك للتنزيل","success");
+};
+// ====== أفكار مشابهة ======
+function renderSimilarIdeas(x){
+ const mySkills=(x.skills||"").split(",").map(s=>s.trim().toLowerCase()).filter(Boolean);
+ const candidates=allIdeas.filter(o=>o.id!==x.id&&o.status!=="draft"&&o.status!=="archived"&&o.category===x.category);
+ const scored=candidates.map(o=>{
+  const oSkills=(o.skills||"").split(",").map(s=>s.trim().toLowerCase()).filter(Boolean);
+  const overlap=oSkills.filter(s=>mySkills.includes(s)).length;
+  return {o,score:overlap*3+1};
+ }).sort((a,b)=>b.score-a.score).slice(0,3).map(s=>s.o);
+ if(!scored.length)return "";
+ return `<div class="divider"></div><h3>🔎 أفكار مشابهة</h3><div class="grid" style="margin-top:10px;grid-template-columns:repeat(3,1fr)">${scored.map(card).join("")}</div>`;
+}
+// ====== Mini Kanban للفريق ======
+function renderKanban(x,interested,isOwner){
+ const accepted=interested.filter(([,v])=>v.status==="accepted").map(([uid])=>uid);
+ const canSeeKanban=isOwner||(currentUser&&accepted.includes(currentUser.uid));
+ if(!canSeeKanban)return "";
+ const tasks=Object.entries(x.tasks||{}).map(([tid,v])=>({tid,...v}));
+ const cols=[{key:"todo",label:"📋 لسه هيتعمل"},{key:"doing",label:"🛠️ جارٍ العمل"},{key:"done",label:"✅ تم"}];
+ return `<div class="divider"></div><h3>🗂️ مهام الفريق (Mini Kanban)</h3>
+ <div style="display:flex;gap:8px;margin:10px 0"><input id="taskText" placeholder="مهمة جديدة..." onkeydown="if(event.key==='Enter')addTask('${x.id}')"><button class="btn secondary sm" onclick="addTask('${x.id}')">+ إضافة</button></div>
+ <div class="kanbanwrap">${cols.map(c=>`<div class="kanbancol"><h4>${c.label} (${tasks.filter(t=>(t.col||"todo")===c.key).length})</h4>
+  ${tasks.filter(t=>(t.col||"todo")===c.key).map(t=>`<div class="kanbancard">${escapeHtml(t.text)}
+   <div class="krow"><span class="muted" style="font-size:10px">${escapeHtml(t.by||"")}</span><span>
+   ${c.key!=="todo"?`<button onclick="moveTask('${x.id}','${t.tid}','${cols[cols.findIndex(z=>z.key===c.key)-1].key}')">◀</button>`:""}
+   ${c.key!=="done"?`<button onclick="moveTask('${x.id}','${t.tid}','${cols[cols.findIndex(z=>z.key===c.key)+1].key}')">▶</button>`:""}
+   <button onclick="deleteTask('${x.id}','${t.tid}')">🗑️</button></span></div></div>`).join("")||`<p class="muted" style="font-size:12px">فارغة</p>`}
+  </div>`).join("")}</div>`;
+}
+window.addTask=async(id)=>{
+ const text=$("taskText").value.trim(); if(!text||!currentUser)return;
+ await push(ref(db,`ideas/${id}/tasks`),{text,col:"todo",by:currentUser.displayName||currentUser.email.split("@")[0],createdAt:Date.now()});
+ $("taskText").value=""; openIdea(id,true,true);
+};
+window.moveTask=async(id,tid,col)=>{await update(ref(db,`ideas/${id}/tasks/${tid}`),{col});openIdea(id,true,true)};
+window.deleteTask=async(id,tid)=>{await remove(ref(db,`ideas/${id}/tasks/${tid}`));openIdea(id,true,true)};
+// ====== تقييم الشركاء بعد التعاون ======
+function renderReviewsSection(x,interested,isOwner){
+ const accepted=interested.filter(([,v])=>v.status==="accepted").map(([uid,v])=>({uid,name:v.name}));
+ if(!currentUser||!accepted.length)return "";
+ const myUid=currentUser.uid;
+ const canReviewOwner=accepted.some(a=>a.uid===myUid)&&myUid!==x.authorId;
+ const canReviewMembers=isOwner;
+ if(!canReviewOwner&&!canReviewMembers)return "";
+ let html=`<div class="divider"></div><h3>⭐ تقييم الشركاء بعد التعاون</h3><div style="margin-top:10px">`;
+ if(canReviewOwner){
+  html+=reviewRow(x.id,x.authorId,x.authorName,"owner");
+ }
+ if(canReviewMembers){
+  accepted.forEach(a=>{html+=reviewRow(x.id,a.uid,a.name,"member")});
+ }
+ html+="</div>";
+ return html;
+}
+function reviewRow(ideaId,revieweeUid,name,kind){
+ const key=`${ideaId}_${revieweeUid}`;
+ const myRating=(reviewsCache[key]||{})[currentUser.uid]?.rating||0;
+ return `<div class="comment" style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+ <span>${kind==="owner"?"صاحب الفكرة: ":"عضو الفريق: "}<b>${escapeHtml(name||"مستخدم")}</b></span>
+ <span class="starrow" id="stars_${ideaId}_${revieweeUid}">${[1,2,3,4,5].map(n=>`<span class="${n<=myRating?"on":""}" onclick="rateUser('${ideaId}','${revieweeUid}',${n})">⭐</span>`).join("")}</span>
+ </div>`;
+}
+window.rateUser=async(ideaId,revieweeUid,rating)=>{
+ if(!currentUser)return;
+ await set(ref(db,`reviews/${ideaId}/${revieweeUid}/${currentUser.uid}`),{rating,createdAt:Date.now()});
+ toast("⭐ تم حفظ تقييمك","success");
+ const snap=await get(ref(db,`reviews/${ideaId}/${revieweeUid}`));
+ reviewsCache[`${ideaId}_${revieweeUid}`]=snap.val()||{};
+ const el=$("stars_"+ideaId+"_"+revieweeUid);
+ if(el)el.innerHTML=[1,2,3,4,5].map(n=>`<span class="${n<=rating?"on":""}" onclick="rateUser('${ideaId}','${revieweeUid}',${n})">⭐</span>`).join("");
+};
+// ====== الأسئلة الشائعة (FAQ) ======
+function renderFaq(x,isOwner){
+ const faqs=Object.entries(x.faqs||{}).map(([fid,v])=>({fid,...v}));
+ const answered=faqs.filter(f=>f.answer);
+ const pending=faqs.filter(f=>!f.answer);
+ let html=`<div class="divider"></div><h3>❓ أسئلة شائعة عن الفكرة</h3><div style="margin-top:10px">`;
+ html+=answered.length?answered.map(f=>`<div class="faqitem"><b>${escapeHtml(f.question)}</b><p>${escapeHtml(f.answer)}</p></div>`).join(""):`<p class="muted">لا توجد أسئلة مُجابة بعد.</p>`;
+ if(isOwner&&pending.length){
+  html+=`<h4 style="margin:14px 0 8px;color:var(--muted)">أسئلة بانتظار إجابتك (${pending.length})</h4>`;
+  html+=pending.map(f=>`<div class="faqitem"><b>${escapeHtml(f.question)}</b><div style="display:flex;gap:8px;margin-top:8px"><input id="ans_${f.fid}" placeholder="اكتب إجابتك..."><button class="btn sm" onclick="answerFaq('${x.id}','${f.fid}')">إرسال</button></div></div>`).join("");
+ }
+ html+="</div>";
+ if(currentUser&&!isOwner){
+  html+=`<div style="display:flex;gap:8px;margin-top:10px"><input id="faqQuestion" placeholder="اسأل صاحب الفكرة سؤالاً..." onkeydown="if(event.key==='Enter')askFaq('${x.id}')"><button class="btn secondary sm" onclick="askFaq('${x.id}')">اسأل</button></div>`;
+ }
+ return html;
+}
+window.askFaq=async(id)=>{
+ const q=$("faqQuestion").value.trim(); if(!q||!currentUser)return;
+ await push(ref(db,`ideas/${id}/faqs`),{question:q,askedBy:currentUser.uid,createdAt:Date.now()});
+ $("faqQuestion").value=""; toast("❓ تم إرسال سؤالك لصاحب الفكرة","success"); openIdea(id,true,true);
+};
+window.answerFaq=async(ideaId,fid)=>{
+ const ans=$("ans_"+fid).value.trim(); if(!ans)return;
+ await update(ref(db,`ideas/${ideaId}/faqs/${fid}`),{answer:ans});
+ openIdea(ideaId,true,true);
+};
+window.toggleTeamFull=async(id)=>{
+ const x=allIdeas.find(i=>i.id===id); if(!x||!currentUser||x.authorId!==currentUser.uid)return;
+ await update(ref(db,"ideas/"+id),{teamFull:!x.teamFull});
+ toast(x.teamFull?"🔓 تم فتح استقبال طلبات الانضمام":"🔒 تم إغلاق استقبال طلبات الانضمام","success");
+ openIdea(id,true,true);
+};
+window.shareWhatsApp=(id,title)=>{
+ const url=location.origin+location.pathname+"#idea-"+id;
+ window.open(`https://wa.me/?text=${encodeURIComponent(title+" — "+url)}`,"_blank");
+};
+window.shareTwitter=(id,title)=>{
+ const url=location.origin+location.pathname+"#idea-"+id;
+ window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,"_blank");
+};
+window.shareIdea=async(id,title)=>{
+ const url=location.origin+location.pathname+"#idea-"+id;
+ if(navigator.share){try{await navigator.share({title,url})}catch(e){}}
+ else{await navigator.clipboard.writeText(url);toast("🔗 تم نسخ رابط الفكرة","success")}
+};
+window.requestJoin=id=>{
+ if(!currentUser){openAuth();return}
+ const idea=allIdeas.find(x=>x.id===id);if(!idea)return;
+ if(blocksMap[idea.authorId]){toast("لقد حظرت صاحب هذه الفكرة","info");return}
+ if(idea.teamFull){toast("الفريق مكتمل حاليًا، جرّب التواصل مباشرة برسالة","info");return}
+ joinTargetId=id;
+ $("joinWhy").value="";$("joinOffer").value="";$("joinLevel").selectedIndex=1;
+ openModal("joinModal");
+};
+window.submitJoinRequest=async()=>{
+ if(!currentUser||!joinTargetId)return;
+ const idea=allIdeas.find(x=>x.id===joinTargetId);if(!idea)return;
+ const why=$("joinWhy").value.trim(),offer=$("joinOffer").value.trim(),level=$("joinLevel").value;
+ if(!why&&!offer){toast("اكتب سطر واحد على الأقل عن سبب اهتمامك","error");return}
+ const message=[why?`ليه مهتم: ${why}`:"",offer?`هيقدّم: ${offer}`:""].filter(Boolean).join(" | ");
+ await set(ref(db,`ideas/${joinTargetId}/interested/${currentUser.uid}`),{name:currentUser.displayName||currentUser.email.split("@")[0],avatar:currentUser.photoURL||avatar(currentUser.uid),message,why,offer,level,createdAt:Date.now()});
+ notify(idea.authorId,"join",joinTargetId,idea.title);
+ closeModal("joinModal");
+ toast("🙋 تم إرسال طلب انضمامك لصاحب الفكرة","success");
+};
+window.editIdea=id=>{
+ const x=allIdeas.find(i=>i.id===id);if(!x)return;
+ editingIdeaId=id;
+ $("ideaModalTitle").textContent="✏️ تعديل الفكرة";
+ $("publishBtn").textContent="💾 حفظ التعديلات"; $("draftBtn").dataset.allowed=x.status==="draft"?"1":"0";
+ $("ideaTitle").value=x.title;$("ideaDesc").value=x.desc;$("ideaCategory").value=x.category;$("ideaSkills").value=x.skills||"";
+ $("ideaProblem").value=x.problem||"";$("ideaSolution").value=x.solution||"";$("ideaMarket").value=x.market||"";
+ $("ideaStageWrap").classList.remove("hidden"); $("ideaStage").value=x.status==="draft"?"idea":(x.status||"idea");
+ uploadedImageUrl=x.imageUrl||"";
+ $("imgPreview").src=x.imageUrl||DEFAULT_IMAGE; $("imgPreviewWrap").classList.remove("hidden");
+ ideaCurrentStep=1; updateIdeaStepUI();
+ closeModal("detailModal"); openModal("ideaModal");
+};
+async function loadComments(id){
+ const snap=await get(ref(db,`comments/${id}`)); const d=snap.val()||{};
+ const arr=Object.entries(d).map(([cid,v])=>({cid,...v})).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+ const idea=allIdeas.find(x=>x.id===id);
+ $("comments").innerHTML=arr.length?arr.map(c=>{
+  const canDelete=currentUser&&(currentUser.uid===c.authorId||currentUser.uid===idea?.authorId||isAdmin());
+  return `<div class="comment"><div class="commenthead"><img class="avatar" src="${safeAttr(c.avatar||avatar(c.authorName))}">${escapeHtml(c.authorName)} <span class="muted" style="font-size:11px">${fmt(c.createdAt)}</span>${canDelete?`<button class="btn ghost sm" style="margin-inline-start:auto;padding:3px 8px" onclick="deleteComment('${id}','${c.cid}')">حذف</button>`:""}</div><p>${escapeHtml(c.text)}</p></div>`;
+ }).join(""):`<p class="muted" style="margin-top:12px">لا توجد تعليقات بعد. كن أول من يعلّق 💬</p>`;
+}
+window.deleteComment=async(ideaId,cid)=>{
+ if(confirm("حذف هذا التعليق؟")){await remove(ref(db,`comments/${ideaId}/${cid}`));loadComments(ideaId)}
+};
+async function loadUpdates(id){
+ const snap=await get(ref(db,`ideas/${id}/updates`)); const d=snap.val()||{};
+ const arr=Object.entries(d).map(([uid,v])=>({uid,...v})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+ $("ideaUpdates").innerHTML=arr.length?arr.map(u=>`<div class="comment"><div class="commenthead">📌 <span class="muted" style="font-size:11px">${fmt(u.createdAt)}</span></div><p>${escapeHtml(u.text)}</p></div>`).join(""):`<p class="muted">لا توجد تحديثات بعد.</p>`;
+}
+window.postUpdate=async(id)=>{
+ const text=$("updateText").value.trim(); if(!text||!currentUser)return;
+ const idea=allIdeas.find(x=>x.id===id); if(!idea||idea.authorId!==currentUser.uid)return;
+ await push(ref(db,`ideas/${id}/updates`),{text,createdAt:Date.now()});
+ await update(ref(db,"ideas/"+id),{lastUpdateAt:Date.now()});
+ Object.keys(idea.interested||{}).forEach(uid=>notify(uid,"update",id,idea.title));
+ $("updateText").value=""; loadUpdates(id); toast("📌 تم نشر التحديث","success");
+};
+window.addComment=async()=>{
+ const text=$("commentText").value.trim();if(!text||!currentUser||!selectedIdeaId)return;
+ const lastC=Number(localStorage.getItem("lastCommentAt")||0);
+ if(Date.now()-lastC<COMMENT_COOLDOWN_MS){toast("تمهّل شوية بين تعليق وآخر 🙂","info");return}
+ localStorage.setItem("lastCommentAt",String(Date.now()));
+ const idea=allIdeas.find(x=>x.id===selectedIdeaId);
+ await set(push(ref(db,`comments/${selectedIdeaId}`)),{text,authorId:currentUser.uid,authorName:currentUser.displayName||currentUser.email.split("@")[0],avatar:currentUser.photoURL||avatar(currentUser.uid),createdAt:Date.now()});
+ if(idea)notify(idea.authorId,"comment",selectedIdeaId,idea.title);
+ $("commentText").value="";loadComments(selectedIdeaId);
+};
+window.deleteIdea=async id=>{
+ if(!currentUser)return;const x=allIdeas.find(i=>i.id===id);
+ if(x?.authorId!==currentUser.uid&&!isAdmin()){toast("غير مسموح","error");return}
+ if(confirm("هل تريد حذف الفكرة؟")){await remove(ref(db,"ideas/"+id));closeModal("detailModal");toast("تم الحذف","success")}
+};
+function resizeImage(file,maxDim,quality){
+ return new Promise((resolve,reject)=>{
+  const reader=new FileReader();
+  reader.onload=e=>{
+   const img=new Image();
+   img.onload=()=>{
+    let w=img.width,h=img.height;
+    if(w>maxDim||h>maxDim){if(w>h){h=Math.round(h*maxDim/w);w=maxDim}else{w=Math.round(w*maxDim/h);h=maxDim}}
+    const canvas=document.createElement("canvas");canvas.width=w;canvas.height=h;
+    canvas.getContext("2d").drawImage(img,0,0,w,h);
+    resolve(canvas.toDataURL("image/jpeg",quality));
+   };
+   img.onerror=()=>reject(new Error("تعذر قراءة الصورة"));
+   img.src=e.target.result;
+  };
+  reader.onerror=()=>reject(new Error("تعذر قراءة الملف"));
+  reader.readAsDataURL(file);
+ });
+}
+async function uploadImageData(dataUrl){
+ if(IMGBB_KEY){
+  try{
+   const form=new FormData(); form.append("image",dataUrl.split(",")[1]);
+   const ctrl=new AbortController(); const t=setTimeout(()=>ctrl.abort(),15000);
+   const res=await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`,{method:"POST",body:form,signal:ctrl.signal});
+   clearTimeout(t);
+   if(!res.ok)throw new Error("upload failed: "+res.status);
+   const json=await res.json();
+   if(json?.data?.url)return json.data.url;
+   throw new Error("no url in response");
+  }catch(e){
+   // فشل رفع الصورة لخدمة الاستضافة الخارجية: نستخدم الصورة نفسها محليًا بدل ما نوقف العملية بالكامل
+   console.warn("imgbb upload failed, falling back to local image data",e);
+   return dataUrl;
+  }
+ }
+ return dataUrl;
+}
+window.handleImageUpload=async(input)=>{
+ const file=input.files[0]; if(!file)return;
+ if(!file.type.startsWith("image/")){toast("اختر ملف صورة صحيح","error");return}
+ if(file.size>8*1024*1024){toast("حجم الصورة أكبر من 8MB، اختر صورة أصغر","error");return}
+ $("uploadStatus").innerHTML='<span class="spinner"></span> جارٍ معالجة الصورة...';
+ try{
+  const dataUrl=await resizeImage(file,1280,.78);
+  $("uploadStatus").innerHTML='<span class="spinner"></span> جارٍ الرفع...';
+  uploadedImageUrl=await uploadImageData(dataUrl);
+  $("imgPreview").src=uploadedImageUrl; $("imgPreviewWrap").classList.remove("hidden");
+  $("uploadStatus").textContent="✅ تم اختيار الصورة";
+ }catch(e){toast("تعذّر معالجة الصورة، جرّب صورة أخرى","error");$("uploadStatus").textContent=""}
+};
+window.removeImage=()=>{uploadedImageUrl="";$("imgPreviewWrap").classList.add("hidden");$("ideaImageFile").value="";$("uploadStatus").textContent=""};
+window.handleProfilePhoto=async(input)=>{
+ const file=input.files[0]; if(!file||!currentUser||profilePhotoUploading)return;
+ if(!file.type.startsWith("image/")){toast("اختر ملف صورة صحيح","error");return}
+ if(file.size>8*1024*1024){toast("حجم الصورة أكبر من 8MB","error");return}
+ profilePhotoUploading=true;
+ try{
+  const dataUrl=await resizeImage(file,500,.82);
+  $("myAvatarImg").src=dataUrl;
+  const url=await uploadImageData(dataUrl);
+  await updateProfile(auth.currentUser,{photoURL:url});
+  currentUser=auth.currentUser;
+  renderHeaderAuth(); renderProfile();
+  toast("✅ تم تحديث صورة البروفايل","success");
+ }catch(e){toast("تعذّر رفع الصورة","error")}
+ finally{profilePhotoUploading=false}
+};
+let ideaCurrentStep=1;
+function updateIdeaStepUI(){
+ document.querySelectorAll(".ideastep").forEach(el=>el.classList.toggle("hidden",Number(el.dataset.step)!==ideaCurrentStep));
+ document.querySelectorAll("#ideaStepBar .stepdot").forEach(el=>{
+  const n=Number(el.dataset.step);
+  el.classList.toggle("active",n===ideaCurrentStep);
+  el.classList.toggle("done",n<ideaCurrentStep);
+ });
+ $("ideaBackBtn").classList.toggle("hidden",ideaCurrentStep===1);
+ $("ideaNextBtn").classList.toggle("hidden",ideaCurrentStep===3);
+ $("draftBtn").classList.toggle("hidden",ideaCurrentStep!==3||$("draftBtn").dataset.allowed==="0");
+ $("publishBtn").classList.toggle("hidden",ideaCurrentStep!==3);
+}
+window.ideaStepNext=()=>{
+ if(ideaCurrentStep===1){
+  const t=$("ideaTitle").value.trim();
+  if(t.length<3){toast("اكتب عنوانًا أوضح (3 أحرف على الأقل) الأول","error");return}
+ }
+ ideaCurrentStep=Math.min(3,ideaCurrentStep+1);
+ updateIdeaStepUI();
+};
+window.ideaStepBack=()=>{ideaCurrentStep=Math.max(1,ideaCurrentStep-1);updateIdeaStepUI()};
+window.goToIdeaStep=(n)=>{
+ if(n>1&&!editingIdeaId&&$("ideaTitle").value.trim().length<3){toast("اكتب عنوانًا أوضح (3 أحرف على الأقل) الأول","error");return}
+ ideaCurrentStep=n;updateIdeaStepUI();
+};
+function resetIdeaForm(){
+ editingIdeaId=null;
+ $("ideaModalTitle").textContent="💡 نشر فكرة"; $("publishBtn").textContent="🚀 نشر الفكرة";
+ $("ideaTitle").value="";$("ideaDesc").value="";$("ideaSkills").value="";$("ideaCategory").selectedIndex=0;
+ $("ideaProblem").value="";$("ideaSolution").value="";$("ideaMarket").value="";
+ $("ideaStage").value="idea"; $("ideaStageWrap").classList.add("hidden");
+ $("draftBtn").dataset.allowed="1";
+ ideaCurrentStep=1; updateIdeaStepUI();
+ removeImage();
+}
+window.publishIdea=async(isDraft)=>{
+ if(!currentUser){openAuth();return}
+ const title=$("ideaTitle").value.trim(),desc=$("ideaDesc").value.trim(),category=$("ideaCategory").value,skills=$("ideaSkills").value.trim();
+ const problem=$("ideaProblem").value.trim(),solution=$("ideaSolution").value.trim(),market=$("ideaMarket").value.trim();
+ if(title.length<3){toast("اكتب عنوانًا أوضح (3 أحرف على الأقل)","error");return}
+ if(!isDraft&&desc.length<10){toast("الوصف قصير جدًا، وضّح فكرتك أكتر","error");return}
+ const wasEditing=editingIdeaId;
+ if(!wasEditing&&!isDraft){
+  const lastPost=Number(localStorage.getItem("lastIdeaPostAt")||0);
+  if(Date.now()-lastPost<IDEA_COOLDOWN_MS){toast("مهلة بسيطة بين فكرة وأخرى عشان نمنع السبام، حاول بعد دقيقتين ⏱️","info");return}
+  const openCount=allIdeas.filter(x=>x.authorId===currentUser.uid&&x.status!=="draft"&&x.status!=="launched"&&x.status!=="archived").length;
+  if(openCount>=MAX_OPEN_IDEAS){toast(`وصلت للحد الأقصى (${MAX_OPEN_IDEAS}) من الأفكار المفتوحة، أغلق أو أطلق فكرة قديمة أولاً`,"error");return}
+ }
+ const btn=isDraft?$("draftBtn"):$("publishBtn");
+ btn.disabled=true; btn.innerHTML=`<span class="spinner"></span> جارٍ الحفظ...`;
+ try{
+  const stage=isDraft?"draft":($("ideaStage")?.value||"idea");
+  if(wasEditing){
+   await update(ref(db,"ideas/"+wasEditing),{title,desc,category,skills,problem,solution,market,imageUrl:uploadedImageUrl||DEFAULT_IMAGE,status:stage});
+   toast(isDraft?"💾 تم حفظ المسودة":"💾 تم حفظ التعديلات","success");
+   if(!isDraft)notifyInterestedUsers(category,title,wasEditing);
+  }else{
+   const obj={title,desc,category,skills,problem,solution,market,imageUrl:uploadedImageUrl||DEFAULT_IMAGE,authorId:currentUser.uid,authorName:currentUser.displayName||currentUser.email.split("@")[0],authorAvatar:currentUser.photoURL||avatar(currentUser.uid),createdAt:Date.now(),status:stage,teamFull:false,views:0};
+   const newRef=push(ref(db,"ideas")); await set(newRef,obj);
+   toast(isDraft?"💾 تم حفظ فكرتك كمسودة":"🚀 تم نشر فكرتك بنجاح","success");
+   if(!isDraft){notifyInterestedUsers(category,title,newRef.key);localStorage.setItem("lastIdeaPostAt",String(Date.now()))}
+  }
+  closeModal("ideaModal"); showPage(isDraft?"profile":"ideas");
+ }catch(e){toast("حدث خطأ: "+e.message,"error")}
+ finally{btn.disabled=false;btn.innerHTML=isDraft?"💾 حفظ كمسودة":(editingIdeaId?"💾 حفظ التعديلات":"🚀 نشر الفكرة")}
+};
+function notifyInterestedUsers(category,title,ideaId){
+ allUsers.filter(u=>u.uid&&u.uid!==currentUser.uid&&u.interests&&u.interests[category]).forEach(u=>{
+  push(ref(db,`notifications/${u.uid}`),{type:"match",ideaId,ideaTitle:title,fromName:currentUser.displayName||currentUser.email.split("@")[0],text:`نشر فكرة جديدة في مجال "${category}" يهمك`,createdAt:Date.now(),read:false});
+ });
+}
+
+window.openReport=id=>{selectedIdeaId=id;openModal("reportModal")};
+window.submitReport=async()=>{
+ if(!currentUser){openAuth();return}
+ await set(push(ref(db,"reports")),{ideaId:selectedIdeaId,reason:$("reportReason").value,reporterId:currentUser.uid,reporterEmail:currentUser.email,createdAt:Date.now(),status:"open"});
+ closeModal("reportModal");toast("تم إرسال البلاغ للمراجعة","success");
+};
+function renderProjects(){
+ const p=allIdeas.filter(x=>x.status==="launched");
+ $("projectsGrid").innerHTML=p.length?p.map(card).join(""):`<div class="empty">المشاريع التي ستنطلق من هنا ستظهر في هذا القسم 🚀</div>`;
+}
+function renderLeaderboard(){
+ const since=Date.now()-30*24*60*60*1000;
+ const scores={};
+ allIdeas.filter(x=>x.status!=="draft").forEach(x=>{
+  if(!x.authorId)return;
+  const s=scores[x.authorId]||{uid:x.authorId,name:x.authorName,avatar:x.authorAvatar,ideas:0,likes:0,views:0,recentIdeas:0};
+  s.name=x.authorName;s.avatar=x.authorAvatar;
+  s.likes+=likesCount(x); s.views+=(x.views||0);
+  if((x.createdAt||0)>=since){s.ideas++;s.recentIdeas++}
+  scores[x.authorId]=s;
+ });
+ const ranked=Object.values(scores).map(s=>({...s,score:s.recentIdeas*15+s.likes*2+Math.round(s.views*.1)})).filter(s=>s.score>0).sort((a,b)=>b.score-a.score).slice(0,20);
+ const medals=["🥇","🥈","🥉"];
+ $("leaderboardList").innerHTML=ranked.length?`<div class="card" style="padding:6px">${ranked.map((s,i)=>`
+  <div class="comment authorlink" style="display:flex;align-items:center;gap:12px;padding:14px" onclick="openPublicProfile('${s.uid}')">
+   <span style="width:30px;text-align:center;font-weight:900;font-size:${i<3?"20px":"14px"}">${medals[i]||(i+1)}</span>
+   <img class="avatar" src="${safeAttr(s.avatar||avatar(s.name||"مبتكر"))}">
+   <div style="flex:1"><b>${escapeHtml(s.name||"مبتكر")}</b><div class="muted" style="font-size:12px">💡 ${s.ideas} فكرة هذا الشهر · ❤️ ${s.likes} إعجاب</div></div>
+   <span class="pill">${s.score} نقطة</span>
+  </div>`).join("")}</div>`:`<div class="empty">لسه مفيش نشاط كافٍ لعرض المتصدرين الشهر ده، ابدأ بنشر فكرة 🚀</div>`;
+}
+function renderProfile(){
+ if(!currentUser){$("profileContent").innerHTML=`<div class="empty">سجّل الدخول لرؤية ملفك الشخصي.</div>`;return}
+ const mineAll=allIdeas.filter(x=>x.authorId===currentUser.uid);
+ const mine=mineAll.filter(x=>x.status!=="draft");
+ const drafts=mineAll.filter(x=>x.status==="draft");
+ const saved=allIdeas.filter(x=>savesMap[x.id]);
+ const totalLikes=mine.reduce((n,x)=>n+likesCount(x),0), totalViews=mine.reduce((n,x)=>n+(x.views||0),0);
+ const followingCount=Object.keys(followsMap).length;
+ $("profileContent").innerHTML=`<div class="profilebox"><div style="position:relative;width:100px;margin:auto">
+ <img class="bigavatar" id="myAvatarImg" src="${safeAttr(currentUser.photoURL||avatar(currentUser.uid))}">
+ <button class="btn secondary sm iconbtn" style="position:absolute;bottom:-4px;left:-4px;border-radius:50%" onclick="$('profilePhotoFile').click()" aria-label="تغيير الصورة" title="تغيير صورة البروفايل">📷</button>
+ <input id="profilePhotoFile" type="file" accept="image/*" class="hidden" onchange="handleProfilePhoto(this)">
+ </div>
+ <div><h1>${escapeHtml(currentUser.displayName||currentUser.email.split("@")[0])}${verifiedBadge(currentUser.uid)}</h1><p class="muted">${escapeHtml(currentUser.email)}</p>
+ <div class="pills"><span class="pill">💡 ${mine.length} أفكار</span><span class="pill">❤️ ${totalLikes} إعجاب</span><span class="pill">👁️ ${totalViews} مشاهدة</span><span class="pill">👥 ${followingCount} متابَع</span>${isAdmin()?'<span class="pill">👑 Admin</span>':""}${badgesFor(mine,totalLikes).map(b=>`<span class="pill badge-pill">${b}</span>`).join("")}</div>
+ <div class="actions" style="justify-content:flex-start;margin-top:14px"><button class="btn" onclick="requireAuth('idea')">+ فكرة جديدة</button><button class="btn secondary" onclick="exportMyData()">📦 تصدير بياناتي</button>${isAdmin()?'<button class="btn secondary" onclick="showPage(\'admin\')">لوحة الأدمن</button><a class="btn ghost sm" href="admin.html" target="_blank">فتح admin.html</a>':""}</div>
+ <div class="refbox"><span style="font-size:20px">🔗</span><div style="flex:1;min-width:200px"><b>ادعُ أصدقاءك</b><p class="muted" style="font-size:12px;margin-top:2px">${Object.keys(referralsMap||{}).length} صديق انضم عن طريقك</p></div><input readonly value="${location.origin+location.pathname}?ref=${currentUser.uid}" onclick="this.select()"><button class="btn secondary sm" onclick="copyReferralLink()">نسخ الرابط</button></div>
+ </div></div>
+ <div class="section-head" style="margin-top:25px"><h2>أفكاري</h2></div><div class="grid">${mine.length?mine.map(card).join(""):`<div class="empty">لم تنشر أي فكرة بعد.</div>`}</div>
+ ${drafts.length?`<div class="section-head" style="margin-top:30px"><h2>📝 مسوداتي</h2></div><div class="grid">${drafts.map(card).join("")}</div>`:""}
+ <div class="section-head" style="margin-top:30px"><h2>🔖 المحفوظات</h2></div><div class="grid">${saved.length?saved.map(card).join(""):`<div class="empty">لسه محفظتش أي فكرة، اضغط 📑 على أي كارت لحفظه.</div>`}</div>`;
+}
+function renderNotifications(){
+ if(!currentUser){$("notificationsList").innerHTML=`<p class="muted">سجّل الدخول لرؤية الإشعارات.</p>`;return}
+ const list=Object.entries(notifMap).map(([id,n])=>({id,...n})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+ const icons={like:"❤️",comment:"💬",join:"🙋",update:"📌",follow:"👥",message:"💬",match:"✨",accepted:"🎉"};
+ $("notificationsList").innerHTML=list.length?list.map(n=>`<div class="comment" style="cursor:pointer;${n.read?"":"background:rgba(139,92,246,.08)"}" onclick="${n.ideaId?`openIdea('${n.ideaId}')`:(n.type==="follow"?"showPage('notifications')":"")}">
+  <div class="commenthead">${icons[n.type]||"🔔"} <b>${escapeHtml(n.fromName)}</b> ${escapeHtml(n.text)}</div>
+  <p>${escapeHtml(n.ideaTitle||"")} · <span style="font-size:11px">${fmt(n.createdAt)}</span></p></div>`).join(""):`<p class="muted">لا توجد إشعارات بعد. أول ما حد يتفاعل مع أفكارك هتلاقيها هنا 🔔</p>`;
+ const unreadIds=list.filter(n=>!n.read).map(n=>n.id);
+ if(unreadIds.length){const updates={};unreadIds.forEach(id=>updates[`notifications/${currentUser.uid}/${id}/read`]=true);update(ref(db),updates)}
+}
+window.adminTab=(tab,btn)=>{
+ document.querySelectorAll(".adminnav button").forEach(b=>b.classList.remove("active"));btn?.classList.add("active");renderAdmin(tab);
+};
+function renderAdmin(tab="overview"){
+ if(!currentUser||!isAdmin()){if($("admin").classList.contains("active"))$("adminContent").innerHTML='<div class="empty">هذه الصفحة للأدمن فقط.</div>';return}
+ if(tab==="overview"){
+  $("adminContent").innerHTML=`<div class="statsgrid" style="margin-bottom:18px"><div class="statitem"><b>${allUsers.length}</b><span>المستخدمون</span></div><div class="statitem"><b>${allIdeas.length}</b><span>الأفكار</span></div><div class="statitem"><b>${allReports.filter(x=>x.status==="open").length}</b><span>بلاغات مفتوحة</span></div><div class="statitem"><b>${allIdeas.reduce((n,x)=>n+likesCount(x),0)}</b><span>إعجابات</span></div></div>
+  <div class="card" style="padding:18px"><h3>⚡ حالة النظام</h3><p class="muted" style="margin-top:8px">Firebase Auth + Realtime Database متصلان. إدارة كل شيء (المستخدمون، الأدمن، البلاغات، إعدادات الدعم) بقت من admin.html.</p></div>`;
+ }else if(tab==="users"){
+  $("adminContent").innerHTML=`<div class="tablewrap"><table class="table"><tr><th>الاسم</th><th>البريد</th><th>UID</th><th>التاريخ</th><th>موثّق</th></tr>${allUsers.map(u=>`<tr><td>${escapeHtml(u.displayName||"-")}</td><td>${escapeHtml(u.email||"-")}</td><td>${escapeHtml(u.uid||"-")}</td><td>${fmt(u.createdAt)}</td><td><button class="btn ${verifiedMap[u.uid]?"success":"secondary"} sm" onclick="toggleVerified('${u.uid}')">${verifiedMap[u.uid]?"✔️ موثّق":"توثيق"}</button></td></tr>`).join("")}</table></div>`;
+ }else if(tab==="ideas"){
+  $("adminContent").innerHTML=`<div class="tablewrap"><table class="table"><tr><th>الفكرة</th><th>صاحبها</th><th>التصنيف</th><th>إجراء</th></tr>${allIdeas.map(x=>`<tr><td>${escapeHtml(x.title)}</td><td>${escapeHtml(x.authorName)}</td><td>${escapeHtml(x.category)}</td><td><button class="btn danger sm" onclick="adminDeleteIdea('${x.id}')">حذف</button></td></tr>`).join("")}</table></div>`;
+ }else{
+  $("adminContent").innerHTML=`<div class="tablewrap"><table class="table"><tr><th>السبب</th><th>الفكرة</th><th>المبلغ</th><th>الحالة</th><th>إجراء</th></tr>${allReports.map(r=>`<tr><td>${escapeHtml(r.reason)}</td><td>${escapeHtml(allIdeas.find(x=>x.id===r.ideaId)?.title||"محذوفة")}</td><td>${fmt(r.createdAt)}</td><td>${escapeHtml(r.status)}</td><td><button class="btn secondary sm" onclick="closeReport('${r.id}')">إغلاق</button></td></tr>`).join("")||`<tr><td colspan="5">لا توجد بلاغات.</td></tr>`}</table></div>`;
+ }
+}
+window.adminDeleteIdea=async id=>{if(!isAdmin())return;if(confirm("حذف الفكرة؟")){await remove(ref(db,"ideas/"+id));toast("تم حذف الفكرة","success")}};
+window.closeReport=async id=>{if(!isAdmin())return;await update(ref(db,"reports/"+id),{status:"closed"});toast("تم إغلاق البلاغ","success")};
+
+window.supportAction=()=>{
+ const amount=$("supportAmount").value;
+ if(!amount||Number(amount)<=0){toast("أدخل قيمة الدعم");return}
+ if(SUPPORT_URL){location.href=SUPPORT_URL}else toast("أضف رابط بوابة الدفع في SUPPORT_URL داخل الكود أولاً");
+};
+
+window.addEventListener("click",e=>{if(e.target.classList.contains("modal"))closeModal(e.target.id)});
+window.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".modal.open").forEach(m=>closeModal(m.id))});
+window.addEventListener("popstate",()=>{if(!location.hash.startsWith("#idea-"))closeModal("detailModal")});
+function checkHashRoute(){
+ const m=location.hash.match(/^#idea-(.+)$/);
+ if(m&&allIdeas.find(x=>x.id===m[1]))openIdea(m[1],true);
+ const u=location.hash.match(/^#user-(.+)$/);
+ if(u)openPublicProfile(u[1]);
+}
+// حالة تحميل أولية (Skeleton) قبل وصول بيانات Firebase
+$("homeIdeas").innerHTML=skeletons(4);
+$("ideasGrid").innerHTML=skeletons(8);
+$("projectsGrid").innerHTML=skeletons(4);
+$("catRail").innerHTML='<div class="skeleton" style="width:168px;height:150px;flex:none"></div>'.repeat(5);
+
+renderStats();renderProfile();
+
+// ظل الهيدر عند السكرول + زر العودة لأعلى
+window.addEventListener("scroll",()=>{
+ document.querySelector("header").classList.toggle("scrolled",window.scrollY>8);
+ $("scrollTopBtn")?.classList.toggle("show",window.scrollY>500);
+});
+document.querySelectorAll(".mobile-nav [data-nav]").forEach(b=>b.classList.toggle("active",b.dataset.nav==="home"));
+
+// ظهور تدريجي للأقسام عند السكرول
+const revealObserver=new IntersectionObserver(entries=>{
+ entries.forEach(en=>{if(en.isIntersecting){en.target.classList.add("in");revealObserver.unobserve(en.target)}});
+},{threshold:.12});
+document.querySelectorAll(".reveal").forEach(el=>revealObserver.observe(el));
+</script>
+</body>
+</html>
