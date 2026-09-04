@@ -1,0 +1,2264 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>VentureHub | مجتمع ريادة الأعمال</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<style>
+:root{
+  --bg:#f7f5f2; --ink:#14110f; --paper:#ffffff; --line:#14110f;
+  --brand:#6c4dfb; --brand-ink:#ffffff; --accent:#00c48c; --warn:#ff8a3d; --danger:#ff4757;
+  --muted:#726e68; --card:#ffffff; --soft:#efece6;
+  --shadow: 4px 4px 0 var(--line);
+  --shadow-sm: 2px 2px 0 var(--line);
+}
+[data-theme="dark"]{--bg:#131218;--ink:#f1f0f4;--paper:#1d1c24;--line:#f1f0f4;--brand:#9b7dff;--accent:#00e0a8;--warn:#ffab5c;--danger:#ff6b6f;--muted:#a5a1ad;--card:#1d1c24;--soft:#28262f;}
+[data-theme="ocean"]{--bg:#eef7f9;--brand:#0891b2;--accent:#0ea5e9;--soft:#dcf0f4;--warn:#f59e0b;}
+[data-theme="sunset"]{--bg:#fff4e9;--brand:#ff6b35;--accent:#ffb703;--soft:#ffe4cc;}
+[data-theme="forest"]{--bg:#f2f8ee;--brand:#15803d;--accent:#84cc16;--soft:#e1eed6;}
+[data-theme="rose"]{--bg:#fdf1f5;--brand:#e11d48;--accent:#fb7185;--soft:#fbdce4;}
+[data-theme="dark"] .input,[data-theme="dark"] textarea,[data-theme="dark"] select{background:#26242e;color:#f1f0f4;}
+[data-theme="dark"] .btn{color:var(--ink);}
+[data-theme="dark"] .btn-brand,[data-theme="dark"] .btn-accent{color:#fff;}
+[data-theme="dark"] img.avatar{background:#333;}
+*{box-sizing:border-box;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--ink);margin:0;-webkit-tap-highlight-color:transparent;transition:background-color .2s ease;}
+body,.card,.btn,.input,.pill,.badge,.modal-box{transition:background-color .2s ease, color .2s ease, border-color .2s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+#app{animation:fadeUp .25s ease;}
+.theme-swatch.on{outline:3px solid var(--brand);outline-offset:2px;}
+.modal-close{position:sticky;top:0;display:flex;justify-content:flex-end;padding:10px 10px 0;background:inherit;}
+.modal-close span{cursor:pointer;width:30px;height:30px;border-radius:50%;background:var(--soft);display:flex;align-items:center;justify-content:center;}
+.skel{background:linear-gradient(90deg,var(--soft) 25%,#e2ded6 37%,var(--soft) 63%);background-size:400% 100%;animation:skel 1.4s ease infinite;border-radius:12px;}
+[data-theme="dark"] .skel{background:linear-gradient(90deg,#26242e 25%,#312f3b 37%,#26242e 63%);background-size:400% 100%;}
+@keyframes skel{0%{background-position:100% 50%;}100%{background-position:0 50%;}}
+.hidden{display:none !important;}
+.brd{border:2.5px solid var(--line);}
+.shadow-h{box-shadow:var(--shadow);}
+.shadow-h-sm{box-shadow:var(--shadow-sm);}
+.btn{border:2.5px solid var(--line);border-radius:14px;padding:10px 18px;font-weight:700;box-shadow:var(--shadow-sm);transition:transform .1s, box-shadow .1s;cursor:pointer;background:var(--paper);}
+.btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--line);}
+.btn-brand{background:var(--brand);color:#fff;}
+.btn-accent{background:var(--accent);color:#fff;}
+.btn-ghost{background:transparent;}
+.card{background:var(--card);border:2.5px solid var(--line);border-radius:18px;box-shadow:var(--shadow);}
+.input{border:2.5px solid var(--line);border-radius:12px;padding:10px 14px;width:100%;background:#fff;font-family:inherit;font-size:15px;}
+.input:focus{outline:none;box-shadow:3px 3px 0 var(--brand);}
+.badge{border:2px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;display:inline-block;}
+.tab-btn{padding:8px 16px;border-radius:12px;font-weight:700;cursor:pointer;border:2.5px solid transparent;}
+.tab-btn.active{border-color:var(--line);background:var(--paper);box-shadow:var(--shadow-sm);}
+.scrollx{overflow-x:auto;scrollbar-width:none;}
+.scrollx::-webkit-scrollbar{display:none;}
+.avatar{border:2.5px solid var(--line);border-radius:50%;object-fit:cover;background:#eee;}
+.pill{border:2px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13px;font-weight:600;background:#fff;cursor:pointer;}
+.pill.on{background:var(--ink);color:#fff;}
+.spin{animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#toastWrap{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;width:min(92vw,380px);}
+.toast{background:var(--ink);color:#fff;border-radius:12px;padding:10px 16px;font-weight:600;font-size:14px;box-shadow:var(--shadow);animation:up .25s ease;}
+@keyframes up{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.modal-bg{position:fixed;inset:0;background:rgba(20,17,15,.55);z-index:1000;display:flex;align-items:flex-end;justify-content:center;}
+@media(min-width:768px){.modal-bg{align-items:center;}}
+.modal-box{background:#fff;border:2.5px solid var(--line);border-radius:22px 22px 0 0;box-shadow:var(--shadow);width:100%;max-width:560px;max-height:92vh;overflow-y:auto;}
+@media(min-width:768px){.modal-box{border-radius:22px;}}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2.5px solid var(--line);display:flex;justify-content:space-around;padding:8px 4px calc(env(safe-area-inset-bottom) + 6px);z-index:500;}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:700;color:var(--muted);flex:1;padding:4px;cursor:pointer;}
+.bn-item.active{color:var(--brand);}
+.bn-item i{font-size:18px;}
+.stagewrap{display:flex;gap:6px;flex-wrap:wrap;}
+.loader-page{position:fixed;inset:0;background:var(--bg);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;}
+::-webkit-scrollbar{width:8px;height:8px;}::-webkit-scrollbar-thumb{background:#ccc;border-radius:8px;}
+@media(min-width:768px){.md-hide{display:none !important;}}
+@media(max-width:767px){#app{padding-bottom:90px;}}
+.unread-dot{width:9px;height:9px;background:var(--danger);border-radius:50%;border:1.5px solid #fff;position:absolute;top:-3px;left:-3px;}
+.fab{position:fixed;z-index:600;width:46px;height:46px;border-radius:50%;background:var(--paper);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--shadow-sm);font-size:19px;border:2.5px solid var(--line);}
+#themeFab{bottom:80px;left:14px;}
+@media(min-width:768px){#themeFab{bottom:20px;}}
+.lightbox-bg{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:2000;display:flex;align-items:center;justify-content:center;cursor:zoom-out;}
+.lightbox-bg img{max-width:92vw;max-height:92vh;border-radius:8px;}
+.line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.line-clamp-3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+
+/* ===== VentureHub Core Upgrade ===== */
+.msg-row{display:flex;gap:8px;align-items:flex-end;margin:2px 0;}
+.msg-row.mine{justify-content:flex-start;}
+.msg-row.theirs{justify-content:flex-end;}
+.msg-avatar{width:30px;height:30px;flex:0 0 30px;}
+.msg-bubble{max-width:min(78%,520px);padding:9px 12px;border:2px solid var(--line);border-radius:16px;line-height:1.6;word-break:break-word;}
+.msg-row.mine .msg-bubble{background:var(--brand);color:#fff;border-bottom-left-radius:5px;}
+.msg-row.theirs .msg-bubble{background:var(--soft);border-bottom-right-radius:5px;}
+.msg-meta{font-size:10px;opacity:.72;margin-top:2px;}
+.community-cover{min-height:130px;border:2.5px solid var(--line);border-radius:16px;background:linear-gradient(135deg,var(--brand),var(--accent));overflow:hidden;}
+.project-cover{width:100%;height:190px;object-fit:cover;border:2.5px solid var(--line);border-radius:16px;}
+.project-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;}
+.project-gallery img{width:100%;height:110px;object-fit:cover;border:2px solid var(--line);border-radius:12px;cursor:zoom-in;}
+.core-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;}
+@media(max-width:767px){
+  .msg-layout{grid-template-columns:1fr!important;}
+  .msg-list-mobile-hide{display:none!important;}
+  .project-cover{height:150px;}
+}
+
+</style>
+</head>
+<body>
+<script>(function(){try{var t=localStorage.getItem('vh_theme')||'default';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+
+<div id="themeFab" class="fab" onclick="openThemePicker()" title="الثيم">🎨</div>
+
+<div id="loaderPage" class="loader-page">
+  <div style="width:56px;height:56px;border:5px solid var(--line);border-top-color:var(--brand);border-radius:50%;" class="spin"></div>
+  <div style="font-weight:800;font-size:18px;">VentureHub</div>
+</div>
+
+<div id="toastWrap"></div>
+
+<!-- ===== NAVBAR ===== -->
+<div id="navbar" class="hidden" style="position:sticky;top:0;z-index:400;background:var(--bg);border-bottom:2.5px solid var(--line);">
+  <div style="max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;gap:10px;">
+    <div style="display:flex;align-items:center;gap:8px;cursor:pointer;" onclick="go('feed')">
+      <div style="width:34px;height:34px;background:var(--brand);border:2.5px solid var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;">V</div>
+      <div style="font-weight:900;font-size:18px;display:none;" class="md-show">VentureHub</div>
+    </div>
+    <div style="flex:1;max-width:420px;position:relative;" class="md-show">
+      <input id="navSearch" class="input" placeholder="ابحث عن أشخاص، مشاريع، فرص..." style="padding-right:36px;" oninput="liveSearch(this.value)">
+      <i class="fa-solid fa-magnifying-glass" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--muted);"></i>
+      <div id="searchDrop" class="hidden card" style="position:absolute;top:46px;left:0;right:0;padding:8px;max-height:400px;overflow-y:auto;"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="md-hide" style="cursor:pointer;" onclick="openMobileSearch()"><i class="fa-solid fa-magnifying-glass" style="font-size:19px;"></i></div>
+      <button class="btn btn-ghost md-show" onclick="openCreatePost()"><i class="fa-solid fa-pen"></i> منشور</button>
+      <div style="position:relative;cursor:pointer;" onclick="go('notifications')">
+        <i class="fa-solid fa-bell" style="font-size:20px;"></i>
+        <span id="notifDot" class="hidden" style="position:absolute;top:-3px;left:-3px;width:9px;height:9px;background:var(--danger);border-radius:50%;border:1.5px solid #fff;"></span>
+      </div>
+      <img id="navAvatar" class="avatar" style="width:34px;height:34px;cursor:pointer;" onclick="go('profile',{uid:currentUser?.uid})">
+    </div>
+  </div>
+  <div class="scrollx" style="max-width:1100px;margin:0 auto;padding:0 14px 8px;display:flex;gap:8px;">
+    <div class="tab-btn" data-nav="feed" onclick="go('feed')">🏠 الفيد</div>
+    <div class="tab-btn" data-nav="discover" onclick="go('discover')">🧭 اكتشف</div>
+    <div class="tab-btn" data-nav="startups" onclick="go('startups')">🚀 المشاريع</div>
+    <div class="tab-btn" data-nav="talent" onclick="go('talent')">👨‍💻 المواهب</div>
+    <div class="tab-btn" data-nav="communities" onclick="go('communities')">👥 المجتمعات</div>
+    <div class="tab-btn" data-nav="opportunities" onclick="go('opportunities')">💰 الفرص</div>
+    <div class="tab-btn" data-nav="messages" onclick="go('messages')" style="position:relative;">💬 الرسائل<span id="navMsgDot" class="hidden" style="position:absolute;top:2px;left:2px;width:8px;height:8px;background:var(--danger);border-radius:50%;border:1.5px solid var(--bg);"></span></div>
+    <div class="tab-btn" data-nav="leaderboard" onclick="go('leaderboard')">🏆 المتصدرين</div>
+    <div id="adminTabBtn" class="tab-btn hidden" data-nav="admin" onclick="go('admin')">⚙️ الإدارة</div>
+  </div>
+</div>
+
+<!-- ===== APP ROOT ===== -->
+<div id="app" style="max-width:1100px;margin:0 auto;padding:14px 14px 90px;"></div>
+
+<div class="bottom-nav md-hide hidden" id="bottomNav">
+  <div class="bn-item" data-nav="feed" onclick="go('feed')"><i class="fa-solid fa-house"></i>الفيد</div>
+  <div class="bn-item" data-nav="discover" onclick="go('discover')"><i class="fa-solid fa-compass"></i>اكتشف</div>
+  <div class="bn-item" onclick="openCreatePost()"><i class="fa-solid fa-circle-plus" style="font-size:26px;color:var(--brand);"></i></div>
+  <div class="bn-item" data-nav="messages" onclick="go('messages')" style="position:relative;"><i class="fa-solid fa-message" id="bnMsgIcon" style="position:relative;"></i><span id="bnMsgDot" class="hidden" style="position:absolute;top:2px;left:calc(50% - 2px);width:8px;height:8px;background:var(--danger);border-radius:50%;border:1.5px solid var(--paper);"></span>رسائل</div>
+  <div class="bn-item" data-nav="profile" onclick="go('profile',{uid:currentUser?.uid})"><i class="fa-solid fa-user"></i>حسابي</div>
+</div>
+
+<div id="modalRoot"></div>
+
+<script>
+/* ============ FIREBASE ============ */
+const firebaseConfig = {
+  apiKey: "AIzaSyAAM11KB7jbdZC0EiPyOgIawxzGZITgMA8",
+  authDomain: "flash-feedback-9c529.firebaseapp.com",
+  databaseURL: "https://flash-feedback-9c529-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "flash-feedback-9c529",
+  storageBucket: "flash-feedback-9c529.firebasestorage.app",
+  messagingSenderId: "1026286586523",
+  appId: "1:1026286586523:web:b76e33473c260fc4d7143e"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+const IMGBB_KEY = "0dade31c18202a2a4fd8b847ab3ef9e1";
+/* تنبيه: كل التحققات (isAdmin, إلخ) هنا في الواجهة فقط للتجربة، مش حماية حقيقية.
+   لازم تتأكد إن قواعد Firebase Realtime Database Rules بتمنع أي مستخدم عادي من:
+   - الكتابة في users/{uid}/isAdmin أو users/{uid}/founderScore مباشرة
+   - الكتابة في opportunities/* إلا لو isAdmin=true على السيرفر
+   بدون كده أي حد يقدر يفتح الكونسول ويغيّر بياناته بنفسه. */
+
+/* ============ STATE ============ */
+let currentUser = null;      // firebase auth user
+let myProfile = null;        // profile record from /users/{uid}
+let allUsersCache = {};
+let allStartupsCache = {};
+let route = {name:'landing', params:{}};
+let feedUnsub = null, notifUnsub = null, msgListUnsub = null, convBadgeUnsub = null, activeMsgUnsub = null;
+
+const ROLE_LABELS = {founder:'مؤسس',builder:'مطوّر/مصمم',mentor:'مرشد',investor:'مستثمر',organization:'منظمة',student:'طالب',customer:'عميل'};
+const ROLE_ICONS = {founder:'🚀',builder:'👨‍💻',mentor:'🧠',investor:'💰',organization:'🏢',student:'🎓',customer:'🛍️'};
+const STAGES = ['idea','validation','mvp','early_revenue','growth','fundraising'];
+const STAGE_LABELS = {idea:'فكرة',validation:'تحقق',mvp:'MVP',early_revenue:'إيرادات مبكرة',growth:'نمو',fundraising:'تمويل'};
+const OPP_CATS = {funding:'تمويل ومنح',programs:'حاضنات ومسرعات',competitions:'مسابقات وهاكاثونات',education:'منح تعليمية',jobs:'وظائف وتدريب'};
+const ADMIN_EMAILS = []; // اختياري: أضف بريد الإدارة هنا. النشر في الفرص متاح للأعضاء المسجلين.
+const REACTION_EMOJIS = ['❤️','😂','👍','😮','😢','🔥'];
+
+/* ============ @MENTIONS ============ */
+let mentionCandidates=null;
+async function ensureMentionCandidates(){
+  if(mentionCandidates)return mentionCandidates;
+  try{
+    const snap=await db.ref('users').limitToLast(300).get();
+    const arr=[];snap.forEach(c=>{if(c.key!==currentUser?.uid)arr.push({uid:c.key,name:(c.val()||{}).name||'مستخدم'});});
+    mentionCandidates=arr;
+  }catch(e){mentionCandidates=[];}
+  return mentionCandidates;
+}
+function getMentionQuery(el){
+  const val=el.value||'';
+  const pos=el.selectionStart||val.length;
+  const upto=val.slice(0,pos);
+  const at=upto.lastIndexOf('@');
+  if(at===-1)return null;
+  const seg=upto.slice(at+1);
+  if(/\s/.test(seg)||seg.length>25)return null;
+  return {at,query:seg};
+}
+async function handleMentionInput(el,dropId){
+  const info=getMentionQuery(el);
+  const drop=document.getElementById(dropId);
+  if(!drop)return;
+  if(!info){drop.classList.add('hidden');drop.classList.remove('open');return;}
+  const cands=await ensureMentionCandidates();
+  const q=info.query.toLowerCase();
+  const matches=cands.filter(c=>c.name.toLowerCase().includes(q)).slice(0,6);
+  if(!matches.length){drop.classList.add('hidden');drop.classList.remove('open');return;}
+  drop.classList.remove('hidden');drop.classList.add('open');
+  drop.innerHTML=matches.map(c=>`<div style="display:flex;gap:8px;align-items:center;padding:6px 8px;cursor:pointer;border-radius:8px;" onmousedown="event.preventDefault();insertMention('${el.id}','${dropId}','${c.uid}','${esc(c.name).replace(/'/g,"\\'")}')"><img class="avatar" style="width:24px;height:24px;" src="${avatarUrl(allUsersCache[c.uid]||{name:c.name})}"><span style="font-weight:700;font-size:13px;">${esc(c.name)}</span></div>`).join('');
+}
+function insertMention(elId,dropId,uid,name){
+  const el=document.getElementById(elId);
+  if(!el)return;
+  const info=getMentionQuery(el);
+  const val=el.value;
+  const pos=el.selectionStart||val.length;
+  const before=info?val.slice(0,info.at):val.slice(0,pos);
+  const after=val.slice(pos);
+  el.value=before+'@'+name+' '+after;
+  el._mentionMap=el._mentionMap||{};
+  el._mentionMap[name]=uid;
+  document.getElementById(dropId)?.classList.add('hidden');
+  document.getElementById(dropId)?.classList.remove('open');
+  el.focus();
+}
+function extractMentions(el){
+  const map=el?._mentionMap||{};
+  const text=el?.value||'';
+  const result=[];
+  Object.keys(map).forEach(name=>{
+    if(text.includes('@'+name))result.push({uid:map[name],name});
+  });
+  return result;
+}
+function renderTextWithMentions(text,mentions){
+  let out=esc(text||'');
+  (mentions||[]).forEach(m=>{
+    if(!m||!m.name||!m.uid)return;
+    const safe=esc(m.name);
+    const re=new RegExp('@'+safe.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g');
+    out=out.replace(re,`<span style="color:var(--brand);font-weight:700;cursor:pointer;" onclick="event.stopPropagation();go('profile',{uid:'${m.uid}'})">@${safe}</span>`);
+  });
+  return out;
+}
+
+/* ============ HELPERS ============ */
+function toast(msg,type='info'){
+  const w=document.getElementById('toastWrap');
+  const t=document.createElement('div');
+  t.className='toast';
+  if(type==='error')t.style.background='#c0392b';
+  if(type==='success')t.style.background='#1e8e5a';
+  t.textContent=msg;
+  w.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300);},2600);
+}
+function esc(s){return (s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+/* بيظهر رسالة خطأ واضحة + زر إعادة محاولة بدل ما القسم يفضل عالق على اللودينج للأبد */
+function loadFail(elId,msg,retryFn){
+  const el=document.getElementById(elId);
+  if(!el)return;
+  el.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--danger);">
+    <i class="fa-solid fa-triangle-exclamation"></i> ${esc(msg||'تعذر تحميل البيانات، تأكد من اتصالك بالإنترنت')}
+    ${retryFn?`<br><button class="btn" style="margin-top:10px;" onclick="${retryFn}">إعادة المحاولة</button>`:''}
+  </div>`;
+}
+function timeAgo(ts){
+  if(!ts)return'';
+  const s=Math.floor((Date.now()-ts)/1000);
+  if(s<60)return'الآن';
+  if(s<3600)return Math.floor(s/60)+' د';
+  if(s<86400)return Math.floor(s/3600)+' س';
+  if(s<2592000)return Math.floor(s/86400)+' يوم';
+  return new Date(ts).toLocaleDateString('ar-EG');
+}
+function uid(){return db.ref().push().key;}
+async function addScore(targetUid,amount){
+  if(!targetUid||!Number.isFinite(Number(amount))||Number(amount)<=0)return;
+  try{
+    await db.ref('users/'+targetUid+'/founderScore').transaction(v=>(Number(v)||0)+Number(amount));
+    if(currentUser&&targetUid===currentUser.uid&&myProfile)myProfile.founderScore=(Number(myProfile.founderScore)||0)+Number(amount);
+  }catch(e){ console.warn('Score update failed',e); }
+}
+function avatarUrl(u){return (u&&u.avatar)||'https://api.dicebear.com/7.x/initials/svg?seed='+encodeURIComponent((u&&u.name)||'U')+'&backgroundColor=6c4dfb&textColor=ffffff';}
+function compressImage(file,maxDim,quality){
+  maxDim=maxDim||1280;quality=quality||0.72;
+  return new Promise((resolve,reject)=>{
+    if(!file.type.startsWith('image/')){resolve(file);return;}
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(w>maxDim||h>maxDim){
+          if(w>h){h=Math.round(h*maxDim/w);w=maxDim;}
+          else{w=Math.round(w*maxDim/h);h=maxDim;}
+        }
+        const canvas=document.createElement('canvas');
+        canvas.width=w;canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        canvas.toBlob(blob=>{
+          if(!blob){resolve(file);return;}
+          resolve(new File([blob],(file.name||'image').replace(/\.[^.]+$/,'')+'.jpg',{type:'image/jpeg'}));
+        },'image/jpeg',quality);
+      };
+      img.onerror=()=>resolve(file);
+      img.src=e.target.result;
+    };
+    reader.onerror=()=>resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
+async function uploadImage(file,onProgress){
+  const compressed=await compressImage(file);
+  const fd=new FormData();fd.append('image',compressed);
+  const res=await fetch('https://api.imgbb.com/1/upload?key='+IMGBB_KEY,{method:'POST',body:fd});
+  const j=await res.json();
+  if(j&&j.success)return j.data.url;
+  throw new Error('upload failed');
+}
+function previewImageInto(inputEl,imgElId){
+  const file=inputEl.files[0];
+  if(!file)return;
+  const url=URL.createObjectURL(file);
+  const el=document.getElementById(imgElId);
+  if(el){el.src=url;el.classList.remove('hidden');}
+}
+
+/* ============ THEMES (local device only) ============ */
+const THEMES=[
+  {id:'default',name:'الافتراضي',c1:'#6c4dfb',c2:'#f7f5f2'},
+  {id:'dark',name:'داكن',c1:'#9b7dff',c2:'#131218'},
+  {id:'ocean',name:'محيط',c1:'#0891b2',c2:'#eef7f9'},
+  {id:'sunset',name:'غروب',c1:'#ff6b35',c2:'#fff4e9'},
+  {id:'forest',name:'غابة',c1:'#15803d',c2:'#f2f8ee'},
+  {id:'rose',name:'وردي',c1:'#e11d48',c2:'#fdf1f5'}
+];
+function applyTheme(id){
+  try{localStorage.setItem('vh_theme',id);}catch(e){}
+  document.documentElement.setAttribute('data-theme',id);
+  document.querySelectorAll('.theme-swatch').forEach(s=>s.classList.toggle('on',s.dataset.theme===id));
+  toast('تم تغيير الثيم — هيفضل محفوظ على جهازك بس','success');
+}
+function openThemePicker(){
+  let current='default';
+  try{current=localStorage.getItem('vh_theme')||'default';}catch(e){}
+  openModal(`<div>
+    <div style="padding:0 18px 20px;">
+      <h3 style="font-weight:800;font-size:17px;margin-bottom:4px;">🎨 اختر الثيم اللي يعجبك</h3>
+      <div style="color:var(--muted);font-size:13px;margin-bottom:14px;">الاختيار بيتحفظ على جهازك بس، مش على حسابك</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+        ${THEMES.map(t=>`<div class="theme-swatch ${t.id===current?'on':''}" data-theme="${t.id}" onclick="applyTheme('${t.id}')" style="cursor:pointer;border:2.5px solid var(--line);border-radius:14px;padding:8px;text-align:center;">
+          <div style="display:flex;height:34px;border-radius:8px;overflow:hidden;border:2px solid var(--line);margin-bottom:6px;">
+            <div style="flex:1;background:${t.c1}"></div><div style="flex:1;background:${t.c2}"></div>
+          </div>
+          <div style="font-weight:700;font-size:12px;">${t.name}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`);
+}
+function openLightbox(url){
+  const box=document.createElement('div');
+  box.className='lightbox-bg';
+  box.onclick=()=>box.remove();
+  box.innerHTML=`<img src="${url}">`;
+  document.body.appendChild(box);
+}
+function go(name,params={}){
+  route={name,params};
+  document.querySelectorAll('[data-nav]').forEach(el=>el.classList.toggle('active',el.dataset.nav===name));
+  document.getElementById('searchDrop')?.classList.add('hidden');
+  render();
+  window.scrollTo(0,0);
+}
+function stopRealtimeListeners(){
+  if(feedUnsub){try{feedUnsub();}catch(e){} feedUnsub=null;}
+  if(notifUnsub){try{notifUnsub();}catch(e){} notifUnsub=null;}
+  if(msgListUnsub){try{msgListUnsub();}catch(e){} msgListUnsub=null;}
+  if(convBadgeUnsub){try{convBadgeUnsub();}catch(e){} convBadgeUnsub=null;}
+  if(activeMsgUnsub){try{activeMsgUnsub();}catch(e){} activeMsgUnsub=null;}
+}
+function requireAuth(){
+  if(!currentUser){go('auth');toast('سجّل دخولك أولًا');return false;}
+  return true;
+}
+
+/* ============ AUTH ============ */
+auth.onAuthStateChanged(async(user)=>{
+  currentUser=user;
+  stopRealtimeListeners();
+  document.getElementById('loaderPage').classList.add('hidden');
+  if(user){
+    let snap;
+    try{snap=await db.ref('users/'+user.uid).get();}catch(e){console.error(e);document.getElementById('app').innerHTML='<div class="card" style="margin:30px auto;max-width:700px;padding:24px;text-align:center;color:var(--danger);"><b>تعذر الاتصال بقاعدة البيانات</b><div style="margin-top:8px;color:var(--muted);">تأكد أن Realtime Database Rules الجديدة منشورة وأن Database URL هو نفسه الموجود في الملف.</div><button class="btn" style="margin-top:14px;" onclick="location.reload()">إعادة المحاولة</button></div>';return;}
+    if(snap.exists()){
+      myProfile=snap.val();
+      document.getElementById('navbar').classList.remove('hidden');
+      document.getElementById('bottomNav').classList.remove('hidden');
+      document.getElementById('navAvatar').src=avatarUrl(myProfile);
+      if(myProfile.isAdmin||ADMIN_EMAILS.map(x=>x.toLowerCase()).includes((user.email||'').toLowerCase())){document.getElementById('adminTabBtn').classList.remove('hidden');}
+      listenNotifications();
+      listenConvBadge();
+      go('feed');
+      handleDeepLink();
+    }else{
+      go('onboarding');
+    }
+  }else{
+    myProfile=null;
+    document.getElementById('navbar').classList.add('hidden');
+    document.getElementById('bottomNav').classList.add('hidden');
+    go('landing');
+  }
+});
+
+function doRegister(email,pass,name){
+  return auth.createUserWithEmailAndPassword(email,pass).then(async cred=>{
+    const emailNorm=(email||'').toLowerCase();
+    const isConfiguredAdmin=ADMIN_EMAILS.map(x=>x.toLowerCase()).includes(emailNorm);
+    await db.ref('users/'+cred.user.uid).set({
+      uid:cred.user.uid,name:name,email:email,role:'',bio:'',location:'',
+      skills:[],avatar:'',availability:'available',founderScore:0,
+      isAdmin:isConfiguredAdmin,createdAt:Date.now()
+    });
+  });
+}
+function doLogin(email,pass){return auth.signInWithEmailAndPassword(email,pass);}
+function doLogout(){stopRealtimeListeners();auth.signOut();go('landing');}
+/* تسجيل خروج من الحساب الحالي والدخول المباشر بحساب تاني (بدل الرجوع لصفحة الهبوط) */
+function switchAccount(){stopRealtimeListeners();auth.signOut();go('auth');}
+function resetPassword(){
+  const email=(document.getElementById('afEmail')?.value||'').trim();
+  if(!email){toast('اكتب بريدك الإلكتروني في الخانة فوق الأول','error');return;}
+  auth.sendPasswordResetEmail(email).then(()=>toast('تم إرسال رابط إعادة تعيين كلمة المرور لبريدك','success')).catch(()=>toast('تعذر إرسال الرابط، تأكد من صحة البريد','error'));
+}
+async function loginWithGoogle(){
+  const provider=new firebase.auth.GoogleAuthProvider();
+  try{
+    const cred=await auth.signInWithPopup(provider);
+    const ref=db.ref('users/'+cred.user.uid);
+    const snap=await ref.get();
+    if(!snap.exists()){
+      const email=(cred.user.email||'').toLowerCase();
+      const isConfiguredAdmin=ADMIN_EMAILS.map(x=>x.toLowerCase()).includes(email);
+      await ref.set({uid:cred.user.uid,name:cred.user.displayName||'مستخدم جديد',email:cred.user.email||'',role:'',bio:'',location:'',skills:[],avatar:cred.user.photoURL||'',availability:'available',founderScore:0,isAdmin:isConfiguredAdmin,createdAt:Date.now()});
+    }
+  }catch(e){
+    console.error(e);
+    if(e.code!=='auth/popup-closed-by-user')toast('تعذر تسجيل الدخول بجوجل','error');
+  }
+}
+
+/* ============ RENDER ROUTER ============ */
+function render(){
+  const app=document.getElementById('app');
+  const r={
+    landing:renderLanding, auth:renderAuth, onboarding:renderOnboarding,
+    feed:renderFeed, discover:renderDiscover, profile:renderProfile,
+    startups:renderStartups, startupDetail:renderStartupDetail, talent:renderTalent,
+    opportunities:renderOpportunities, opportunityDetail:renderOpportunityDetail,
+    messages:renderMessages, communities:renderCommunities, communityDetail:renderCommunityDetail, notifications:renderNotifications, leaderboard:renderLeaderboard,
+    admin:renderAdmin, search:renderSearchPage
+  };
+  app.innerHTML='';
+  (r[route.name]||renderLanding)(app);
+}
+
+/* ============ LANDING ============ */
+function renderLanding(app){
+  app.innerHTML=`
+  <div style="padding:20px 0 10px;text-align:center;">
+    <div style="display:inline-flex;align-items:center;gap:10px;margin-bottom:18px;">
+      <div style="width:44px;height:44px;background:var(--brand);border:2.5px solid var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px;">V</div>
+      <div style="font-weight:900;font-size:22px;">VentureHub</div>
+    </div>
+    <h1 style="font-size:34px;font-weight:900;line-height:1.4;margin:0 0 12px;">ابنِ مشروعك.<br>كوّن فريقك.<br><span style="color:var(--brand);">وابنِ مستقبلك.</span></h1>
+    <p style="color:var(--muted);font-size:16px;max-width:480px;margin:0 auto 22px;">مجتمع عربي يجمع رواد الأعمال والمواهب والمرشدين والفرص في مكان واحد.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn btn-brand" style="font-size:16px;padding:12px 26px;" onclick="go('auth',{mode:'register'})">ابدأ مجانًا</button>
+      <button class="btn" style="font-size:16px;padding:12px 26px;" onclick="go('auth',{mode:'login'})">تسجيل الدخول</button>
+    </div>
+  </div>
+  <div class="scrollx" style="display:flex;gap:12px;margin:26px 0;padding-bottom:6px;">
+    ${statCard('المؤسسين','12,500+','🚀')}${statCard('المشاريع','4,800+','💡')}${statCard('الفرص','1,200+','🎯')}${statCard('Mentors','650+','🧠')}
+  </div>
+  <div style="margin-top:10px;">
+    <h2 style="font-weight:900;font-size:20px;margin-bottom:14px;">استكشف النظام البيئي</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;">
+      ${ecoCard('🚀','Startups','مشاريع ناشئة تبحث عن فرق وفرص')}
+      ${ecoCard('👨‍💻','Talent','مطورين ومصممين ومسوقين')}
+      ${ecoCard('🧠','Mentors','خبرات تدعم رحلتك')}
+      ${ecoCard('💰','Funding','منح ومستثمرين وحاضنات')}
+      ${ecoCard('🏆','Competitions','مسابقات وهاكاثونات')}
+      ${ecoCard('📚','Learning','مسارات تعلم ريادة الأعمال')}
+    </div>
+  </div>
+  <div style="text-align:center;margin:40px 0 10px;">
+    <button class="btn btn-brand" style="padding:12px 30px;font-size:16px;" onclick="go('auth',{mode:'register'})">انضم الآن مجانًا</button>
+  </div>`;
+}
+function statCard(label,val,icon){return `<div class="card" style="min-width:130px;padding:16px;text-align:center;"><div style="font-size:22px;">${icon}</div><div style="font-weight:900;font-size:19px;margin-top:4px;">${val}</div><div style="color:var(--muted);font-size:12px;">${label}</div></div>`;}
+function ecoCard(icon,title,desc){return `<div class="card" style="padding:18px;cursor:pointer;" onclick="go('auth',{mode:'register'})"><div style="font-size:26px;">${icon}</div><div style="font-weight:800;margin-top:8px;">${title}</div><div style="color:var(--muted);font-size:13px;margin-top:4px;">${desc}</div></div>`;
+}
+
+/* ============ AUTH VIEW ============ */
+function renderAuth(app){
+  const mode=route.params.mode||'login';
+  app.innerHTML=`
+  <div style="max-width:400px;margin:30px auto;">
+    <div style="text-align:center;margin-bottom:20px;cursor:pointer;" onclick="go('landing')">
+      <div style="display:inline-flex;align-items:center;gap:8px;">
+        <div style="width:36px;height:36px;background:var(--brand);border:2.5px solid var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;">V</div>
+        <div style="font-weight:900;font-size:19px;">VentureHub</div>
+      </div>
+    </div>
+    <div class="card" style="padding:22px;">
+      <div style="display:flex;gap:8px;margin-bottom:18px;">
+        <div class="tab-btn ${mode==='login'?'active':''}" style="flex:1;text-align:center;" onclick="go('auth',{mode:'login'})">تسجيل الدخول</div>
+        <div class="tab-btn ${mode==='register'?'active':''}" style="flex:1;text-align:center;" onclick="go('auth',{mode:'register'})">حساب جديد</div>
+      </div>
+      <div id="authErr" style="color:var(--danger);font-size:13px;margin-bottom:8px;"></div>
+      ${mode==='register'?'<input id="afName" class="input" placeholder="الاسم الكامل" style="margin-bottom:10px;">':''}
+      <input id="afEmail" class="input" placeholder="البريد الإلكتروني" type="email" style="margin-bottom:10px;">
+      <input id="afPass" class="input" placeholder="كلمة المرور" type="password" style="margin-bottom:${mode==='login'?'6px':'14px'};">
+      ${mode==='login'?'<div style="text-align:left;margin-bottom:12px;"><span style="color:var(--brand);font-size:12px;font-weight:700;cursor:pointer;" onclick="resetPassword()">نسيت كلمة المرور؟</span></div>':''}
+      <button class="btn btn-brand" style="width:100%;" onclick="submitAuth('${mode}')">${mode==='login'?'دخول':'إنشاء حساب'}</button>
+      <div style="display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--muted);font-size:12px;">
+        <div style="flex:1;height:2px;background:var(--soft);"></div>أو<div style="flex:1;height:2px;background:var(--soft);"></div>
+      </div>
+      <button class="btn" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;" onclick="loginWithGoogle()">
+        <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84c-.21 1.13-.85 2.09-1.8 2.73v2.27h2.92c1.71-1.57 2.68-3.88 2.68-6.64z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.27c-.81.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.71H.96v2.34C2.44 15.98 5.48 18 9 18z"/><path fill="#FBBC05" d="M3.97 10.7c-.18-.54-.28-1.11-.28-1.7s.1-1.16.28-1.7V4.96H.96C.35 6.17 0 7.55 0 9s.35 2.83.96 4.04l3.01-2.34z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.51.45 3.44 1.35l2.59-2.59C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.96l3.01 2.34C4.68 5.16 6.66 3.58 9 3.58z"/></svg>
+        الدخول بحساب جوجل
+      </button>
+    </div>
+  </div>`;
+}
+function submitAuth(mode){
+  const email=document.getElementById('afEmail').value.trim();
+  const pass=document.getElementById('afPass').value;
+  const errEl=document.getElementById('authErr');
+  errEl.textContent='';
+  if(!email||!pass){errEl.textContent='من فضلك أكمل البيانات';return;}
+  if(mode==='register'){
+    const name=document.getElementById('afName').value.trim();
+    if(!name){errEl.textContent='من فضلك أدخل الاسم';return;}
+    doRegister(email,pass,name).catch(e=>errEl.textContent=friendlyErr(e));
+  }else{
+    doLogin(email,pass).catch(e=>errEl.textContent=friendlyErr(e));
+  }
+}
+function friendlyErr(e){
+  const m=e.code||'';
+  if(m.includes('email-already-in-use'))return'البريد الإلكتروني مستخدم بالفعل';
+  if(m.includes('invalid-email'))return'بريد إلكتروني غير صالح';
+  if(m.includes('weak-password'))return'كلمة المرور ضعيفة (6 أحرف على الأقل)';
+  if(m.includes('user-not-found')||m.includes('wrong-password')||m.includes('invalid-credential'))return'بيانات الدخول غير صحيحة';
+  return'حدث خطأ، حاول مرة أخرى';
+}
+
+/* ============ ONBOARDING ============ */
+function renderOnboarding(app){
+  app.innerHTML=`
+  <div style="max-width:460px;margin:20px auto;">
+    <h2 style="font-weight:900;font-size:22px;text-align:center;margin-bottom:6px;">أهلًا بيك 👋</h2>
+    <p style="color:var(--muted);text-align:center;margin-bottom:20px;">اختر دورك في المجتمع علشان نظبطلك التجربة</p>
+    <div id="roleGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      ${Object.entries(ROLE_LABELS).map(([k,v])=>`<div class="card" style="padding:16px;text-align:center;cursor:pointer;" onclick="selectRole('${k}')"><div style="font-size:24px;">${ROLE_ICONS[k]}</div><div style="font-weight:800;margin-top:6px;">${v}</div></div>`).join('')}
+    </div>
+  </div>`;
+}
+async function selectRole(role){
+  if(!requireAuth()||!ROLE_LABELS[role])return;
+  try{
+    await db.ref('users/'+currentUser.uid+'/role').set(role);
+    myProfile.role=role;
+    toast('تم اختيار الدور: '+ROLE_LABELS[role],'success');
+    go('feed');
+    document.getElementById('navbar').classList.remove('hidden');
+    document.getElementById('bottomNav').classList.remove('hidden');
+    document.getElementById('navAvatar').src=avatarUrl(myProfile);
+  }catch(e){toast('تعذر حفظ الدور. راجع قواعد Firebase.','error');}
+}
+
+/* ============ FEED ============ */
+function renderFeed(app){
+  app.innerHTML=`
+  <div style="display:grid;grid-template-columns:1fr;gap:14px;">
+    <div class="card" style="padding:14px;display:flex;gap:10px;align-items:center;cursor:pointer;" onclick="openCreatePost()">
+      <img class="avatar" style="width:38px;height:38px;" src="${avatarUrl(myProfile)}">
+      <div style="flex:1;color:var(--muted);border:2px solid var(--line);border-radius:12px;padding:9px 14px;">شارك تحديث، سؤال، أو فرصة...</div>
+    </div>
+    <div class="scrollx" style="display:flex;gap:8px;">
+      ${['post','question','build','opportunity','update','poll'].map(t=>`<div class="pill" onclick="openCreatePost('${t}')">${postTypeLabel(t)}</div>`).join('')}
+    </div>
+    <div id="suggestBox"></div>
+    <div id="feedList"></div>
+  </div>`;
+  loadFeed();
+  loadSuggestedFollows();
+}
+async function loadSuggestedFollows(){
+  const box=document.getElementById('suggestBox');
+  if(!box||!currentUser)return;
+  try{
+    const [usersSnap,followingSnap]=await Promise.all([db.ref('users').limitToLast(25).get(),db.ref('follows/'+currentUser.uid).get()]);
+    const following=followingSnap.exists()?followingSnap.val():{};
+    const arr=[];usersSnap.forEach(c=>{if(c.key!==currentUser.uid&&!following[c.key])arr.push({id:c.key,...c.val()});});
+    if(!arr.length){box.innerHTML='';return;}
+    const picks=arr.sort(()=>Math.random()-0.5).slice(0,8);
+    box.innerHTML=`<div class="card" style="padding:14px;">
+      <div style="font-weight:800;font-size:14px;margin-bottom:10px;">✨ ناس مقترح تتابعهم</div>
+      <div class="scrollx" style="display:flex;gap:10px;">
+        ${picks.map(u=>`<div style="min-width:110px;text-align:center;border:2px solid var(--line);border-radius:14px;padding:10px 8px;flex-shrink:0;">
+          <img class="avatar" style="width:44px;height:44px;margin:0 auto;cursor:pointer;" src="${avatarUrl(u)}" onclick="go('profile',{uid:'${u.id}'})">
+          <div style="font-weight:700;font-size:12px;margin-top:6px;" class="line-clamp-2">${esc(u.name)}</div>
+          <div style="color:var(--muted);font-size:10px;">${ROLE_LABELS[u.role]||''}</div>
+          <button class="btn btn-brand" style="padding:3px 10px;font-size:11px;margin-top:6px;width:100%;" onclick="quickFollow('${u.id}',this)">متابعة</button>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }catch(e){console.error(e);box.innerHTML='';}
+}
+async function quickFollow(targetUid,btn){
+  if(!requireAuth())return;
+  try{
+    await Promise.all([
+      db.ref('follows/'+currentUser.uid+'/'+targetUid).set(true),
+      db.ref('followers/'+targetUid+'/'+currentUser.uid).set(true)
+    ]);
+    notify(targetUid,'follow','بدأ شخص بمتابعتك');
+    addScore(targetUid,2);
+    btn.closest('div').style.opacity='0.35';
+    btn.textContent='تمت المتابعة';btn.disabled=true;
+  }catch(e){console.error(e);toast('تعذر المتابعة','error');}
+}
+function postTypeLabel(t){return {post:'📝 منشور',question:'❓ سؤال',build:'🏗️ بناء علني',opportunity:'🎯 فرصة (مشاركة شخصية)',update:'📈 تحديث مشروع',poll:'📊 استطلاع'}[t]||t;}
+let feedRenderToken=0;
+function loadFeed(){
+  if(feedUnsub){try{feedUnsub();}catch(e){} feedUnsub=null;}
+  const list=document.getElementById('feedList');
+  if(!list)return;
+  list.innerHTML='<div style="text-align:center;padding:30px;color:var(--muted);"><i class="fa-solid fa-spinner spin"></i></div>';
+  const feedRef=db.ref('posts').orderByChild('createdAt').limitToLast(50);
+  const feedCb=feedRef.on('value',async snap=>{
+    const myToken=++feedRenderToken; // يمنع سباق التحديثات: لو جه سناب شوت جديد قبل ما القديم يخلص، القديم يتجاهل نفسه
+    const posts=[];
+    snap.forEach(c=>posts.push({id:c.key,...c.val()}));
+    posts.reverse();
+    if(!posts.length){if(myToken===feedRenderToken)list.innerHTML='<div class="card" style="padding:30px;text-align:center;color:var(--muted);">لا توجد منشورات بعد. كن أول من ينشر!</div>';return;}
+    const authorIds=[...new Set(posts.map(p=>p.authorId))];
+    await Promise.all(authorIds.map(fetchUserCached));
+    if(myToken!==feedRenderToken)return; // سناب شوت أحدث وصل واتعرض بالفعل، متكتبش فوقه ببيانات قديمة
+    list.innerHTML=posts.map(renderPostCard).join('');
+  },err=>{console.error(err);list.innerHTML='<div class="card" style="padding:30px;text-align:center;color:var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i> تعذر تحميل الفيد<br><button class="btn" style="margin-top:10px;" onclick="loadFeed()">إعادة المحاولة</button></div>';});
+  feedUnsub=()=>feedRef.off('value',feedCb);
+}
+async function fetchUserCached(id){
+  if(allUsersCache[id])return allUsersCache[id];
+  const s=await db.ref('users/'+id).get();
+  allUsersCache[id]=s.exists()?s.val():{name:'مستخدم محذوف'};
+  return allUsersCache[id];
+}
+function postPath(p){return p&&p.communityId?('communityPosts/'+p.communityId):'posts';}
+function postRef(postId,communityId){return db.ref((communityId?('communityPosts/'+communityId):'posts')+'/'+postId);}
+function renderPostCard(p){
+  const author=allUsersCache[p.authorId]||{name:'...'};
+  const likeCount=p.likes?Object.keys(p.likes).length:0;
+  const helpCount=p.canHelp?Object.keys(p.canHelp).length:0;
+  const iLiked=currentUser&&p.likes&&p.likes[currentUser.uid];
+  const iHelped=currentUser&&p.canHelp&&p.canHelp[currentUser.uid];
+  const iSaved=currentUser&&p.saves&&p.saves[currentUser.uid];
+  let bodyExtra='';
+  if(p.type==='poll'&&p.poll){
+    const total=Object.values(p.poll.votes||{}).length;
+    bodyExtra='<div style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">'+p.poll.options.map((o,i)=>{
+      const cnt=Object.values(p.poll.votes||{}).filter(v=>v===i).length;
+      const pct=total?Math.round(cnt/total*100):0;
+      return `<div class="brd" style="border-radius:10px;padding:8px 12px;position:relative;overflow:hidden;cursor:pointer;" onclick="votePoll('${p.id}',${i},'${p.communityId||''}')">
+        <div style="position:absolute;inset:0;background:#e9e4fb;width:${pct}%;z-index:0;"></div>
+        <div style="position:relative;z-index:1;display:flex;justify-content:space-between;font-weight:700;font-size:14px;"><span>${esc(o)}</span><span>${pct}%</span></div>
+      </div>`;
+    }).join('')+`</div>`;
+  }
+  if(p.imageUrl){bodyExtra+=`<img src="${esc(p.imageUrl)}" style="width:100%;border-radius:12px;border:2px solid var(--line);margin-top:10px;max-height:340px;object-fit:cover;cursor:zoom-in;" onclick="event.stopPropagation();openLightbox('${p.imageUrl}')">`;}
+  let repostBlock='';
+  if(p.repostOf){
+    repostBlock=`<div class="brd" style="border-radius:12px;padding:12px;margin-top:10px;background:var(--soft);cursor:pointer;" onclick="event.stopPropagation();go('profile',{uid:'${p.originalAuthorId}'})">
+      <div style="display:flex;gap:8px;align-items:center;">
+        <img class="avatar" style="width:26px;height:26px;" src="${p.originalAuthorAvatar||avatarUrl({})}">
+        <span style="font-weight:700;font-size:13px;">${esc(p.originalAuthorName||'')}</span>
+      </div>
+      <div class="line-clamp-3" style="margin-top:6px;font-size:13px;color:#333;">${esc(p.originalText||'')}</div>
+      ${p.originalImageUrl?`<img src="${p.originalImageUrl}" style="width:100%;border-radius:8px;margin-top:6px;max-height:180px;object-fit:cover;">`:''}
+    </div>`;
+  }
+  const repostCount=p.repostCount||0;
+  return `<div class="card" style="padding:16px;margin-bottom:12px;">
+    <div style="display:flex;gap:10px;">
+      <img class="avatar" style="width:42px;height:42px;cursor:pointer;" src="${avatarUrl(author)}" onclick="go('profile',{uid:'${p.authorId}'})">
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <span style="font-weight:800;cursor:pointer;" onclick="go('profile',{uid:'${p.authorId}'})">${esc(author.name)}</span>
+          ${author.role?`<span class="badge" style="font-size:11px;padding:1px 8px;">${ROLE_ICONS[author.role]||''} ${ROLE_LABELS[author.role]||''}</span>`:''}
+          <span style="color:var(--muted);font-size:12px;">· ${timeAgo(p.createdAt)}</span>
+          <span class="badge" style="font-size:11px;background:var(--soft);">${p.repostOf?'🔁 أعاد النشر':postTypeLabel(p.type).split(' ')[0]}</span>
+        </div>
+        ${p.text?`<div style="margin-top:6px;white-space:pre-wrap;line-height:1.7;">${renderTextWithMentions(p.text,p.mentions)}</div>`:''}
+        ${repostBlock}
+        ${bodyExtra}
+        <div style="display:flex;gap:14px;margin-top:12px;flex-wrap:wrap;align-items:center;">
+          <span onclick="toggleLike('${p.id}','${p.communityId||''}')" style="cursor:pointer;font-weight:700;font-size:13px;color:${iLiked?'var(--danger)':'var(--muted)'};"><i class="fa-${iLiked?'solid':'regular'} fa-heart"></i> ${likeCount}</span>
+          <span onclick="openComments('${p.id}','${p.communityId||''}')" style="cursor:pointer;font-weight:700;font-size:13px;color:var(--muted);"><i class="fa-regular fa-comment"></i> ${p.commentsCount||0}</span>
+          <span onclick="openShareModal('${p.id}')" style="cursor:pointer;font-weight:700;font-size:13px;color:var(--muted);"><i class="fa-solid fa-retweet"></i> ${repostCount>0?repostCount:''}</span>
+          <span onclick="event.stopPropagation();sharePost('${p.id}')" style="cursor:pointer;font-weight:700;font-size:13px;color:var(--muted);" title="مشاركة"><i class="fa-solid fa-share-nodes"></i></span>
+          <span onclick="toggleSave('${p.id}','${p.communityId||''}')" style="cursor:pointer;font-weight:700;font-size:13px;color:${iSaved?'var(--brand)':'var(--muted)'};"><i class="fa-${iSaved?'solid':'regular'} fa-bookmark"></i></span>
+          <span onclick="toggleCanHelp('${p.id}','${p.communityId||''}')" class="pill ${iHelped?'on':''}" style="font-size:12px;padding:3px 10px;">🤝 أقدر أساعد ${helpCount>0?'('+helpCount+')':''}</span>
+          ${(currentUser&&p.authorId!==currentUser.uid)?`<span onclick="event.stopPropagation();openReportModal('${p.id}','${p.communityId||''}')" style="cursor:pointer;color:var(--muted);font-size:12px;margin-right:auto;" title="إبلاغ"><i class="fa-regular fa-flag"></i></span>`:''}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function openReportModal(postId,communityId){
+  if(!requireAuth())return;
+  openModal(`<div style="padding:16px;">
+    <h3 style="font-weight:800;font-size:17px;margin-bottom:10px;">🚩 الإبلاغ عن منشور</h3>
+    <textarea id="reportReason" class="input" rows="3" placeholder="اكتب سبب الإبلاغ..."></textarea>
+    <button class="btn btn-brand" style="width:100%;margin-top:10px;" id="reportSubmit" onclick="submitReport('${postId}','${communityId||''}')">إرسال البلاغ</button>
+  </div>`);
+}
+async function submitReport(postId,communityId){
+  const reason=document.getElementById('reportReason').value.trim();
+  if(!reason){toast('اكتب سبب الإبلاغ','error');return;}
+  const btn=document.getElementById('reportSubmit');btn.disabled=true;btn.textContent='جارٍ الإرسال...';
+  await db.ref('reports/'+uid()).set({postId,communityId:communityId||null,reporterId:currentUser.uid,reason,status:'open',createdAt:Date.now()});
+  closeModal();toast('تم إرسال البلاغ، شكرًا لمساعدتك في الحفاظ على المجتمع','success');
+}
+async function toggleLike(postId,communityId){
+  if(!requireAuth())return;const ref=postRef(postId,communityId||null).child('likes/'+currentUser.uid);
+  try{const x=await ref.get();if(x.exists())await ref.remove();else{await ref.set(true);const p=(await postRef(postId,communityId||null).get()).val();if(p&&p.authorId!==currentUser.uid)notify(p.authorId,'like','أعجب شخص بمنشورك');}}catch(e){console.error(e);toast('تعذر تسجيل الإعجاب','error');}
+}
+async function toggleSave(postId,communityId){
+  if(!requireAuth())return;const ref=postRef(postId,communityId||null).child('saves/'+currentUser.uid);
+  try{const x=await ref.get();x.exists()?await ref.remove():await ref.set(true);}catch(e){console.error(e);toast('تعذر الحفظ','error');}
+}
+async function toggleCanHelp(postId,communityId){
+  if(!requireAuth())return;const ref=postRef(postId,communityId||null).child('canHelp/'+currentUser.uid);
+  try{const x=await ref.get();if(x.exists())await ref.remove();else{await ref.set(true);const p=(await postRef(postId,communityId||null).get()).val();if(p&&p.authorId!==currentUser.uid)notify(p.authorId,'canhelp','عرض شخص المساعدة في منشورك');toast('تم إرسال عرض المساعدة','success');}}catch(e){console.error(e);toast('تعذر إتمام العملية','error');}
+}
+/* مشاركة حقيقية (مش إعادة نشر): تفتح شاشة المشاركة في الموبايل، أو تنسخ رابط مباشر للمنشور */
+async function sharePost(postId){
+  const url=location.origin+location.pathname+'#post='+postId;
+  const shareData={title:'VentureHub',text:'شوف المنشور ده على VentureHub',url};
+  try{
+    if(navigator.share){await navigator.share(shareData);return;}
+  }catch(e){ if(e && e.name==='AbortError')return; }
+  try{
+    await navigator.clipboard.writeText(url);
+    toast('تم نسخ رابط المنشور، شاركه مع اللي تحب','success');
+  }catch(e){toast('تعذر نسخ الرابط','error');}
+}
+/* دعم فتح منشور من رابط مشاركة مباشر (#post=ID) */
+function handleDeepLink(){
+  const h=location.hash||'';
+  if(h.startsWith('#post=')){
+    const pid=h.slice('#post='.length);
+    if(pid){history.replaceState(null,'',location.pathname);setTimeout(()=>openComments(pid,''),400);}
+  }
+}
+function openShareModal(postId){
+  if(!requireAuth())return;
+  openModal(`<div style="padding:0 18px 18px;">
+    <h3 style="font-weight:800;font-size:17px;margin-bottom:12px;">إعادة نشر</h3>
+    <textarea id="repostText" class="input" rows="2" placeholder="أضف تعليقك (اختياري)"></textarea>
+    <button class="btn btn-brand" style="width:100%;margin-top:12px;" onclick="submitRepost('${postId}')"><i class="fa-solid fa-retweet"></i> إعادة نشر لمتابعيك</button>
+  </div>`);
+}
+async function submitRepost(postId){
+  const text=document.getElementById('repostText').value.trim();
+  const orig=(await db.ref('posts/'+postId).get()).val();
+  if(!orig){toast('المنشور غير موجود','error');return;}
+  const originalAuthor=await fetchUserCached(orig.repostOf?orig.originalAuthorId||orig.authorId:orig.authorId);
+  const rid=uid();
+  await db.ref('posts/'+rid).set({
+    authorId:currentUser.uid,type:'repost',text,repostOf:postId,
+    originalAuthorId:orig.authorId,originalAuthorName:(allUsersCache[orig.authorId]||{}).name||'',
+    originalAuthorAvatar:avatarUrl(allUsersCache[orig.authorId]||{}),
+    originalText:orig.text||'',originalImageUrl:orig.imageUrl||'',
+    createdAt:Date.now(),commentsCount:0
+  });
+  db.ref('posts/'+postId+'/repostCount').transaction(v=>(v||0)+1);
+  if(orig.authorId!==currentUser.uid){notify(orig.authorId,'repost','أعاد شخص نشر منشورك');addScore(orig.authorId,2);}
+  closeModal();toast('تم إعادة النشر','success');
+}
+function votePoll(postId,idx,communityId){
+  if(!requireAuth())return;
+  postRef(postId,communityId||null).child('poll/votes/'+currentUser.uid).set(idx).catch(e=>{console.error(e);toast('تعذر تسجيل صوتك','error');});
+}
+
+/* ---- comments ---- */
+function openComments(postId,communityId){
+  if(!requireAuth())return;
+  openModal(`<div style="padding:16px;">
+    <h3 style="font-weight:800;font-size:17px;margin-bottom:12px;">التعليقات</h3>
+    <div id="commentsList" style="display:flex;flex-direction:column;gap:10px;max-height:50vh;overflow-y:auto;"></div>
+    <div id="mentionDropComment" class="hidden card" style="padding:6px;max-height:160px;overflow-y:auto;"></div>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <input id="commentInput" class="input" placeholder="اكتب تعليق... (استخدم @ للإشارة لشخص)" oninput="handleMentionInput(this,'mentionDropComment')" onkeydown="if(event.key==='Enter'&&!document.getElementById('mentionDropComment')?.classList.contains('open'))submitComment('${postId}','${communityId||''}')">
+      <button class="btn btn-brand" onclick="submitComment('${postId}','${communityId||''}')">إرسال</button>
+    </div>
+  </div>`);
+  const path=communityId?('communityComments/'+communityId+'/'+postId):('comments/'+postId);
+  db.ref(path).off();
+  let commentsRenderToken=0;
+  db.ref(path).orderByChild('createdAt').on('value',async snap=>{
+    const myToken=++commentsRenderToken; // نفس منطق منع سباق التحديثات المستخدم في الفيد والرسائل
+    const arr=[];snap.forEach(c=>arr.push({id:c.key,...c.val()}));
+    await Promise.all(arr.map(c=>fetchUserCached(c.authorId)));
+    if(myToken!==commentsRenderToken)return;
+    const el=document.getElementById('commentsList');if(!el)return;
+    el.innerHTML=arr.length?arr.map(c=>{const a=allUsersCache[c.authorId]||{};return `<div style="display:flex;gap:8px;"><img class="avatar" style="width:30px;height:30px;" src="${avatarUrl(a)}"><div style="background:var(--soft);border-radius:12px;padding:8px 12px;flex:1;"><b style="font-size:13px;">${esc(a.name||'مستخدم')}</b><div style="font-size:14px;">${renderTextWithMentions(c.text,c.mentions)}</div></div></div>`;}).join(''):'<div style="color:var(--muted);text-align:center;">لا توجد تعليقات بعد</div>';
+  },err=>{console.error(err);const el=document.getElementById('commentsList');if(el)el.innerHTML='<div style="color:var(--danger);text-align:center;padding:20px;">تعذر تحميل التعليقات</div>';});
+}
+async function submitComment(postId,communityId){
+  if(!requireAuth())return;
+  const input=document.getElementById('commentInput');const text=(input?.value||'').trim();if(!text)return;
+  const mentions=extractMentions(input);
+  try{
+    const base=communityId?('communityComments/'+communityId+'/'+postId):('comments/'+postId);
+    const data={authorId:currentUser.uid,text,createdAt:Date.now()};
+    if(mentions.length)data.mentions=mentions;
+    await db.ref(base+'/'+uid()).set(data);
+    await postRef(postId,communityId||null).child('commentsCount').transaction(v=>(Number(v)||0)+1);
+    input.value='';
+    const p=(await postRef(postId,communityId||null).get()).val();
+    if(p&&p.authorId!==currentUser.uid)notify(p.authorId,'comment','علّق شخص على منشورك');
+    mentions.forEach(m=>notify(m.uid,'mention','أشار إليك شخص في تعليق'));
+  }catch(e){console.error(e);toast('تعذر إرسال التعليق','error');}
+}
+
+/* ---- create post modal ---- */
+function openCreatePost(type){
+  if(!requireAuth())return;
+  type=type||'post';
+  openModal(`
+    <div style="padding:16px;">
+      <h3 style="font-weight:800;font-size:17px;margin-bottom:10px;">منشور جديد</h3>
+      <select id="postType" class="input" style="margin-bottom:10px;">
+        ${['post','question','build','opportunity','update','poll'].map(t=>`<option value="${t}" ${t===type?'selected':''}>${postTypeLabel(t)}</option>`).join('')}
+      </select>
+      <textarea id="postText" class="input" rows="4" placeholder="بماذا تفكر؟ (استخدم @ للإشارة لشخص)" oninput="handleMentionInput(this,'mentionDropPost')"></textarea>
+      <div id="mentionDropPost" class="hidden card" style="padding:6px;max-height:180px;overflow-y:auto;margin-top:-4px;"></div>
+      <div id="oppHint" class="hidden" style="font-size:12px;color:var(--muted);margin-top:6px;">ملحوظة: ده منشور عادي في الفيد بس. لو الفرصة رسمية (منحة/برنامج/مسابقة) بلّغ الإدارة لإضافتها في صفحة "الفرص" الرسمية.</div>
+      <div id="pollBox" class="hidden" style="margin-top:10px;display:flex;flex-direction:column;gap:6px;">
+        <input class="input poll-opt" placeholder="خيار 1">
+        <input class="input poll-opt" placeholder="خيار 2">
+        <button class="btn btn-ghost" style="align-self:flex-start;" onclick="addPollOpt()">+ خيار آخر</button>
+      </div>
+      <div style="margin-top:10px;">
+        <input type="file" id="postImg" accept="image/*" class="input" onchange="previewImageInto(this,'postImgPreview')">
+        <img id="postImgPreview" class="hidden" style="width:100%;border-radius:12px;border:2px solid var(--line);margin-top:8px;max-height:220px;object-fit:cover;">
+      </div>
+      <button class="btn btn-brand" style="width:100%;margin-top:14px;" id="submitPostBtn" onclick="submitPost()">نشر</button>
+    </div>`);
+  document.getElementById('postType').addEventListener('change',e=>{
+    document.getElementById('pollBox').classList.toggle('hidden',e.target.value!=='poll');
+    document.getElementById('oppHint').classList.toggle('hidden',e.target.value!=='opportunity');
+  });
+  document.getElementById('oppHint').classList.toggle('hidden',type!=='opportunity');
+}
+function addPollOpt(){
+  const box=document.getElementById('pollBox');
+  const inp=document.createElement('input');
+  inp.className='input poll-opt';inp.placeholder='خيار آخر';
+  box.insertBefore(inp,box.lastElementChild);
+}
+async function submitPost(){
+  const type=document.getElementById('postType').value;
+  const textEl=document.getElementById('postText');
+  const text=textEl.value.trim();
+  if(!text){toast('اكتب نص المنشور','error');return;}
+  const mentions=extractMentions(textEl);
+  const btn=document.getElementById('submitPostBtn');btn.disabled=true;btn.textContent='جارٍ النشر...';
+  try{
+    let imageUrl='';
+    const file=document.getElementById('postImg').files[0];
+    if(file)imageUrl=await uploadImage(file);
+    let poll=null;
+    if(type==='poll'){
+      const opts=[...document.querySelectorAll('.poll-opt')].map(i=>i.value.trim()).filter(Boolean);
+      if(opts.length>=2)poll={options:opts,votes:{}};
+    }
+    const pid=uid();
+    const data={authorId:currentUser.uid,type,text,imageUrl,poll,createdAt:Date.now(),commentsCount:0};
+    if(mentions.length)data.mentions=mentions;
+    await db.ref('posts/'+pid).set(data);
+    mentions.forEach(m=>notify(m.uid,'mention','أشار إليك شخص في منشور'));
+    addScore(currentUser.uid,3);
+    closeModal();
+    toast('تم النشر بنجاح','success');
+  }catch(e){toast('حدث خطأ أثناء النشر','error');}
+  btn.disabled=false;btn.textContent='نشر';
+}
+
+/* ============ DISCOVER ============ */
+function renderDiscover(app){
+  app.innerHTML=`<h2 style="font-weight:900;font-size:20px;margin-bottom:14px;">اكتشف</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;">
+    <div class="card" style="padding:18px;cursor:pointer;" onclick="go('startups')"><div style="font-size:24px;">🚀</div><div style="font-weight:800;margin-top:6px;">تصفح المشاريع</div></div>
+    <div class="card" style="padding:18px;cursor:pointer;" onclick="go('talent')"><div style="font-size:24px;">👨‍💻</div><div style="font-weight:800;margin-top:6px;">تصفح المواهب</div></div>
+    <div class="card" style="padding:18px;cursor:pointer;" onclick="go('opportunities')"><div style="font-size:24px;">💰</div><div style="font-weight:800;margin-top:6px;">تصفح الفرص</div></div>
+    <div class="card" style="padding:18px;cursor:pointer;" onclick="go('leaderboard')"><div style="font-size:24px;">🏆</div><div style="font-weight:800;margin-top:6px;">المتصدرين</div></div>
+  </div>
+  <div class="card" style="padding:14px;margin-top:16px;">
+    <div style="font-weight:900;font-size:16px;">🎯 ابحث عن قيمة، مش مجرد متابعين</div>
+    <div style="color:var(--muted);font-size:12px;margin:4px 0 10px;">مشاريع تحتاج مهاراتك + أشخاص لديهم اهتمامات قريبة + مجتمعات متخصصة.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-brand" onclick="go('talent')">مشاريع تناسب مهاراتي</button>
+      <button class="btn" onclick="go('communities')">مجتمعات حسب الاهتمام</button>
+      <button class="btn" onclick="go('messages')">ابدأ شبكة علاقات</button>
+    </div>
+  </div>
+  <h3 style="font-weight:800;font-size:17px;margin:22px 0 12px;">أحدث المؤسسين</h3>
+  <div id="discoverUsers" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;"></div>`;
+  db.ref('users').limitToLast(12).get().then(snap=>{
+    const arr=[];snap.forEach(c=>arr.push({id:c.key,...c.val()}));
+    arr.reverse();
+    document.getElementById('discoverUsers').innerHTML=arr.filter(u=>u.id!==currentUser?.uid).map(u=>`
+      <div class="card" style="padding:14px;text-align:center;cursor:pointer;" onclick="go('profile',{uid:'${u.id}'})">
+        <img class="avatar" style="width:52px;height:52px;margin:0 auto;" src="${avatarUrl(u)}">
+        <div style="font-weight:800;margin-top:8px;font-size:14px;">${esc(u.name)}</div>
+        <div style="color:var(--muted);font-size:12px;">${ROLE_ICONS[u.role]||''} ${ROLE_LABELS[u.role]||''}</div>
+      </div>`).join('');
+  }).catch(e=>{console.error(e);loadFail('discoverUsers','تعذر تحميل الأعضاء','go(route.name,route.params)');});
+}
+
+/* ============ PROFILE ============ */
+async function renderProfile(app){
+  const targetUid=route.params.uid||currentUser?.uid;
+  if(!targetUid){go('auth');return;}
+  app.innerHTML='<div style="text-align:center;padding:40px;"><i class="fa-solid fa-spinner spin"></i></div>';
+  let snap,u,isFollowing,followersCount;
+  try{
+    snap=await db.ref('users/'+targetUid).get();
+    if(!snap.exists()){app.innerHTML='<div class="card" style="padding:30px;text-align:center;">المستخدم غير موجود</div>';return;}
+    u=snap.val();
+    allUsersCache[targetUid]=u;
+    const followSnap=currentUser?await db.ref('follows/'+currentUser.uid+'/'+targetUid).get():null;
+    isFollowing=followSnap&&followSnap.exists();
+    const followersSnap=await db.ref('followers/'+targetUid).get();
+    followersCount=followersSnap.exists()?Object.keys(followersSnap.val()).length:0;
+  }catch(e){
+    console.error(e);
+    app.innerHTML='<div class="card" style="padding:30px;text-align:center;color:var(--danger);">تعذر تحميل الملف الشخصي<br><button class="btn" style="margin-top:10px;" onclick="go(\'profile\',{uid:\''+targetUid+'\'})">إعادة المحاولة</button></div>';
+    return;
+  }
+  const isMe=currentUser&&targetUid===currentUser.uid;
+
+  app.innerHTML=`
+  <div class="card" style="padding:20px;">
+    <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;">
+      <img class="avatar" style="width:80px;height:80px;" src="${avatarUrl(u)}">
+      <div style="flex:1;min-width:200px;">
+        <div style="font-weight:900;font-size:20px;">${esc(u.name)}</div>
+        <div style="color:var(--muted);font-size:14px;">${ROLE_ICONS[u.role]||''} ${ROLE_LABELS[u.role]||'لم يحدد الدور'} ${u.location?'· '+esc(u.location):''} ${u.isAdmin?'<span class="badge" style="background:var(--brand);color:#fff;">⚙️ أدمن</span>':''}</div>
+        <div style="margin-top:6px;font-size:13px;"><b>${followersCount}</b> متابع · <b>${u.founderScore||0}</b> نقاط Founder Score</div>
+        ${u.bio?`<div style="margin-top:10px;line-height:1.7;">${esc(u.bio)}</div>`:''}
+        ${(u.skills&&u.skills.length)?`<div class="stagewrap" style="margin-top:10px;">${u.skills.map(s=>`<span class="badge">${esc(s)}</span>`).join('')}</div>`:''}
+      </div>
+      <div>
+        ${isMe?`<div style="display:flex;flex-direction:column;gap:8px;">
+          <button class="btn" onclick="openEditProfile()"><i class="fa-solid fa-pen"></i> تعديل</button>
+          <button class="btn btn-ghost" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i> تسجيل خروج</button>
+        </div>`:
+        `<div style="display:flex;flex-direction:column;gap:8px;">
+          <button class="btn ${isFollowing?'':'btn-brand'}" onclick="toggleFollow('${targetUid}',this)">${isFollowing?'إلغاء المتابعة':'متابعة'}</button>
+          <button class="btn btn-ghost" onclick="startConversation('${targetUid}')"><i class="fa-regular fa-message"></i> مراسلة</button>
+        </div>`}
+      </div>
+    </div>
+  </div>
+  ${isMe?`<div id="accountSettingsCard"></div>`:''}
+  <div style="margin-top:16px;">
+    <h3 style="font-weight:800;font-size:16px;margin-bottom:10px;">المشاريع</h3>
+    <div id="profileStartups" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;"></div>
+  </div>
+  <div style="margin-top:20px;">
+    <h3 style="font-weight:800;font-size:16px;margin-bottom:10px;">المنشورات</h3>
+    <div id="profilePosts"></div>
+  </div>`;
+
+  db.ref('startups').orderByChild('founderId').equalTo(targetUid).get().then(s=>{
+    const arr=[];s.forEach(c=>arr.push({id:c.key,...c.val()}));
+    document.getElementById('profileStartups').innerHTML=arr.length?arr.map(startupMiniCard).join(''):'<div style="color:var(--muted);">لا توجد مشاريع بعد</div>';
+  }).catch(e=>{console.error(e);loadFail('profileStartups','تعذر تحميل المشاريع','go(route.name,route.params)');});
+  db.ref('posts').orderByChild('authorId').equalTo(targetUid).get().then(s=>{
+    const arr=[];s.forEach(c=>arr.push({id:c.key,...c.val()}));
+    arr.sort((a,b)=>b.createdAt-a.createdAt);
+    allUsersCache[targetUid]=u;
+    document.getElementById('profilePosts').innerHTML=arr.length?arr.map(renderPostCard).join(''):'<div class="card" style="padding:20px;text-align:center;color:var(--muted);">لا توجد منشورات بعد</div>';
+  }).catch(e=>{console.error(e);loadFail('profilePosts','تعذر تحميل المنشورات','go(route.name,route.params)');});
+
+  if(isMe)renderAccountSettingsCard(u);
+}
+
+/* بطاقة إعدادات الحساب: تفعيل الأدمن الأول (لو لسه محدش أدمن)، تسجيل خروج، حذف الحساب */
+async function renderAccountSettingsCard(u){
+  const card=document.getElementById('accountSettingsCard');
+  if(!card)return;
+  let showBecomeAdmin=false;
+  if(!u.isAdmin){
+    try{
+      const hasAdminSnap=await db.ref('meta/hasAdmin').get();
+      showBecomeAdmin=!hasAdminSnap.exists();
+    }catch(e){console.warn(e);}
+  }
+  card.innerHTML=`<div class="card" style="padding:16px;margin-top:14px;">
+    <h3 style="font-weight:800;font-size:15px;margin-bottom:10px;">إعدادات الحساب</h3>
+    ${showBecomeAdmin?`<div style="background:var(--soft);border-radius:12px;padding:12px;margin-bottom:12px;">
+      <div style="font-weight:800;font-size:13px;margin-bottom:6px;">لا يوجد أدمن على المنصة بعد</div>
+      <div style="color:var(--muted);font-size:12px;margin-bottom:8px;">فعّل نفسك كأول أدمن عشان تقدر تنشر فرص وتدير المنشورات والبلاغات.</div>
+      <button class="btn btn-brand" style="width:100%;" onclick="becomeFirstAdmin()">تفعيلي كأدمن</button>
+    </div>`:''}
+    <button class="btn" style="width:100%;margin-bottom:8px;" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i> تسجيل خروج</button>
+    <button class="btn" style="width:100%;margin-bottom:8px;" onclick="switchAccount()"><i class="fa-solid fa-user-plus"></i> إضافة حساب آخر</button>
+    <button class="btn" style="width:100%;background:#fff0f0;color:var(--danger);border-color:var(--danger);" onclick="confirmDeleteAccount()"><i class="fa-solid fa-trash"></i> حذف الحساب نهائيًا</button>
+  </div>`;
+}
+async function becomeFirstAdmin(){
+  if(!requireAuth())return;
+  try{
+    await db.ref().update({['users/'+currentUser.uid+'/isAdmin']:true,'meta/hasAdmin':true});
+    myProfile.isAdmin=true;
+    toast('تم تفعيلك كأدمن','success');
+    go('profile',{uid:currentUser.uid});
+  }catch(e){
+    console.error(e);
+    toast('في أدمن على المنصة بالفعل، أو تعذر التفعيل','error');
+    go('profile',{uid:currentUser.uid});
+  }
+}
+function confirmDeleteAccount(){
+  openModal(`<div style="padding:16px;">
+    <h3 style="font-weight:900;font-size:17px;color:var(--danger);margin-bottom:8px;">حذف الحساب نهائيًا</h3>
+    <p style="color:var(--muted);font-size:13px;line-height:1.7;">هيتم حذف ملفك الشخصي وتسجيل خروجك نهائيًا. مشاريعك ومنشوراتك القديمة هتفضل موجودة لكن هتظهر بدون صاحب. الإجراء ده لا يمكن التراجع عنه.</p>
+    <label style="font-size:12px;font-weight:700;display:block;margin:12px 0 6px;">اكتب كلمة "حذف" للتأكيد</label>
+    <input id="delConfirmInput" class="input" placeholder="حذف" style="margin-bottom:12px;">
+    <button class="btn" style="width:100%;background:var(--danger);color:#fff;border-color:var(--danger);" id="delAccBtn" onclick="submitDeleteAccount()">تأكيد الحذف النهائي</button>
+  </div>`);
+}
+async function submitDeleteAccount(){
+  const val=document.getElementById('delConfirmInput').value.trim();
+  if(val!=='حذف'){toast('اكتب "حذف" بالظبط للتأكيد','error');return;}
+  const btn=document.getElementById('delAccBtn');btn.disabled=true;btn.textContent='جارٍ الحذف...';
+  try{
+    const myUid=currentUser.uid;
+    await db.ref('users/'+myUid).remove();
+    await currentUser.delete();
+    closeModal();
+    go('landing');
+    toast('تم حذف حسابك','success');
+  }catch(e){
+    console.error(e);
+    if(e.code==='auth/requires-recent-login'){
+      toast('لأمانك، سجّل خروج وادخل تاني ثم أعد محاولة الحذف فورًا','error');
+    }else{
+      toast('تعذر حذف الحساب','error');
+    }
+    btn.disabled=false;btn.textContent='تأكيد الحذف النهائي';
+  }
+}
+async function toggleFollow(targetUid,btn){
+  if(!requireAuth()||!targetUid||targetUid===currentUser.uid)return;
+  const ref=db.ref('follows/'+currentUser.uid+'/'+targetUid);
+  try{
+    const snap=await ref.get();
+    if(snap.exists()){
+      await Promise.all([ref.remove(),db.ref('followers/'+targetUid+'/'+currentUser.uid).remove()]);
+      btn.textContent='متابعة';btn.classList.add('btn-brand');
+    }else{
+      await Promise.all([ref.set(true),db.ref('followers/'+targetUid+'/'+currentUser.uid).set(true)]);
+      btn.textContent='إلغاء المتابعة';btn.classList.remove('btn-brand');
+      notify(targetUid,'follow','بدأ شخص بمتابعتك');
+      await addScore(targetUid,2);
+    }
+  }catch(e){toast('تعذر تحديث المتابعة','error');}
+}
+function openEditProfile(){
+  const u=myProfile;
+  openModal(`
+  <div style="padding:16px;">
+    <h3 style="font-weight:800;font-size:17px;margin-bottom:12px;">تعديل الملف الشخصي</h3>
+    <label style="font-size:13px;font-weight:700;">الاسم</label>
+    <input id="epName" class="input" style="margin:6px 0 10px;" value="${esc(u.name||'')}">
+    <label style="font-size:13px;font-weight:700;">الدور</label>
+    <select id="epRole" class="input" style="margin:6px 0 10px;">${Object.entries(ROLE_LABELS).map(([k,v])=>`<option value="${k}" ${u.role===k?'selected':''}>${v}</option>`).join('')}</select>
+    <label style="font-size:13px;font-weight:700;">الموقع</label>
+    <input id="epLoc" class="input" style="margin:6px 0 10px;" value="${esc(u.location||'')}">
+    <label style="font-size:13px;font-weight:700;">نبذة</label>
+    <textarea id="epBio" class="input" rows="3" style="margin:6px 0 10px;">${esc(u.bio||'')}</textarea>
+    <label style="font-size:13px;font-weight:700;">المهارات (افصل بفاصلة)</label>
+    <input id="epSkills" class="input" style="margin:6px 0 10px;" value="${(u.skills||[]).join(', ')}">
+    <label style="font-size:13px;font-weight:700;">حالة التوفر للعمل</label>
+    <select id="epAvail" class="input" style="margin:6px 0 10px;">
+      <option value="available" ${u.availability==='available'?'selected':''}>متاح للعمل / تعاون</option>
+      <option value="busy" ${u.availability==='busy'?'selected':''}>غير متاح حاليًا</option>
+    </select>
+    <label style="font-size:13px;font-weight:700;">صورة شخصية</label>
+    <input id="epAvatar" type="file" accept="image/*" class="input" style="margin:6px 0 8px;" onchange="previewImageInto(this,'epAvatarPreview')">
+    <img id="epAvatarPreview" class="avatar hidden" style="width:64px;height:64px;margin-bottom:14px;">
+    <div style="color:var(--muted);font-size:12px;margin:-6px 0 14px;">هنضغط الصورة تلقائيًا قبل الرفع لتوفير المساحة والسرعة</div>
+    <button class="btn btn-brand" style="width:100%;" id="epSubmit" onclick="submitEditProfile()">حفظ</button>
+  </div>`);
+}
+async function submitEditProfile(){
+  const btn=document.getElementById('epSubmit');btn.disabled=true;btn.textContent='جارٍ الحفظ...';
+  try{
+    const updates={
+      name:document.getElementById('epName').value.trim(),
+      role:document.getElementById('epRole').value,
+      location:document.getElementById('epLoc').value.trim(),
+      bio:document.getElementById('epBio').value.trim(),
+      skills:document.getElementById('epSkills').value.split(',').map(s=>s.trim()).filter(Boolean),
+      availability:document.getElementById('epAvail').value
+    };
+    const file=document.getElementById('epAvatar').files[0];
+    if(file)updates.avatar=await uploadImage(file);
+    await db.ref('users/'+currentUser.uid).update(updates);
+    Object.assign(myProfile,updates);
+    document.getElementById('navAvatar').src=avatarUrl(myProfile);
+    closeModal();toast('تم الحفظ','success');
+    go('profile',{uid:currentUser.uid});
+  }catch(e){toast('حدث خطأ','error');}
+  btn.disabled=false;btn.textContent='حفظ';
+}
+
+/* ============ STARTUPS ============ */
+function renderStartups(app){
+  app.innerHTML=`
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+    <h2 style="font-weight:900;font-size:20px;">المشاريع الناشئة</h2>
+    <button class="btn btn-brand" onclick="openCreateStartup()"><i class="fa-solid fa-plus"></i> أضف مشروعك</button>
+  </div>
+  <div class="scrollx" style="display:flex;gap:8px;margin-bottom:14px;" id="stageFilters">
+    <div class="pill on" data-stage="" onclick="filterStartups('')">الكل</div>
+    ${STAGES.map(s=>`<div class="pill" data-stage="${s}" onclick="filterStartups('${s}')">${STAGE_LABELS[s]}</div>`).join('')}
+  </div>
+  <div id="startupsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;"></div>`;
+  loadStartups('');
+}
+function filterStartups(stage){
+  document.querySelectorAll('#stageFilters .pill').forEach(p=>p.classList.toggle('on',p.dataset.stage===stage));
+  loadStartups(stage);
+}
+function loadStartups(stage){
+  const grid=document.getElementById('startupsGrid');
+  grid.innerHTML='<div style="text-align:center;padding:20px;grid-column:1/-1;"><i class="fa-solid fa-spinner spin"></i></div>';
+  db.ref('startups').orderByChild('createdAt').get().then(snap=>{
+    let arr=[];snap.forEach(c=>arr.push({id:c.key,...c.val()}));
+    arr.reverse();
+    allStartupsCache={};arr.forEach(s=>allStartupsCache[s.id]=s);
+    if(stage)arr=arr.filter(s=>s.stage===stage);
+    grid.innerHTML=arr.length?arr.map(startupMiniCard).join(''):'<div class="card" style="padding:24px;text-align:center;color:var(--muted);grid-column:1/-1;">لا توجد مشاريع في هذه المرحلة</div>';
+  }).catch(e=>{console.error(e);loadFail('startupsGrid','تعذر تحميل المشاريع الناشئة، تأكد من نشر قواعد Firebase',`loadStartups('${stage}')`);});
+}
+function startupMiniCard(s){
+  return `<div class="card" style="padding:10px;cursor:pointer;overflow:hidden;" onclick="go('startupDetail',{id:'${s.id}'})">
+    ${s.coverUrl?`<img src="${esc(s.coverUrl)}" style="width:100%;height:125px;object-fit:cover;border:2px solid var(--line);border-radius:12px;margin-bottom:10px;">`:''}
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+      <div style="font-weight:800;font-size:16px;">${esc(s.name)}</div>
+      <span class="badge" style="background:var(--soft);">${STAGE_LABELS[s.stage]||''}</span>
+    </div>
+    <div style="color:var(--muted);font-size:13px;margin-top:4px;">${esc(s.industry||'')}</div>
+    <div class="line-clamp-2" style="margin-top:8px;font-size:14px;color:#333;">${esc(s.problem||'')}</div>
+    ${(s.lookingFor&&s.lookingFor.length)?`<div class="stagewrap" style="margin-top:10px;">${s.lookingFor.slice(0,4).map(l=>`<span class="badge" style="font-size:11px;">🔎 ${esc(l)}</span>`).join('')}</div>`:''}
+  </div>`;
+}
+function openCreateStartup(){
+  if(!requireAuth())return;
+  openModal(`
+  <div style="padding:16px;">
+    <h3 style="font-weight:800;font-size:17px;margin-bottom:4px;">إطلاق مشروع</h3>
+    <div style="color:var(--muted);font-size:12px;margin-bottom:12px;">خلّي صفحة مشروعك أقرب لـ Startup Profile حقيقي، مش مجرد كارت.</div>
+    <input id="stName" class="input" placeholder="اسم المشروع" style="margin-bottom:8px;">
+    <input id="stIndustry" class="input" placeholder="المجال / الصناعة (مثال: FinTech)" style="margin-bottom:8px;">
+    <select id="stStage" class="input" style="margin-bottom:8px;">${STAGES.map(s=>`<option value="${s}">${STAGE_LABELS[s]}</option>`).join('')}</select>
+    <textarea id="stProblem" class="input" rows="2" placeholder="ما المشكلة التي تحلها؟" style="margin-bottom:8px;"></textarea>
+    <textarea id="stSolution" class="input" rows="2" placeholder="ما الحل؟" style="margin-bottom:8px;"></textarea>
+    <textarea id="stProduct" class="input" rows="2" placeholder="ماذا بنيت فعليًا؟" style="margin-bottom:8px;"></textarea>
+    <input id="stLookingFor" class="input" placeholder="نبحث عن (Developer, Designer, Growth...)" style="margin-bottom:8px;">
+    <input id="stWebsite" class="input" placeholder="رابط الموقع / Landing Page" style="margin-bottom:8px;">
+    <input id="stDemo" class="input" placeholder="رابط Demo / منتج تجريبي" style="margin-bottom:8px;">
+    <input id="stPitch" class="input" placeholder="رابط Pitch Deck (اختياري)" style="margin-bottom:8px;">
+    <label style="font-size:12px;font-weight:700;display:block;margin:4px 0 6px;">صورة الغلاف</label>
+    <input type="file" id="stCover" accept="image/*" class="input" onchange="previewImageInto(this,'stCoverPreview')" style="margin-bottom:6px;">
+    <img id="stCoverPreview" class="hidden project-cover" style="height:120px;margin-bottom:8px;">
+    <label style="font-size:12px;font-weight:700;display:block;margin:4px 0 6px;">صور المشروع / المنتج (حتى 4)</label>
+    <input type="file" id="stGallery" accept="image/*" multiple class="input" style="margin-bottom:8px;">
+    <button class="btn btn-brand" style="width:100%;margin-top:8px;" id="stSubmit" onclick="submitStartup()">إطلاق المشروع</button>
+  </div>`);
+}
+async function submitStartup(){
+  const name=document.getElementById('stName').value.trim();
+  if(!name){toast('اكتب اسم المشروع','error');return;}
+  const btn=document.getElementById('stSubmit');btn.disabled=true;btn.textContent='جارٍ رفع بيانات المشروع...';
+  try{
+    const coverFile=document.getElementById('stCover')?.files?.[0];
+    const galleryFiles=[...(document.getElementById('stGallery')?.files||[])].slice(0,4);
+    let coverUrl='';
+    if(coverFile)coverUrl=await uploadImage(coverFile);
+
+    const gallery=[];
+    for(const f of galleryFiles){
+      gallery.push(await uploadImage(f));
+    }
+
+    const sid=uid();
+    const data={
+      founderId:currentUser.uid,
+      name,
+      industry:document.getElementById('stIndustry').value.trim(),
+      stage:document.getElementById('stStage').value,
+      problem:document.getElementById('stProblem').value.trim(),
+      solution:document.getElementById('stSolution').value.trim(),
+      product:document.getElementById('stProduct').value.trim(),
+      lookingFor:document.getElementById('stLookingFor').value.split(',').map(s=>s.trim()).filter(Boolean),
+      website:document.getElementById('stWebsite').value.trim(),
+      demoUrl:document.getElementById('stDemo').value.trim(),
+      pitchUrl:document.getElementById('stPitch').value.trim(),
+      coverUrl,
+      gallery,
+      team:[{uid:currentUser.uid,role:'Founder'}],
+      milestones:[],
+      followers:{},
+      createdAt:Date.now()
+    };
+    await db.ref('startups/'+sid).set(data);
+    await db.ref('posts/'+uid()).set({
+      authorId:currentUser.uid,
+      type:'update',
+      text:'🚀 أطلقت مشروعًا جديدًا: '+name,
+      startupId:sid,
+      createdAt:Date.now(),
+      commentsCount:0
+    });
+    addScore(currentUser.uid,20);
+    closeModal();toast('تم إطلاق المشروع بنجاح','success');
+    go('startupDetail',{id:sid});
+  }catch(e){
+    console.error(e);
+    toast('تعذر رفع المشروع. جرّب صورًا أقل أو أصغر حجمًا.','error');
+  }finally{
+    btn.disabled=false;btn.textContent='إطلاق المشروع';
+  }
+}
+async function renderStartupDetail(app){
+  const id=route.params.id;
+  app.innerHTML='<div style="text-align:center;padding:40px;"><i class="fa-solid fa-spinner spin"></i></div>';
+  let snap,s,founder,myRequestStatus=null;
+  try{
+    snap=await db.ref('startups/'+id).get();
+    if(!snap.exists()){app.innerHTML='<div class="card" style="padding:30px;text-align:center;">المشروع غير موجود</div>';return;}
+    s=snap.val();
+    s.team=s.team||[];s.milestones=s.milestones||[];
+    founder=await fetchUserCached(s.founderId);
+    const isOwnerCheck=currentUser&&currentUser.uid===s.founderId;
+    const isMemberCheck=currentUser&&s.team.some(t=>t.uid===currentUser.uid);
+    await Promise.all(s.team.map(t=>fetchUserCached(t.uid)));
+    if(currentUser&&!isOwnerCheck&&!isMemberCheck){
+      const reqSnap=await db.ref('joinRequests/'+id+'/'+currentUser.uid).get();
+      if(reqSnap.exists())myRequestStatus=reqSnap.val().status;
+    }
+  }catch(e){
+    console.error(e);
+    app.innerHTML='<div class="card" style="padding:30px;text-align:center;color:var(--danger);">تعذر تحميل المشروع<br><button class="btn" style="margin-top:10px;" onclick="go(\'startupDetail\',{id:\''+id+'\'})">إعادة المحاولة</button></div>';
+    return;
+  }
+  const isOwner=currentUser&&currentUser.uid===s.founderId;
+  const isMember=currentUser&&s.team.some(t=>t.uid===currentUser.uid);
+  const milestonesSorted=[...s.milestones].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  app.innerHTML=`
+  <div class="card" style="padding:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+      <div>
+        <div style="font-weight:900;font-size:24px;">${esc(s.name)}</div>
+        <div style="color:var(--muted);margin-top:4px;">${esc(s.industry||'')} · <span class="badge">${STAGE_LABELS[s.stage]}</span></div>
+        <div style="margin-top:8px;font-size:14px;cursor:pointer;" onclick="go('profile',{uid:'${s.founderId}'})">👤 مؤسس: <b>${esc(founder.name)}</b></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        ${!isOwner?`<button class="btn btn-brand" onclick="startConversation('${s.founderId}')"><i class="fa-regular fa-message"></i> تواصل مع المؤسس</button>`:''}
+        ${(!isOwner&&!isMember&&!myRequestStatus)?`<button class="btn btn-accent" onclick="openJoinTeamModal('${id}')"><i class="fa-solid fa-user-plus"></i> اطلب الانضمام للفريق</button>`:''}
+        ${myRequestStatus==='pending'?`<span class="badge" style="background:var(--soft);">⏳ طلبك قيد المراجعة</span>`:''}
+        ${myRequestStatus==='rejected'?`<span class="badge" style="background:var(--soft);">تم رفض طلبك سابقًا</span>`:''}
+        ${isMember&&!isOwner?`<span class="badge" style="background:var(--soft);">✅ أنت عضو في الفريق</span>`:''}
+      </div>
+    </div>
+    <div style="margin-top:18px;display:grid;gap:14px;">
+      ${sec('المشكلة',s.problem)}${sec('الحل',s.solution)}${sec('المنتج',s.product)}
+    </div>
+    ${(s.lookingFor&&s.lookingFor.length)?`<div style="margin-top:16px;"><div style="font-weight:800;margin-bottom:8px;">نبحث عن</div><div class="stagewrap">${s.lookingFor.map(l=>`<span class="badge">🔎 ${esc(l)}</span>`).join('')}</div></div>`:''}
+    ${(s.website||s.demoUrl||s.pitchUrl)?`<div style="margin-top:16px;"><div style="font-weight:800;margin-bottom:8px;">🔗 روابط المشروع</div><div style="display:flex;gap:8px;flex-wrap:wrap;">
+      ${s.website?`<a class="btn btn-brand" href="${esc(s.website)}" target="_blank" rel="noopener">الموقع</a>`:''}
+      ${s.demoUrl?`<a class="btn" href="${esc(s.demoUrl)}" target="_blank" rel="noopener">Demo</a>`:''}
+      ${s.pitchUrl?`<a class="btn" href="${esc(s.pitchUrl)}" target="_blank" rel="noopener">Pitch Deck</a>`:''}
+    </div></div>`:''}
+    ${(s.gallery&&s.gallery.length)?`<div style="margin-top:16px;"><div style="font-weight:800;margin-bottom:8px;">📸 صور المشروع</div><div class="project-gallery">${s.gallery.map(u=>`<img src="${esc(u)}" onclick="openLightbox('${esc(u)}')">`).join('')}</div></div>`:''}
+    <div style="margin-top:16px;">
+      <div style="font-weight:800;margin-bottom:8px;">الفريق (${s.team.length})</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        ${s.team.map(t=>{const u=allUsersCache[t.uid]||{};return `<div style="text-align:center;cursor:pointer;width:70px;" onclick="go('profile',{uid:'${t.uid}'})"><img class="avatar" style="width:40px;height:40px;" src="${avatarUrl(u)}"><div class="line-clamp-2" style="font-size:11px;font-weight:700;margin-top:4px;">${esc(u.name||'')}</div><div style="font-size:10px;color:var(--muted);">${esc(t.role||'')}</div></div>`;}).join('')}
+      </div>
+    </div>
+  </div>
+  <div class="card" style="padding:20px;margin-top:16px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div style="font-weight:800;font-size:16px;">🏁 مسار الإنجازات</div>
+      ${isOwner?`<button class="btn" style="padding:6px 12px;font-size:12px;" onclick="openAddMilestoneModal('${id}')">+ إضافة إنجاز</button>`:''}
+    </div>
+    <div id="milestonesList" style="display:flex;flex-direction:column;gap:10px;">
+      ${milestonesSorted.length?milestonesSorted.map(m=>`<div class="brd" style="border-radius:12px;padding:10px 14px;"><div style="display:flex;justify-content:space-between;gap:8px;"><b style="font-size:14px;">${esc(m.title)}</b><span style="color:var(--muted);font-size:12px;">${esc(m.date||'')}</span></div>${m.note?`<div style="font-size:13px;color:#333;margin-top:4px;">${esc(m.note)}</div>`:''}</div>`).join(''):'<div style="color:var(--muted);font-size:13px;">لا توجد إنجازات مسجّلة بعد</div>'}
+    </div>
+  </div>
+  ${isOwner?`<div class="card" style="padding:20px;margin-top:16px;">
+    <div style="font-weight:800;font-size:16px;margin-bottom:10px;">📥 طلبات الانضمام</div>
+    <div id="joinRequestsList"><div style="text-align:center;padding:10px;"><i class="fa-solid fa-spinner spin"></i></div></div>
+  </div>`:''}`;
+  if(isOwner)loadJoinRequests(id);
+  function sec(title,val){return val?`<div><div style="font-weight:800;font-size:14px;margin-bottom:4px;">${title}</div><div style="line-height:1.7;color:#333;">${esc(val)}</div></div>`:'';}
+}
+function openJoinTeamModal(startupId){
+  if(!requireAuth())return;
+  const s=allStartupsCache[startupId];
+  const roleOptions=(s&&s.lookingFor&&s.lookingFor.length)?s.lookingFor:['عضو فريق'];
+  openModal(`
+  <div style="padding:16px;">
+    <h3 style="font-weight:800;font-size:17px;margin-bottom:12px;">طلب الانضمام للفريق</h3>
+    <label style="font-size:13px;font-weight:700;">الدور اللي تقدر تساهم فيه</label>
+    <select id="jrRole" class="input" style="margin:6px 0 10px;">${roleOptions.map(r=>`<option value="${esc(r)}">${esc(r)}</option>`).join('')}</select>
+    <label style="font-size:13px;font-weight:700;">ليه تحب تنضم؟ (اختياري)</label>
+    <textarea id="jrMsg" class="input" rows="3" style="margin:6px 0 12px;" placeholder="اكتب رسالة قصيرة للمؤسس..."></textarea>
+    <button class="btn btn-brand" style="width:100%;" id="jrSubmit" onclick="submitJoinRequest('${startupId}')">إرسال الطلب</button>
+  </div>`);
+}
+async function submitJoinRequest(startupId){
+  const btn=document.getElementById('jrSubmit');btn.disabled=true;btn.textContent='جارٍ الإرسال...';
+  const role=document.getElementById('jrRole').value;
+  const message=document.getElementById('jrMsg').value.trim();
+  await db.ref('joinRequests/'+startupId+'/'+currentUser.uid).set({
+    uid:currentUser.uid,name:myProfile.name,avatar:myProfile.avatar||'',
+    role,message,status:'pending',createdAt:Date.now()
+  });
+  const s=(await db.ref('startups/'+startupId).get()).val();
+  if(s)notify(s.founderId,'connection','طلب شخص الانضمام لفريق مشروعك: '+s.name);
+  closeModal();toast('تم إرسال طلبك، هيوصلك رد لما المؤسس يراجعه','success');
+  go('startupDetail',{id:startupId});
+}
+function loadJoinRequests(startupId){
+  db.ref('joinRequests/'+startupId).orderByChild('status').equalTo('pending').get().then(async snap=>{
+    const arr=[];snap.forEach(c=>arr.push(c.val()));
+    const list=document.getElementById('joinRequestsList');
+    if(!list)return;
+    list.innerHTML=arr.length?arr.map(r=>`
+      <div class="card" style="padding:12px 14px;display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <img class="avatar" style="width:36px;height:36px;cursor:pointer;" src="${avatarUrl(r)}" onclick="go('profile',{uid:'${r.uid}'})">
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:800;font-size:13px;">${esc(r.name)} <span class="badge" style="font-size:10px;">${esc(r.role)}</span></div>
+          ${r.message?`<div class="line-clamp-2" style="font-size:12px;color:var(--muted);margin-top:2px;">${esc(r.message)}</div>`:''}
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-accent" style="padding:5px 10px;font-size:11px;" onclick="respondJoinRequest('${startupId}','${r.uid}',true,this)">قبول</button>
+          <button class="btn" style="padding:5px 10px;font-size:11px;" onclick="respondJoinRequest('${startupId}','${r.uid}',false,this)">رفض</button>
+        </div>
+      </div>`).join(''):'<div style="color:var(--muted);font-size:13px;">لا توجد طلبات معلّقة</div>';
+  }).catch(e=>{console.error(e);const list=document.getElementById('joinRequestsList');if(list)list.innerHTML='<div style="color:var(--danger);font-size:13px;">تعذر تحميل طلبات الانضمام</div>';});
+}
+async function respondJoinRequest(startupId,requesterUid,accept,btn){
+  btn.closest('.card').style.opacity='0.5';
+  const reqRef=db.ref('joinRequests/'+startupId+'/'+requesterUid);
+  const reqSnap=await reqRef.get();
+  const req=reqSnap.val();
+  if(!req)return;
+  if(accept){
+    await db.ref('startups/'+startupId+'/team').transaction(team=>{
+      team=team||[];
+      if(!team.some(t=>t.uid===requesterUid))team.push({uid:requesterUid,role:req.role});
+      return team;
+    });
+    await reqRef.update({status:'accepted'});
+    notify(requesterUid,'connection','تم قبولك في فريق المشروع 🎉');
+    addScore(requesterUid,10);
+    toast('تم قبول العضو في الفريق','success');
+  }else{
+    await reqRef.update({status:'rejected'});
+    notify(requesterUid,'connection','تم رفض طلب انضمامك للفريق');
+    toast('تم رفض الطلب','info');
+  }
+  go('startupDetail',{id:startupId});
+}
+function openAddMilestoneModal(startupId){
+  openModal(`
+  <div style="padding:16px;">
+    <h3 style="font-weight:800;font-size:17px;margin-bottom:12px;">إضافة إنجاز جديد</h3>
+    <input id="msTitle" class="input" placeholder="عنوان الإنجاز (مثال: أول 100 مستخدم)" style="margin-bottom:8px;">
+    <input id="msDate" class="input" placeholder="التاريخ (مثال: سبتمبر 2026)" style="margin-bottom:8px;">
+    <textarea id="msNote" class="input" rows="2" placeholder="تفاصيل إضافية (اختياري)" style="margin-bottom:8px;"></textarea>
+    <button class="btn btn-brand" style="width:100%;margin-top:6px;" id="msSubmit" onclick="submitMilestone('${startupId}')">إضافة</button>
+  </div>`);
+}
+async function submitMilestone(startupId){
+  const title=document.getElementById('msTitle').value.trim();
+  if(!title){toast('اكتب عنوان الإنجاز','error');return;}
+  const btn=document.getElementById('msSubmit');btn.disabled=true;btn.textContent='جارٍ الإضافة...';
+  const milestone={title,date:document.getElementById('msDate').value.trim(),note:document.getElementById('msNote').value.trim(),createdAt:Date.now()};
+  await db.ref('startups/'+startupId+'/milestones').transaction(list=>{list=list||[];list.push(milestone);return list;});
+  closeModal();toast('تم إضافة الإنجاز','success');
+  go('startupDetail',{id:startupId});
+}
+
+/* ============ TALENT (matching) ============ */
+function renderTalent(app){
+  app.innerHTML=`<h2 style="font-weight:900;font-size:20px;margin-bottom:14px;">المواهب والفرص المتاحة</h2>
+  <div style="display:grid;grid-template-columns:1fr;gap:16px;">
+    <div>
+      <h3 style="font-weight:800;font-size:15px;margin-bottom:8px;">🔎 مشاريع تبحث عن مهارات مثل مهاراتك</h3>
+      <div id="matchedStartups" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;"></div>
+    </div>
+    <div>
+      <h3 style="font-weight:800;font-size:15px;margin-bottom:8px;">👨‍💻 أعضاء المجتمع المتاحين للعمل</h3>
+      <div id="availableUsers" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;"></div>
+    </div>
+  </div>`;
+  const mySkills=(myProfile&&myProfile.skills)||[];
+  db.ref('startups').get().then(snap=>{
+    const arr=[];snap.forEach(c=>arr.push({id:c.key,...c.val()}));
+    const matched=arr.filter(s=>s.lookingFor&&s.lookingFor.some(l=>mySkills.some(sk=>sk&&l.toLowerCase().includes(sk.toLowerCase()))));
+    const list=matched.length?matched:arr.slice(0,6);
+    document.getElementById('matchedStartups').innerHTML=list.length?list.map(startupMiniCard).join(''):'<div style="color:var(--muted);">لا توجد نتائج بعد</div>';
+  }).catch(e=>{console.error(e);loadFail('matchedStartups','تعذر تحميل المشاريع','go(\'talent\')');});
+  db.ref('users').orderByChild('availability').equalTo('available').limitToLast(20).get().then(snap=>{
+    const arr=[];snap.forEach(c=>{if(c.key!==currentUser?.uid)arr.push({id:c.key,...c.val()});});
+    document.getElementById('availableUsers').innerHTML=arr.length?arr.map(u=>`
+      <div class="card" style="padding:14px;text-align:center;cursor:pointer;" onclick="go('profile',{uid:'${u.id}'})">
+        <img class="avatar" style="width:48px;height:48px;margin:0 auto;" src="${avatarUrl(u)}">
+        <div style="font-weight:800;margin-top:6px;font-size:13px;">${esc(u.name)}</div>
+        <div style="color:var(--muted);font-size:11px;">${ROLE_ICONS[u.role]||''} ${ROLE_LABELS[u.role]||''}</div>
+      </div>`).join(''):'<div style="color:var(--muted);">لا يوجد أعضاء متاحين حاليًا</div>';
+  }).catch(e=>{console.error(e);loadFail('availableUsers','تعذر تحميل الأعضاء المتاحين','go(\'talent\')');});
+}
+
+/* ============ OPPORTUNITIES ============ */
+function renderOpportunities(app){
+  if(!requireAuth())return;
+  const isAdmin=myProfile&&(myProfile.isAdmin||ADMIN_EMAILS.map(x=>x.toLowerCase()).includes((currentUser?.email||'').toLowerCase()));
+  app.innerHTML=`
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+    <h2 style="font-weight:900;font-size:20px;">الفرص</h2>
+    <button class="btn btn-brand" onclick="openCreateOpportunity()"><i class="fa-solid fa-plus"></i> أضف فرصة</button>
+  </div>
+  <div class="scrollx" style="display:flex;gap:8px;margin-bottom:14px;" id="oppFilters">
+    <div class="pill on" data-cat="" onclick="filterOpps('')">الكل</div>
+    ${Object.entries(OPP_CATS).map(([k,v])=>`<div class="pill" data-cat="${k}" onclick="filterOpps('${k}')">${v}</div>`).join('')}
+  </div>
+  <div id="oppList" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;"></div>`;
+  loadOpps('');
+}
+function filterOpps(cat){
+  document.querySelectorAll('#oppFilters .pill').forEach(p=>p.classList.toggle('on',p.dataset.cat===cat));
+  loadOpps(cat);
+}
+function loadOpps(cat){
+  const list=document.getElementById('oppList');
+  list.innerHTML='<div style="text-align:center;padding:20px;grid-column:1/-1;"><i class="fa-solid fa-spinner spin"></i></div>';
+  db.ref('opportunities').orderByChild('createdAt').get().then(snap=>{
+    let arr=[];snap.forEach(c=>arr.push({id:c.key,...c.val()}));
+    arr.reverse();
+    if(cat)arr=arr.filter(o=>o.category===cat);
+    list.innerHTML=arr.length?arr.map(o=>`
+      <div class="card" style="padding:16px;cursor:pointer;" onclick="go('opportunityDetail',{id:'${o.id}'})">
+        <div style="display:flex;justify-content:space-between;">
+          <div style="font-weight:800;">${esc(o.title)}</div>
+          <span class="badge" style="background:var(--soft);font-size:11px;">${OPP_CATS[o.category]||''}</span>
+        </div>
+        <div style="color:var(--muted);font-size:13px;margin-top:4px;">${esc(o.org||'')}</div>
+        <div class="line-clamp-2" style="margin-top:8px;font-size:14px;">${esc(o.eligibility||'')}</div>
+        ${o.deadline?`<div style="margin-top:8px;font-size:12px;color:var(--warn);font-weight:700;"><i class="fa-regular fa-clock"></i> الموعد النهائي: ${esc(o.deadline)}</div>`:''}
+      </div>`).join(''):'<div class="card" style="padding:24px;text-align:center;color:var(--muted);grid-column:1/-1;">لا توجد فرص متاحة الآن</div>';
+  }).catch(e=>{console.error(e);loadFail('oppList','تعذر تحميل الفرص',`loadOpps('${cat}')`);});
+}
+function openCreateOpportunity(){
+  if(!requireAuth())return;
+  openModal(`
+  <div style="padding:16px;">
+    <h3 style="font-weight:800;font-size:17px;margin-bottom:12px;">فرصة جديدة</h3>
+    <input id="opTitle" class="input" placeholder="العنوان" style="margin-bottom:8px;">
+    <select id="opCat" class="input" style="margin-bottom:8px;">${Object.entries(OPP_CATS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select>
+    <input id="opOrg" class="input" placeholder="الجهة المنظمة" style="margin-bottom:8px;">
+    <input id="opDeadline" class="input" placeholder="الموعد النهائي (مثال: 30 أكتوبر 2026)" style="margin-bottom:8px;">
+    <textarea id="opElig" class="input" rows="2" placeholder="شروط الأهلية" style="margin-bottom:8px;"></textarea>
+    <input id="opLink" class="input" placeholder="رابط التقديم" style="margin-bottom:8px;">
+    <button class="btn btn-brand" style="width:100%;margin-top:8px;" onclick="submitOpportunity()">نشر الفرصة</button>
+  </div>`);
+}
+async function submitOpportunity(){
+  const title=document.getElementById('opTitle').value.trim();
+  if(!title){toast('اكتب العنوان','error');return;}
+  try{
+    const oid=uid();
+    await db.ref('opportunities/'+oid).set({
+      title,createdBy:currentUser.uid,category:document.getElementById('opCat').value,org:document.getElementById('opOrg').value.trim(),
+      deadline:document.getElementById('opDeadline').value.trim(),eligibility:document.getElementById('opElig').value.trim(),
+      link:document.getElementById('opLink').value.trim(),createdAt:Date.now()
+    });
+    closeModal();toast('تم نشر الفرصة','success');go('opportunities');
+  }catch(e){console.error(e);toast('تعذر نشر الفرصة، تأكد من اتصالك وقواعد Firebase','error');}
+}
+async function renderOpportunityDetail(app){
+  const id=route.params.id;
+  app.innerHTML='<div style="text-align:center;padding:40px;"><i class="fa-solid fa-spinner spin"></i></div>';
+  let snap;
+  try{
+    snap=await db.ref('opportunities/'+id).get();
+  }catch(e){
+    console.error(e);
+    app.innerHTML='<div class="card" style="padding:30px;text-align:center;color:var(--danger);">تعذر تحميل الفرصة<br><button class="btn" style="margin-top:10px;" onclick="go(\'opportunityDetail\',{id:\''+id+'\'})">إعادة المحاولة</button></div>';
+    return;
+  }
+  if(!snap.exists()){app.innerHTML='<div class="card" style="padding:30px;text-align:center;">الفرصة غير موجودة</div>';return;}
+  const o=snap.val();
+  app.innerHTML=`
+  <div class="card" style="padding:20px;">
+    <span class="badge" style="background:var(--soft);">${OPP_CATS[o.category]||''}</span>
+    <h2 style="font-weight:900;font-size:22px;margin:10px 0 4px;">${esc(o.title)}</h2>
+    <div style="color:var(--muted);">${esc(o.org||'')}</div>
+    ${o.deadline?`<div style="margin-top:10px;color:var(--warn);font-weight:700;"><i class="fa-regular fa-clock"></i> الموعد النهائي: ${esc(o.deadline)}</div>`:''}
+    <div style="margin-top:14px;font-weight:800;">شروط الأهلية</div>
+    <div style="margin-top:4px;line-height:1.8;">${esc(o.eligibility||'غير محدد')}</div>
+    <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;">
+      ${o.link?`<a href="${esc(o.link)}" target="_blank" class="btn btn-brand">التقديم الآن <i class="fa-solid fa-arrow-up-left"></i></a>`:''}
+      <button class="btn" onclick="checkEligibility()">هل أنا مؤهل؟</button>
+    </div>
+  </div>`;
+}
+function checkEligibility(){
+  toast('راجع شروط الأهلية بعناية وتأكد من توافقها مع ملفك قبل التقديم','info');
+}
+
+/* ============ MESSAGES ============ */
+/* فهرس عكسي: userConversations/{uid}/{convId}=true — عشان نقدر نجيب "محادثاتي" من غير ما نحتاج نفتش/نفلتر كل جدول المحادثات (وده اللي كان بيسبب فشل صامت في الصلاحيات). */
+function directKey(a,b){return [a,b].sort().join('_');}
+
+/* هل المحادثة فيها رسائل لسه ملهاش قراءة من المستخدم الحالي؟ */
+function isConvUnread(c){
+  if(!currentUser||!c)return false;
+  if(c.lastSenderId===currentUser.uid)return false; // آخر رسالة أنا اللي بعتها
+  const lastRead=(c.readBy&&c.readBy[currentUser.uid])||0;
+  return (c.updatedAt||0)>lastRead;
+}
+/* سجّل إن المستخدم الحالي قرأ المحادثة دي لحد اللحظة دي */
+function markConvRead(convId,ts){
+  if(!currentUser||!convId)return;
+  db.ref('conversations/'+convId+'/readBy/'+currentUser.uid).set(ts||Date.now());
+}
+
+/* يراقب فهرس محادثاتي + كل محادثة فيه لايف، وينده onChange كل ما حاجة تتغير */
+function watchMyConversations(onChange){
+  const idxRef=db.ref('userConversations/'+currentUser.uid);
+  const state={};
+  const itemUnsubs={};
+  function emit(){onChange(Object.values(state));}
+  const idxCb=idxRef.on('value',snap=>{
+    const ids=snap.exists()?Object.keys(snap.val()):[];
+    Object.keys(itemUnsubs).forEach(cid=>{
+      if(!ids.includes(cid)){itemUnsubs[cid]();delete itemUnsubs[cid];delete state[cid];}
+    });
+    ids.forEach(cid=>{
+      if(itemUnsubs[cid])return;
+      const ref=db.ref('conversations/'+cid);
+      const cb=ref.on('value',cSnap=>{
+        if(!cSnap.exists()){delete state[cid];emit();return;}
+        state[cid]={id:cid,...cSnap.val()};
+        emit();
+      },err=>console.warn('conv watch error',cid,err));
+      itemUnsubs[cid]=()=>ref.off('value',cb);
+    });
+    if(!ids.length)emit();
+  },err=>console.warn('userConversations watch error',err));
+  return function unsub(){
+    idxRef.off('value',idxCb);
+    Object.values(itemUnsubs).forEach(fn=>fn());
+  };
+}
+
+/* نقطة تنبيه صغيرة على أيقونة الرسائل لو فيه محادثة مقروءة لسه */
+function listenConvBadge(){
+  if(convBadgeUnsub)convBadgeUnsub();
+  convBadgeUnsub=watchMyConversations(convs=>{
+    const any=convs.some(isConvUnread);
+    document.getElementById('bnMsgDot')?.classList.toggle('hidden',!any);
+    document.getElementById('navMsgDot')?.classList.toggle('hidden',!any);
+  });
+}
+
+function renderMessages(app){
+  if(!requireAuth())return;
+  app.innerHTML=`
+  <div class="msg-layout" style="display:grid;grid-template-columns:${route.params.convId?'1fr 2fr':'1fr'};gap:14px;" id="msgLayout">
+    <div class="card ${route.params.convId?'msg-list-mobile-hide':''}" style="padding:10px;height:calc(100vh - 180px);overflow-y:auto;" id="convList">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 4px 12px;">
+        <b>الرسائل</b>
+        <button class="btn btn-brand" style="padding:6px 10px;font-size:11px;" onclick="openCreateGroup()">+ جروب</button>
+      </div>
+      <div id="convItems"><div style="text-align:center;padding:20px;color:var(--muted);"><i class="fa-solid fa-spinner spin"></i></div></div>
+    </div>
+    <div id="convWindow" class="${route.params.convId?'':'hidden'}"></div>
+  </div>`;
+  loadConversations();
+  if(route.params.convId)openConversation(route.params.convId);
+}
+
+async function loadConversations(){
+  if(msgListUnsub)msgListUnsub();
+  msgListUnsub=watchMyConversations(async arr=>{
+    arr.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+    await Promise.all(arr.map(async c=>{
+      if(c.type==='group'){
+        c.displayName=c.name||'جروب';
+        c.otherId=null;
+      }else{
+        const otherId=Object.keys(c.members||{}).find(m=>m!==currentUser.uid);
+        c.otherId=otherId;
+        if(otherId)c.displayName=(await fetchUserCached(otherId)).name;
+      }
+    }));
+    const list=document.getElementById('convItems');
+    if(!list)return;
+    list.innerHTML=arr.length?arr.map(c=>{
+      const unread=isConvUnread(c);
+      const icon=c.type==='group'?'👥':'💬';
+      return `<div style="display:flex;gap:10px;padding:11px 8px;border-radius:12px;cursor:pointer;align-items:center;position:relative;" onclick="go('messages',{convId:'${c.id}'})">
+        <div style="width:42px;height:42px;border:2px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--soft);position:relative;">
+          ${c.type==='group'?icon:(c.otherId?`<img class="avatar" style="width:40px;height:40px;border:0;" src="${avatarUrl(allUsersCache[c.otherId]||{})}">`:icon)}
+          ${unread?'<span class="unread-dot"></span>':''}
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:${unread?'900':'800'};font-size:14px;">${esc(c.displayName||'محادثة')}</div>
+          <div style="font-size:11px;color:var(--muted);">${c.type==='group'?(Object.keys(c.members||{}).length+' أعضاء'):'محادثة مباشرة'}</div>
+          <div class="line-clamp-2" style="font-size:12px;color:${unread?'var(--ink)':'var(--muted)'};">${esc(c.lastMessage||'ابدأ المحادثة')}</div>
+        </div>
+      </div>`;
+    }).join(''):'<div style="color:var(--muted);text-align:center;padding:24px;">لا توجد محادثات. ابدأ برسالة أو أنشئ جروب.</div>';
+  });
+}
+
+function openConversation(convId){
+  if(!requireAuth()||!convId)return;
+  markConvRead(convId,Date.now());
+  document.getElementById('msgLayout').style.gridTemplateColumns='1fr 2fr';
+  document.getElementById('convWindow').classList.remove('hidden');
+  const win=document.getElementById('convWindow');
+  win.innerHTML='<div class="card" style="display:flex;align-items:center;justify-content:center;height:calc(100vh - 180px);"><i class="fa-solid fa-spinner spin"></i></div>';
+  db.ref('conversations/'+convId).once('value').then(async cs=>{
+    const c=cs.val();
+    if(!c||!c.members||!c.members[currentUser.uid]){win.innerHTML='<div class="card" style="padding:30px;text-align:center;color:var(--muted);">لا يمكنك فتح هذه المحادثة</div>';return;}
+    let title=c.type==='group'?(c.name||'جروب'):'محادثة';
+    let subtitle='';
+    if(c.type==='group'){
+      subtitle=Object.keys(c.members).length+' أعضاء';
+    }else{
+      const otherId=Object.keys(c.members).find(m=>m!==currentUser.uid);
+      const other=otherId?await fetchUserCached(otherId):{};
+      title=other.name||'مستخدم';
+      subtitle=ROLE_LABELS[other.role]||'';
+    }
+    win.innerHTML=`<div class="card" style="display:flex;flex-direction:column;height:calc(100vh - 180px);">
+      <div style="padding:12px 14px;border-bottom:2.5px solid var(--line);display:flex;align-items:center;gap:10px;">
+        <div class="md-hide" style="cursor:pointer;padding:4px;" onclick="go('messages')" title="رجوع"><i class="fa-solid fa-arrow-right"></i></div>
+        <div style="width:42px;height:42px;border:2px solid var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--soft);">${c.type==='group'?'👥':'💬'}</div>
+        <div><div style="font-weight:900;">${esc(title)}</div><div style="font-size:11px;color:var(--muted);">${esc(subtitle)}</div></div>
+      </div>
+      <div id="msgBody" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:6px;"></div>
+      <div id="mentionDropMsg" class="hidden card" style="margin:0 10px;padding:6px;max-height:180px;overflow-y:auto;"></div>
+      <div style="display:flex;gap:8px;padding:10px;border-top:2.5px solid var(--line);position:relative;">
+        <input id="msgInput" class="input" placeholder="اكتب رسالة... (استخدم @ للإشارة لشخص)" onkeydown="if(event.key==='Enter'&&!document.getElementById('mentionDropMsg')?.classList.contains('open')){sendMessage('${convId}')}" oninput="handleMentionInput(this,'mentionDropMsg')">
+        <button class="btn btn-brand" onclick="sendMessage('${convId}')"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </div>`;
+    if(activeMsgUnsub){try{activeMsgUnsub();}catch(e){} activeMsgUnsub=null;}
+    const msgRef=db.ref('messages/'+convId).orderByChild('createdAt');
+    let msgRenderToken=0;
+    const msgCb=msgRef.on('value',async snap=>{
+      const myToken=++msgRenderToken; // يمنع سباق التحديثات: أول رسالة بتاخد وقت أطول عشان تجيب بيانات المرسل، فلو وصلت رسالة تانية أسرع، الأقدم متكتبش فوق الأحدث
+      const arr=[];snap.forEach(c=>arr.push({id:c.key,...c.val()}));
+      await Promise.all(arr.map(m=>fetchUserCached(m.senderId)));
+      if(myToken!==msgRenderToken)return;
+      const body=document.getElementById('msgBody');
+      if(!body)return;
+      body.innerHTML=arr.map(m=>renderMessageBubble(m,c,convId)).join('')||'<div style="text-align:center;color:var(--muted);padding:30px;">ابدأ أول رسالة.</div>';
+      body.scrollTop=body.scrollHeight;
+      markConvRead(convId,Date.now());
+    },err=>{console.error(err);const body=win.querySelector('#msgBody');if(body)body.innerHTML='<div style="text-align:center;color:var(--danger);padding:30px;">تعذر تحميل الرسائل</div>';});
+    activeMsgUnsub=()=>msgRef.off('value',msgCb);
+  }).catch(e=>{console.error(e);win.innerHTML='<div class="card" style="padding:30px;text-align:center;color:var(--danger);">تعذر فتح المحادثة</div>';});
+}
+
+/* بطاقة الرسالة: تعرض النص (مع الإشارات @) وردود الفعل، وزر لإضافة رد فعل */
+function renderMessageBubble(m,c,convId){
+  const mine=m.senderId===currentUser.uid;
+  const sender=allUsersCache[m.senderId]||{};
+  const reactions=m.reactions||{};
+  const counts={};
+  Object.values(reactions).forEach(e=>{counts[e]=(counts[e]||0)+1;});
+  const myReaction=reactions[currentUser.uid];
+  const reactionsHtml=Object.keys(counts).length?`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:3px;${mine?'':'justify-content:flex-end;'}">${Object.entries(counts).map(([emo,n])=>`<span onclick="toggleMessageReaction('${convId}','${m.id}','${emo}')" style="cursor:pointer;background:${emo===myReaction?'var(--soft)':'var(--paper)'};border:1.5px solid var(--line);border-radius:999px;padding:1px 7px;font-size:11px;">${emo}${n>1?' '+n:''}</span>`).join('')}</div>`:'';
+  return `<div class="msg-row ${mine?'mine':'theirs'}">
+    ${!mine?`<img class="avatar msg-avatar" src="${avatarUrl(sender)}">`:''}
+    <div style="max-width:min(78%,520px);">
+      ${c.type==='group'&&!mine?`<div style="font-size:11px;font-weight:800;margin:0 6px 2px;">${esc(sender.name||'مستخدم')}</div>`:''}
+      <div class="msg-bubble">${renderTextWithMentions(m.text,m.mentions)}</div>
+      ${reactionsHtml}
+      <div class="msg-meta" style="text-align:${mine?'left':'right'};">${mine?'أنت':esc(sender.name||'')} · ${timeAgo(m.createdAt)} <span onclick="openReactionPicker('${convId}','${m.id}')" style="cursor:pointer;" title="إضافة رد فعل">➕</span></div>
+    </div>
+    ${mine?`<img class="avatar msg-avatar" src="${avatarUrl(myProfile)}">`:''}
+  </div>`;
+}
+function openReactionPicker(convId,mid){
+  if(!requireAuth())return;
+  openModal(`<div style="padding:18px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+    ${REACTION_EMOJIS.map(e=>`<span style="font-size:28px;cursor:pointer;padding:6px;" onclick="toggleMessageReaction('${convId}','${mid}','${e}');closeModal();">${e}</span>`).join('')}
+  </div>`);
+}
+async function toggleMessageReaction(convId,mid,emoji){
+  if(!requireAuth()||!convId||!mid)return;
+  const ref=db.ref('messages/'+convId+'/'+mid+'/reactions/'+currentUser.uid);
+  try{
+    const snap=await ref.get();
+    if(snap.exists()&&snap.val()===emoji)await ref.remove();
+    else await ref.set(emoji);
+  }catch(e){console.error(e);toast('تعذر إضافة رد الفعل','error');}
+}
+
+async function startConversation(otherUid){
+  if(!requireAuth())return;
+  if(otherUid===currentUser.uid)return;
+  try{
+    const key=directKey(currentUser.uid,otherUid);
+    const lookupSnap=await db.ref('directConvLookup/'+key).get();
+    let convId=lookupSnap.exists()?lookupSnap.val():null;
+    if(convId){
+      const exists=(await db.ref('conversations/'+convId).get()).exists();
+      if(!exists)convId=null;
+      else {
+        const c=await db.ref('conversations/'+convId).get();
+        if(!c.child('members/'+currentUser.uid).exists()){convId=null;}
+      }
+    }
+    if(!convId){
+      convId=uid();
+      const updates={};
+      updates['conversations/'+convId]={
+        type:'direct',
+        members:{[currentUser.uid]:true,[otherUid]:true},
+        lastMessage:'',
+        updatedAt:Date.now()
+      };
+      updates['userConversations/'+currentUser.uid+'/'+convId]=true;
+      updates['userConversations/'+otherUid+'/'+convId]=true;
+      updates['directConvLookup/'+key]=convId;
+      await db.ref().update(updates);
+    }
+    go('messages',{convId});
+  }catch(e){
+    console.error(e);
+    toast('تعذر بدء المحادثة، حاول تاني','error');
+  }
+}
+
+async function sendMessage(convId){
+  if(!requireAuth()||!convId)return;
+  const input=document.getElementById('msgInput');
+  if(!input)return;
+  const text=input.value.trim();
+  if(!text)return;
+  const mentions=extractMentions(input);
+  const btn=input.nextElementSibling;
+  if(btn)btn.disabled=true;
+  try{
+    const convSnap=await db.ref('conversations/'+convId).get();
+    const conv=convSnap.val();
+    if(!conv||!conv.members||!conv.members[currentUser.uid]){toast('لا يمكنك إرسال رسالة هنا','error');return;}
+    const now=Date.now();
+    const mid=uid();
+    const mdata={senderId:currentUser.uid,text,createdAt:now};
+    if(mentions.length)mdata.mentions=mentions;
+    await db.ref('messages/'+convId+'/'+mid).set(mdata);
+    await db.ref('conversations/'+convId).update({lastMessage:text,updatedAt:now,lastSenderId:currentUser.uid});
+    markConvRead(convId,now);
+    input.value='';
+    input._mentionMap={};
+    Object.keys(conv.members||{}).filter(id=>id!==currentUser.uid).forEach(id=>notify(id,'message','أرسل لك شخص رسالة جديدة'));
+    mentions.forEach(m=>notify(m.uid,'mention','أشار إليك شخص في رسالة'));
+  }catch(e){console.error(e);toast('تعذر إرسال الرسالة، تأكد من اتصالك بالإنترنت','error');}
+  finally{if(btn)btn.disabled=false;}
+}
+
+async function openCreateGroup(){
+  if(!requireAuth())return;
+  const snap=await db.ref('users').limitToLast(80).get();
+  const users=[];snap.forEach(c=>{if(c.key!==currentUser.uid)users.push({id:c.key,...c.val()});});
+  openModal(`<div style="padding:16px;">
+    <h3 style="font-weight:900;font-size:18px;">إنشاء جروب</h3>
+    <p style="color:var(--muted);font-size:12px;">جروب لفريق مشروع، هاكاثون، دراسة، أو تعاون.</p>
+    <input id="grpName" class="input" placeholder="اسم الجروب" style="margin-bottom:10px;">
+    <textarea id="grpDesc" class="input" rows="2" placeholder="وصف الجروب (اختياري)" style="margin-bottom:10px;"></textarea>
+    <div style="font-weight:800;font-size:13px;margin-bottom:6px;">أضف أعضاء</div>
+    <div style="max-height:260px;overflow-y:auto;border:2px solid var(--line);border-radius:12px;padding:8px;">
+      ${users.length?users.map(u=>`<label style="display:flex;gap:8px;align-items:center;padding:7px;border-bottom:1px solid var(--soft);">
+        <input type="checkbox" class="grp-member" value="${u.id}">
+        <img class="avatar" style="width:30px;height:30px;" src="${avatarUrl(u)}">
+        <span style="font-weight:700;font-size:12px;">${esc(u.name)}</span>
+      </label>`).join(''):'<div style="color:var(--muted);font-size:13px;padding:8px;">لا يوجد أعضاء آخرين بعد</div>'}
+    </div>
+    <button class="btn btn-brand" style="width:100%;margin-top:12px;" id="grpSubmit" onclick="createGroup()">إنشاء الجروب</button>
+  </div>`);
+}
+
+async function createGroup(){
+  const name=document.getElementById('grpName').value.trim();
+  if(!name){toast('اكتب اسم الجروب','error');return;}
+  const btn=document.getElementById('grpSubmit');btn.disabled=true;btn.textContent='جارٍ الإنشاء...';
+  try{
+    const members={[currentUser.uid]:true};
+    document.querySelectorAll('.grp-member:checked').forEach(x=>members[x.value]=true);
+    const id=uid();
+    const updates={};
+    updates['conversations/'+id]={
+      type:'group',name,
+      description:document.getElementById('grpDesc').value.trim(),
+      ownerId:currentUser.uid,members,lastMessage:'',
+      updatedAt:Date.now()
+    };
+    Object.keys(members).forEach(m=>{updates['userConversations/'+m+'/'+id]=true;});
+    await db.ref().update(updates);
+    Object.keys(members).filter(x=>x!==currentUser.uid).forEach(x=>notify(x,'message','تمت إضافتك إلى جروب: '+name));
+    closeModal();toast('تم إنشاء الجروب','success');go('messages',{convId:id});
+  }catch(e){
+    console.error(e);
+    toast('تعذر إنشاء الجروب','error');
+    btn.disabled=false;btn.textContent='إنشاء الجروب';
+  }
+}
+
+
+/* ============ COMMUNITIES ============ */
+function renderCommunities(app){
+  if(!requireAuth())return;
+  app.innerHTML=`
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+    <div><h2 style="font-weight:900;font-size:22px;">👥 المجتمعات</h2><div style="color:var(--muted);font-size:13px;">انضم لمجتمع حول موضوع أنت مهتم به.</div></div>
+    <button class="btn btn-brand" onclick="openCreateCommunity()">+ أنشئ مجتمع</button>
+  </div>
+  <div class="card" style="padding:14px;margin-bottom:14px;">
+    <input id="communitySearch" class="input" placeholder="ابحث: AI، برمجة، تجارة إلكترونية، Startup..." oninput="filterCommunities(this.value)">
+  </div>
+  <div id="communityGrid" class="core-grid"><div style="text-align:center;padding:20px;grid-column:1/-1;"><i class="fa-solid fa-spinner spin"></i></div></div>`;
+  loadCommunities();
+}
+
+let communityCache=[];
+async function loadCommunities(){
+  const grid=document.getElementById('communityGrid');
+  try{
+    const snap=await db.ref('communities').get();
+    communityCache=[];snap.forEach(c=>communityCache.push({id:c.key,...c.val()}));
+    communityCache.sort((a,b)=>(b.membersCount||0)-(a.membersCount||0));
+    renderCommunityGrid(communityCache);
+  }catch(e){
+    console.error(e);
+    if(grid)loadFail('communityGrid','تعذر تحميل المجتمعات','loadCommunities()');
+  }
+}
+function renderCommunityGrid(arr){
+  const grid=document.getElementById('communityGrid');if(!grid)return;
+  grid.innerHTML=arr.length?arr.map(c=>{
+    const joined=c.members&&c.members[currentUser.uid];
+    return `<div class="card" style="padding:14px;cursor:pointer;" onclick="go('communityDetail',{id:'${c.id}'})">
+      <div class="community-cover" style="${c.coverUrl?`background-image:url('${esc(c.coverUrl)}');background-size:cover;background-position:center;`:''}"></div>
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:10px;">
+        <div style="font-weight:900;">${esc(c.name)}</div>
+        <span class="badge">${c.membersCount||0} عضو</span>
+      </div>
+      <div style="color:var(--muted);font-size:12px;margin-top:3px;">${esc(c.topic||'عام')}</div>
+      <div class="line-clamp-2" style="font-size:13px;margin-top:8px;">${esc(c.description||'')}</div>
+      <button class="btn ${joined?'':'btn-brand'}" style="margin-top:10px;width:100%;padding:7px 10px;font-size:12px;" onclick="event.stopPropagation();toggleCommunity('${c.id}',this)">${joined?'عضو بالفعل':'انضم للمجتمع'}</button>
+    </div>`;
+  }).join(''):'<div class="card" style="padding:28px;text-align:center;color:var(--muted);grid-column:1/-1;">لا توجد مجتمعات بهذا البحث. أنشئ أول مجتمع.</div>';
+}
+function filterCommunities(q){
+  q=(q||'').toLowerCase().trim();
+  renderCommunityGrid(!q?communityCache:communityCache.filter(c=>(c.name||'').toLowerCase().includes(q)||(c.topic||'').toLowerCase().includes(q)||(c.description||'').toLowerCase().includes(q)));
+}
+async function toggleCommunity(id,btn){
+  if(!requireAuth())return;
+  try{
+    const ref=db.ref('communities/'+id+'/members/'+currentUser.uid);
+    const snap=await ref.get();
+    const delta=snap.exists()?-1:1;
+    if(snap.exists())await ref.remove();else await ref.set(true);
+    await db.ref('communities/'+id+'/membersCount').transaction(v=>Math.max(0,(Number(v)||0)+delta));
+    btn.textContent=delta>0?'عضو بالفعل':'انضم للمجتمع';
+    if(delta>0)btn.classList.remove('btn-brand');else btn.classList.add('btn-brand');
+    loadCommunities();
+  }catch(e){toast('تعذر تحديث عضويتك في المجتمع','error');}
+}
+function openCreateCommunity(){
+  if(!requireAuth())return;
+  openModal(`<div style="padding:16px;">
+    <h3 style="font-weight:900;">إنشاء مجتمع متخصص</h3>
+    <input id="cmName" class="input" placeholder="اسم المجتمع" style="margin-bottom:8px;">
+    <input id="cmTopic" class="input" placeholder="الموضوع / المجال" style="margin-bottom:8px;">
+    <textarea id="cmDesc" class="input" rows="3" placeholder="ما الذي سيجتمع الناس حوله؟" style="margin-bottom:8px;"></textarea>
+    <input id="cmRules" class="input" placeholder="قاعدة مختصرة للمجتمع (اختياري)" style="margin-bottom:8px;">
+    <button class="btn btn-brand" style="width:100%;" onclick="createCommunity()">إنشاء المجتمع</button>
+  </div>`);
+}
+async function createCommunity(){
+  const name=document.getElementById('cmName').value.trim();
+  const topic=document.getElementById('cmTopic').value.trim();
+  const description=document.getElementById('cmDesc').value.trim();
+  if(!name||!topic){toast('اكتب اسم المجتمع والموضوع','error');return;}
+  const btn=document.querySelector('#modalRoot .btn-brand');
+  if(btn){btn.disabled=true;btn.textContent='جارٍ الإنشاء...';}
+  try{
+    const id=uid();
+    await db.ref('communities/'+id).set({
+      name,topic,description,
+      rules:document.getElementById('cmRules').value.trim(),
+      ownerId:currentUser.uid,
+      members:{[currentUser.uid]:true},
+      membersCount:1,
+      createdAt:Date.now()
+    });
+    await addScore(currentUser.uid,10);
+    closeModal();toast('تم إنشاء المجتمع','success');go('communityDetail',{id});
+  }catch(e){
+    console.error(e);
+    toast('تعذر إنشاء المجتمع','error');
+    if(btn){btn.disabled=false;btn.textContent='إنشاء المجتمع';}
+  }
+}
+async function renderCommunityDetail(app){
+  if(!requireAuth())return;
+  const id=route.params.id;
+  app.innerHTML='<div style="text-align:center;padding:40px;"><i class="fa-solid fa-spinner spin"></i></div>';
+  let snap;
+  try{
+    snap=await db.ref('communities/'+id).get();
+  }catch(e){
+    console.error(e);
+    app.innerHTML='<div class="card" style="padding:30px;text-align:center;color:var(--danger);">تعذر تحميل المجتمع<br><button class="btn" style="margin-top:10px;" onclick="go(\'communityDetail\',{id:\''+id+'\'})">إعادة المحاولة</button></div>';
+    return;
+  }
+  if(!snap.exists()){app.innerHTML='<div class="card" style="padding:30px;text-align:center;">المجتمع غير موجود</div>';return;}
+  const c={id,...snap.val()};
+  const joined=!!(c.members&&c.members[currentUser.uid]);
+  app.innerHTML=`
+    <div class="card" style="padding:14px;">
+      <div class="community-cover" style="${c.coverUrl?`background-image:url('${esc(c.coverUrl)}');background-size:cover;background-position:center;`:''}"></div>
+      <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-top:12px;">
+        <div><h2 style="font-weight:900;font-size:23px;">${esc(c.name)}</h2><div style="color:var(--muted);">${esc(c.topic)}</div></div>
+        <button class="btn ${joined?'':'btn-brand'}" onclick="toggleCommunity('${id}',this)">${joined?'مغادرة المجتمع':'انضم للمجتمع'}</button>
+      </div>
+      <div style="margin-top:10px;line-height:1.7;">${esc(c.description||'')}</div>
+      <div class="stagewrap" style="margin-top:10px;"><span class="badge">👥 ${c.membersCount||0} عضو</span>${c.rules?`<span class="badge">📌 ${esc(c.rules)}</span>`:''}</div>
+    </div>
+    <div class="card" style="padding:14px;margin-top:14px;">
+      <div style="font-weight:900;margin-bottom:8px;">انشر داخل المجتمع</div>
+      <textarea id="cmPostText" class="input" rows="3" placeholder="سؤال، تجربة، مورد، مشروع، فرصة..."></textarea>
+      <button class="btn btn-brand" style="margin-top:8px;width:100%;" onclick="publishCommunityPost('${id}')">نشر</button>
+    </div>
+    <div style="margin-top:14px;"><div style="font-weight:900;margin-bottom:8px;">أحدث النقاشات</div><div id="communityPosts"></div></div>`;
+  db.ref('communityPosts/'+id).orderByChild('createdAt').limitToLast(40).get().then(async s=>{
+    const arr=[];s.forEach(x=>arr.push({id:x.key,...x.val()}));arr.reverse();
+    await Promise.all(arr.map(p=>fetchUserCached(p.authorId)));
+    document.getElementById('communityPosts').innerHTML=arr.length?arr.map(p=>renderPostCard({...p,communityId:id})).join(''):'<div class="card" style="padding:24px;text-align:center;color:var(--muted);">ابدأ أول نقاش.</div>';
+  }).catch(e=>{console.error(e);loadFail('communityPosts','تعذر تحميل النقاشات',`go('communityDetail',{id:'${id}'})`);});
+}
+async function publishCommunityPost(communityId){
+  if(!requireAuth())return;
+  const input=document.getElementById('cmPostText');
+  const text=(input?.value||'').trim();
+  if(!text)return;
+  try{
+    const memberSnap=await db.ref('communities/'+communityId+'/members/'+currentUser.uid).get();
+    if(!memberSnap.exists()){toast('انضم للمجتمع أولًا قبل النشر','error');return;}
+    const id=uid();
+    await db.ref('communityPosts/'+communityId+'/'+id).set({authorId:currentUser.uid,text,type:'community',createdAt:Date.now(),commentsCount:0});
+    await addScore(currentUser.uid,3);
+    input.value='';
+    toast('تم نشر النقاش','success');go('communityDetail',{id:communityId});
+  }catch(e){toast('تعذر نشر النقاش','error');}
+}
+
+/* ============ NOTIFICATIONS ============ */
+function notify(targetUid,type,text){
+  if(!targetUid||targetUid===currentUser?.uid)return;
+  db.ref('notifications/'+targetUid+'/'+uid()).set({type,text,fromId:currentUser.uid,read:false,createdAt:Date.now()}).catch(e=>console.warn('notify failed',e));
+}
+function listenNotifications(){
+  if(notifUnsub){try{notifUnsub();}catch(e){} notifUnsub=null;}
+  const nRef=db.ref('notifications/'+currentUser.uid).orderByChild('read').equalTo(false);
+  const nCb=nRef.on('value',snap=>{
+    document.getElementById('notifDot')?.classList.toggle('hidden',!snap.exists());
+  },err=>console.warn('notifications badge error',err));
+  notifUnsub=()=>nRef.off('value',nCb);
+}
+function renderNotifications(app){
+  if(!requireAuth())return;
+  app.innerHTML='<h2 style="font-weight:900;font-size:20px;margin-bottom:14px;">الإشعارات</h2><div id="notifList"><div style="text-align:center;padding:20px;"><i class="fa-solid fa-spinner spin"></i></div></div>';
+  db.ref('notifications/'+currentUser.uid).orderByChild('createdAt').limitToLast(50).get().then(snap=>{
+    const arr=[];snap.forEach(c=>arr.push({id:c.key,...c.val()}));
+    arr.reverse();
+    arr.forEach(n=>{if(!n.read)db.ref('notifications/'+currentUser.uid+'/'+n.id+'/read').set(true);});
+    document.getElementById('notifList').innerHTML=arr.length?arr.map(n=>`
+      <div class="card" style="padding:14px;margin-bottom:8px;display:flex;gap:10px;align-items:center;cursor:pointer;" onclick="${n.fromId?`go('profile',{uid:'${n.fromId}'})`:''}">
+        <div style="font-size:18px;">${notifIcon(n.type)}</div>
+        <div style="flex:1;font-size:14px;">${esc(n.text)}</div>
+        <div style="color:var(--muted);font-size:11px;">${timeAgo(n.createdAt)}</div>
+      </div>`).join(''):'<div class="card" style="padding:24px;text-align:center;color:var(--muted);">لا توجد إشعارات</div>';
+    document.getElementById('notifDot')?.classList.add('hidden');
+  }).catch(e=>{console.error(e);loadFail('notifList','تعذر تحميل الإشعارات',"go('notifications')");});
+}
+function notifIcon(t){return {follow:'👤',canhelp:'🤝',connection:'🔗',opportunity:'🎯',comment:'💬',like:'❤️',repost:'🔁',message:'✉️',mention:'📣'}[t]||'🔔';}
+
+/* ============ LEADERBOARD ============ */
+function renderLeaderboard(app){
+  app.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+    <div><h2 style="font-weight:900;font-size:22px;">🏆 المتصدرين</h2><div style="color:var(--muted);font-size:12px;">الترتيب هنا مبني على المساهمة الفعلية، مش عدد المتابعين فقط.</div></div>
+  </div>
+  <div class="core-grid" style="margin-bottom:14px;">
+    <div class="card" style="padding:14px;"><b>🚀 Builder</b><div style="color:var(--muted);font-size:12px;">بناء المشاريع والتحديثات</div></div>
+    <div class="card" style="padding:14px;"><b>🤝 Connector</b><div style="color:var(--muted);font-size:12px;">مساعدة الناس وبناء الشبكات</div></div>
+    <div class="card" style="padding:14px;"><b>🧠 Contributor</b><div style="color:var(--muted);font-size:12px;">أسئلة وتعليقات ومحتوى مفيد</div></div>
+  </div>
+  <div id="lbList"><div style="text-align:center;padding:20px;"><i class="fa-solid fa-spinner spin"></i></div></div>`;
+  db.ref('users').orderByChild('founderScore').limitToLast(50).get().then(snap=>{
+    const arr=[];snap.forEach(c=>arr.push({id:c.key,...c.val()}));
+    arr.sort((a,b)=>(b.founderScore||0)-(a.founderScore||0));
+    document.getElementById('lbList').innerHTML=arr.length?arr.map((u,i)=>{
+      const tier=(u.founderScore||0)>=100?'🏅 Top Builder':(u.founderScore||0)>=30?'⭐ Active':'🌱 Rising';
+      return `<div class="card" style="padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:8px;cursor:pointer;" onclick="go('profile',{uid:'${u.id}'})">
+        <div style="font-weight:900;font-size:16px;width:28px;">${i<3?['🥇','🥈','🥉'][i]:i+1}</div>
+        <img class="avatar" style="width:42px;height:42px;" src="${avatarUrl(u)}">
+        <div style="flex:1;"><div style="font-weight:800;">${esc(u.name)}</div><div style="color:var(--muted);font-size:11px;">${ROLE_LABELS[u.role]||''} · ${tier}</div></div>
+        <div style="font-weight:900;color:var(--brand);">${u.founderScore||0} pts</div>
+      </div>`;
+    }).join(''):'<div class="card" style="padding:24px;text-align:center;color:var(--muted);">لا توجد بيانات بعد</div>';
+  }).catch(e=>{console.error(e);loadFail('lbList','تعذر تحميل قائمة المتصدرين',"go('leaderboard')");});
+}
+
+/* ============ SEARCH ============ */
+let searchTimer=null;
+function liveSearch(q){
+  clearTimeout(searchTimer);
+  const drop=document.getElementById('searchDrop');
+  if(!q||q.trim().length<2){drop.classList.add('hidden');return;}
+  searchTimer=setTimeout(async()=>{
+    const [usersSnap,startupsSnap]=await Promise.all([db.ref('users').get(),db.ref('startups').get()]);
+    const users=[];usersSnap.forEach(c=>{const v=c.val();if(v.name&&v.name.toLowerCase().includes(q.toLowerCase()))users.push({id:c.key,...v});});
+    const startups=[];startupsSnap.forEach(c=>{const v=c.val();if(v.name&&v.name.toLowerCase().includes(q.toLowerCase()))startups.push({id:c.key,...v});});
+    drop.classList.remove('hidden');
+    drop.innerHTML=(users.slice(0,4).map(u=>`<div style="display:flex;gap:8px;align-items:center;padding:8px;cursor:pointer;border-radius:8px;" onclick="go('profile',{uid:'${u.id}'})"><img class="avatar" style="width:28px;height:28px;" src="${avatarUrl(u)}"><span style="font-weight:700;font-size:13px;">${esc(u.name)}</span><span style="color:var(--muted);font-size:11px;">شخص</span></div>`).join(''))
+      +(startups.slice(0,4).map(s=>`<div style="display:flex;gap:8px;align-items:center;padding:8px;cursor:pointer;border-radius:8px;" onclick="go('startupDetail',{id:'${s.id}'})"><span>🚀</span><span style="font-weight:700;font-size:13px;">${esc(s.name)}</span><span style="color:var(--muted);font-size:11px;">مشروع</span></div>`).join(''))
+      || '<div style="padding:10px;color:var(--muted);font-size:13px;">لا توجد نتائج</div>';
+  },300);
+}
+function renderSearchPage(app){app.innerHTML='';go('discover');}
+function openMobileSearch(){
+  openModal(`<div style="padding:16px;">
+    <input id="mobileSearchInput" class="input" placeholder="ابحث عن أشخاص، مشاريع، فرص..." oninput="mobileLiveSearch(this.value)">
+    <div id="mobileSearchResults" style="margin-top:12px;max-height:60vh;overflow-y:auto;"></div>
+  </div>`);
+  setTimeout(()=>document.getElementById('mobileSearchInput')?.focus(),150);
+}
+let mobileSearchTimer=null;
+function mobileLiveSearch(q){
+  clearTimeout(mobileSearchTimer);
+  const res=document.getElementById('mobileSearchResults');
+  if(!res)return;
+  if(!q||q.trim().length<2){res.innerHTML='';return;}
+  res.innerHTML='<div style="text-align:center;padding:10px;"><i class="fa-solid fa-spinner spin"></i></div>';
+  mobileSearchTimer=setTimeout(async()=>{
+    const [usersSnap,startupsSnap,oppsSnap]=await Promise.all([db.ref('users').get(),db.ref('startups').get(),db.ref('opportunities').get()]);
+    const ql=q.toLowerCase();
+    const users=[];usersSnap.forEach(c=>{const v=c.val();if(v.name&&v.name.toLowerCase().includes(ql))users.push({id:c.key,...v});});
+    const startups=[];startupsSnap.forEach(c=>{const v=c.val();if(v.name&&v.name.toLowerCase().includes(ql))startups.push({id:c.key,...v});});
+    const opps=[];oppsSnap.forEach(c=>{const v=c.val();if(v.title&&v.title.toLowerCase().includes(ql))opps.push({id:c.key,...v});});
+    const rEl=document.getElementById('mobileSearchResults');
+    if(!rEl)return;
+    const html=(users.slice(0,6).map(u=>`<div style="display:flex;gap:10px;align-items:center;padding:10px;cursor:pointer;border-radius:10px;" onclick="closeModal();go('profile',{uid:'${u.id}'})"><img class="avatar" style="width:34px;height:34px;" src="${avatarUrl(u)}"><span style="font-weight:700;font-size:14px;">${esc(u.name)}</span><span style="color:var(--muted);font-size:12px;">شخص</span></div>`).join(''))
+      +(startups.slice(0,6).map(s=>`<div style="display:flex;gap:10px;align-items:center;padding:10px;cursor:pointer;border-radius:10px;" onclick="closeModal();go('startupDetail',{id:'${s.id}'})"><span>🚀</span><span style="font-weight:700;font-size:14px;">${esc(s.name)}</span><span style="color:var(--muted);font-size:12px;">مشروع</span></div>`).join(''))
+      +(opps.slice(0,6).map(o=>`<div style="display:flex;gap:10px;align-items:center;padding:10px;cursor:pointer;border-radius:10px;" onclick="closeModal();go('opportunityDetail',{id:'${o.id}'})"><span>💰</span><span style="font-weight:700;font-size:14px;">${esc(o.title)}</span><span style="color:var(--muted);font-size:12px;">فرصة</span></div>`).join(''));
+    rEl.innerHTML=html||'<div style="padding:14px;color:var(--muted);text-align:center;">لا توجد نتائج</div>';
+  },300);
+}
+
+/* ============ ADMIN ============ */
+function renderAdmin(app){
+  if(!myProfile||!(myProfile.isAdmin||ADMIN_EMAILS.map(x=>x.toLowerCase()).includes((currentUser?.email||'').toLowerCase()))){
+    app.innerHTML='<div class="card" style="padding:30px;text-align:center;">🚫 هذه الصفحة للإدارة فقط</div>';return;
+  }
+  app.innerHTML=`<h2 style="font-weight:900;font-size:20px;margin-bottom:14px;">⚙️ لوحة الإدارة</h2>
+  <div id="adminStats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:20px;"></div>
+  <div class="scrollx" style="display:flex;gap:8px;margin-bottom:14px;">
+    <div class="tab-btn active" data-atab="users" onclick="adminTab('users')">المستخدمون</div>
+    <div class="tab-btn" data-atab="opps" onclick="adminTab('opps')">الفرص</div>
+    <div class="tab-btn" data-atab="startups" onclick="adminTab('startups')">المشاريع</div>
+    <div class="tab-btn" data-atab="posts" onclick="adminTab('posts')">المنشورات</div>
+    <div class="tab-btn" data-atab="reports" onclick="adminTab('reports')">🚩 البلاغات</div>
+  </div>
+  <div id="adminContent"></div>`;
+  Promise.all([db.ref('users').get(),db.ref('posts').get(),db.ref('startups').get(),db.ref('opportunities').get()]).then(([u,p,s,o])=>{
+    document.getElementById('adminStats').innerHTML=[
+      ['المستخدمون',u.size||0,'👥'],['المنشورات',p.size||0,'📝'],['المشاريع',s.size||0,'🚀'],['الفرص',o.size||0,'💰']
+    ].map(([l,v,i])=>`<div class="card" style="padding:14px;text-align:center;"><div style="font-size:20px;">${i}</div><div style="font-weight:900;font-size:18px;">${v}</div><div style="color:var(--muted);font-size:12px;">${l}</div></div>`).join('');
+  }).catch(e=>{console.error(e);loadFail('adminStats','تعذر تحميل الإحصائيات',"go('admin')");});
+  adminTab('users');
+}
+function adminTab(tab){
+  document.querySelectorAll('[data-atab]').forEach(el=>el.classList.toggle('active',el.dataset.atab===tab));
+  const c=document.getElementById('adminContent');
+  c.innerHTML='<div style="text-align:center;padding:20px;"><i class="fa-solid fa-spinner spin"></i></div>';
+  if(tab==='posts'){
+    db.ref('posts').orderByChild('createdAt').limitToLast(50).get().then(async snap=>{
+      const arr=[];snap.forEach(x=>arr.push({id:x.key,...x.val()}));
+      arr.reverse();
+      await Promise.all(arr.map(p=>fetchUserCached(p.authorId)));
+      c.innerHTML=arr.length?arr.map(p=>{
+        const a=allUsersCache[p.authorId]||{};
+        return `<div class="card" style="padding:12px 16px;margin-bottom:8px;">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+            <img class="avatar" style="width:26px;height:26px;" src="${avatarUrl(a)}">
+            <b style="font-size:13px;">${esc(a.name)}</b>
+            <span style="color:var(--muted);font-size:11px;">${timeAgo(p.createdAt)}</span>
+          </div>
+          <div class="line-clamp-2" style="font-size:13px;color:#333;">${esc(p.text||'')}</div>
+          <button class="btn" style="padding:5px 10px;font-size:11px;margin-top:8px;" onclick="adminDeletePost('${p.id}')">حذف المنشور</button>
+        </div>`;
+      }).join(''):'<div style="color:var(--muted);text-align:center;padding:20px;">لا توجد منشورات</div>';
+    }).catch(e=>{console.error(e);loadFail('adminContent','تعذر تحميل المنشورات',"adminTab('posts')");});
+  }else if(tab==='reports'){
+    db.ref('reports').orderByChild('status').equalTo('open').get().then(async snap=>{
+      const arr=[];snap.forEach(x=>arr.push({id:x.key,...x.val()}));
+      arr.sort((a,b)=>b.createdAt-a.createdAt);
+      await Promise.all(arr.map(r=>fetchUserCached(r.reporterId)));
+      c.innerHTML=arr.length?arr.map(r=>{
+        const rep=allUsersCache[r.reporterId]||{};
+        return `<div class="card" style="padding:12px 16px;margin-bottom:8px;">
+          <div style="font-size:12px;color:var(--muted);">بلاغ من <b>${esc(rep.name)}</b> · ${timeAgo(r.createdAt)}</div>
+          <div style="font-size:13px;margin-top:4px;">${esc(r.reason)}</div>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button class="btn" style="padding:5px 10px;font-size:11px;" onclick="go('feed');closeModal&&closeModal();">عرض الفيد</button>
+            <button class="btn" style="padding:5px 10px;font-size:11px;" onclick="adminDeletePost('${r.postId}');adminResolveReport('${r.id}')">حذف المنشور المُبلَّغ عنه</button>
+            <button class="btn" style="padding:5px 10px;font-size:11px;" onclick="adminResolveReport('${r.id}')">تجاهل البلاغ</button>
+          </div>
+        </div>`;
+      }).join(''):'<div style="color:var(--muted);text-align:center;padding:20px;">لا توجد بلاغات مفتوحة</div>';
+    }).catch(e=>{console.error(e);loadFail('adminContent','تعذر تحميل البلاغات',"adminTab('reports')");});
+  }else if(tab==='users'){
+    db.ref('users').get().then(snap=>{
+      const arr=[];snap.forEach(x=>arr.push({id:x.key,...x.val()}));
+      c.innerHTML=arr.map(u=>`<div class="card" style="padding:12px 16px;display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <img class="avatar" style="width:34px;height:34px;" src="${avatarUrl(u)}">
+        <div style="flex:1;"><b>${esc(u.name)}</b> <span style="color:var(--muted);font-size:12px;">${esc(u.email||'')}</span></div>
+        <button class="btn" style="padding:6px 12px;font-size:12px;" onclick="toggleAdmin('${u.id}',${!u.isAdmin})">${u.isAdmin?'إزالة أدمن':'ترقية لأدمن'}</button>
+      </div>`).join('');
+    }).catch(e=>{console.error(e);loadFail('adminContent','تعذر تحميل المستخدمين',"adminTab('users')");});
+  }else if(tab==='opps'){
+    db.ref('opportunities').get().then(snap=>{
+      const arr=[];snap.forEach(x=>arr.push({id:x.key,...x.val()}));
+      c.innerHTML=`<button class="btn btn-brand" style="margin-bottom:10px;" onclick="openCreateOpportunity()">+ فرصة جديدة</button>`+
+      (arr.length?arr.map(o=>`<div class="card" style="padding:12px 16px;display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div style="flex:1;"><b>${esc(o.title)}</b></div>
+        <button class="btn" style="padding:6px 12px;font-size:12px;" onclick="deleteOpp('${o.id}')">حذف</button>
+      </div>`).join(''):'<div style="color:var(--muted);text-align:center;padding:20px;">لا توجد فرص بعد</div>');
+    }).catch(e=>{console.error(e);loadFail('adminContent','تعذر تحميل الفرص',"adminTab('opps')");});
+  }else{
+    db.ref('startups').get().then(snap=>{
+      const arr=[];snap.forEach(x=>arr.push({id:x.key,...x.val()}));
+      c.innerHTML=arr.length?arr.map(s=>`<div class="card" style="padding:12px 16px;display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+        <div style="flex:1;"><b>${esc(s.name)}</b></div>
+        <button class="btn" style="padding:6px 12px;font-size:12px;" onclick="deleteStartup('${s.id}')">حذف</button>
+      </div>`).join(''):'<div style="color:var(--muted);text-align:center;padding:20px;">لا توجد مشاريع بعد</div>';
+    }).catch(e=>{console.error(e);loadFail('adminContent','تعذر تحميل المشاريع',"adminTab('startups')");});
+  }
+}
+async function toggleAdmin(uid,val){if(!myProfile?.isAdmin&&!ADMIN_EMAILS.map(x=>x.toLowerCase()).includes((currentUser?.email||'').toLowerCase())){toast('غير مصرح','error');return;}try{await db.ref('users/'+uid+'/isAdmin').set(!!val);adminTab('users');}catch(e){toast('تعذر تحديث صلاحيات المستخدم','error');}}
+async function deleteOpp(id){try{await db.ref('opportunities/'+id).remove();adminTab('opps');}catch(e){toast('تعذر حذف الفرصة','error');}}
+async function deleteStartup(id){try{await db.ref('startups/'+id).remove();adminTab('startups');}catch(e){toast('تعذر حذف المشروع','error');}}
+async function adminDeletePost(postId){try{await db.ref('posts/'+postId).remove();await db.ref('comments/'+postId).remove();toast('تم حذف المنشور','success');adminTab('posts');}catch(e){toast('تعذر حذف المنشور','error');}}
+async function adminResolveReport(reportId){try{await db.ref('reports/'+reportId+'/status').set('resolved');toast('تم إغلاق البلاغ','success');adminTab('reports');}catch(e){toast('تعذر إغلاق البلاغ','error');}}
+
+/* ============ MODAL HELPERS ============ */
+function openModal(html,opts){
+  opts=opts||{};
+  const root=document.getElementById('modalRoot');
+  const closeBtn=opts.noClose?'':'<div class="modal-close"><span onclick="closeModal()">✕</span></div>';
+  root.innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal-box">${closeBtn}${html}</div></div>`;
+  document.addEventListener('keydown',escCloseModal);
+  return root;
+}
+function escCloseModal(e){if(e.key==='Escape')closeModal();}
+function closeModal(){document.getElementById('modalRoot').innerHTML='';document.removeEventListener('keydown',escCloseModal);}
+
+/* responsive helper */
+function updateResponsive(){
+  const isMd=window.innerWidth>=768;
+  document.querySelectorAll('.md-show').forEach(e=>e.style.display=isMd?'':'none');
+}
+window.addEventListener('resize',updateResponsive);
+updateResponsive();
+
+// Public diagnostics: افتح Console واكتب window.VentureHubDiagnostics() لمعرفة حالة Firebase/Auth/Database.
+window.VentureHubDiagnostics=async function(){
+  const result={firebase:!!window.firebase,authUser:auth.currentUser?auth.currentUser.uid:null,databaseURL:firebaseConfig.databaseURL,read:{users:null,posts:null,opportunities:null,conversations:null}};
+  if(!auth.currentUser){console.table(result);return result;}
+  const paths=['users/'+auth.currentUser.uid,'posts','opportunities','userConversations/'+auth.currentUser.uid];
+  for(const path of paths){try{await db.ref(path).limitToLast(3).get(); result.read[path]=true;}catch(e){result.read[path]=e.code||e.message||false;}}
+  console.table(result.read); return result;
+};
+</script>
+<div id="vhBuild" style="display:none">VentureHub repaired build</div>
+</body>
+</html>
