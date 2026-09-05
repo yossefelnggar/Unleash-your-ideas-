@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>VentureHub — لاقي فريقك</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<style>
+:root{
+  --bg:#f7f5f2; --ink:#14110f; --paper:#ffffff; --line:#14110f;
+  --brand:#6c4dfb; --brand-ink:#ffffff; --accent:#00c48c; --warn:#ff8a3d; --danger:#ff4757;
+  --muted:#726e68; --card:#ffffff; --soft:#efece6;
+  --shadow: 4px 4px 0 var(--line);
+  --shadow-sm: 2px 2px 0 var(--line);
+}
+*{box-sizing:border-box;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--ink);margin:0;-webkit-tap-highlight-color:transparent;}
+a{color:inherit;}
+.hidden{display:none!important;}
+.spin{animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.btn{border:2.5px solid var(--line);border-radius:14px;padding:10px 18px;font-weight:700;box-shadow:var(--shadow-sm);transition:transform .1s, box-shadow .1s;cursor:pointer;background:var(--paper);font-family:inherit;font-size:14px;}
+.btn:active{transform:translate(2px,2px);box-shadow:0 0 0 var(--line);}
+.btn:disabled{opacity:.55;cursor:not-allowed;}
+.btn-brand{background:var(--brand);color:#fff;}
+.btn-ghost{background:transparent;box-shadow:none;border-color:transparent;}
+.btn-danger{background:var(--danger);color:#fff;}
+.card{background:var(--card);border:2.5px solid var(--line);border-radius:18px;box-shadow:var(--shadow);}
+.input{border:2.5px solid var(--line);border-radius:12px;padding:10px 14px;width:100%;background:#fff;font-family:inherit;font-size:15px;}
+.input:focus{outline:none;box-shadow:3px 3px 0 var(--brand);}
+textarea.input{resize:vertical;}
+.badge{border:2px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;display:inline-block;}
+.pill{border:2px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13px;font-weight:600;background:#fff;cursor:pointer;display:inline-block;}
+.pill.on{background:var(--ink);color:#fff;}
+.avatar{border:2.5px solid var(--line);border-radius:50%;object-fit:cover;background:#eee;}
+.toast-wrap{position:fixed;bottom:90px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;z-index:9999;pointer-events:none;}
+.toast{background:var(--ink);color:#fff;border-radius:12px;padding:10px 16px;font-weight:600;font-size:14px;box-shadow:var(--shadow);animation:up .25s ease;}
+.toast.error{background:var(--danger);}
+.toast.success{background:var(--accent);}
+@keyframes up{from{transform:translateY(10px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.modal-backdrop{position:fixed;inset:0;background:rgba(20,17,15,.5);z-index:2000;display:flex;align-items:flex-end;justify-content:center;}
+@media(min-width:768px){.modal-backdrop{align-items:center;}}
+.modal-box{background:#fff;border:2.5px solid var(--line);border-radius:22px 22px 0 0;box-shadow:var(--shadow);width:100%;max-width:560px;max-height:92vh;overflow-y:auto;}
+@media(min-width:768px){.modal-box{border-radius:22px;}}
+.modal-close{position:sticky;top:0;background:#fff;display:flex;justify-content:flex-end;padding:10px 14px 0;z-index:1;}
+.modal-close span{cursor:pointer;width:30px;height:30px;border-radius:50%;background:var(--soft);display:flex;align-items:center;justify-content:center;}
+.loader-page{position:fixed;inset:0;background:var(--bg);z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;}
+.skel{background:linear-gradient(90deg,var(--soft) 25%,#e2ded6 37%,var(--soft) 63%);background-size:400% 100%;animation:skel 1.4s ease infinite;border-radius:12px;}
+@keyframes skel{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.tab-btn{border:2.5px solid var(--line);border-radius:999px;padding:8px 16px;font-weight:700;font-size:13px;white-space:nowrap;cursor:pointer;background:#fff;}
+.tab-btn.active{background:var(--ink);color:#fff;}
+.scrollx{overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none;}
+.scrollx::-webkit-scrollbar{display:none;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:2.5px solid var(--line);display:flex;justify-content:space-around;padding:8px 4px calc(env(safe-area-inset-bottom) + 6px);z-index:500;}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:700;color:var(--muted);flex:1;padding:4px;cursor:pointer;}
+.bn-item.active{color:var(--brand);}
+.core-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;}
+.msg-row{display:flex;gap:8px;align-items:flex-end;}
+.msg-row.mine{flex-direction:row-reverse;}
+.msg-avatar{width:26px;height:26px;}
+.msg-bubble{background:var(--soft);border:2px solid var(--line);border-radius:16px;padding:8px 14px;font-size:14px;line-height:1.6;max-width:100%;word-break:break-word;}
+.mine .msg-bubble{background:var(--brand);color:#fff;border-color:var(--line);}
+.msg-meta{font-size:10px;color:var(--muted);margin-top:2px;}
+.md-hide{}
+@media(min-width:768px){.md-hide{display:none !important;}}
+.md-show{}
+@media(max-width:767px){
+  .md-show{display:none!important;}
+  .msg-list-mobile-hide{display:none!important;}
+}
+::placeholder{color:#b5b0a7;}
+</style>
+</head>
+<body>
+
+<div class="loader-page" id="loaderPage">
+  <div style="width:44px;height:44px;background:var(--brand);border:2.5px solid var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px;">V</div>
+  <div style="font-weight:800;color:var(--muted);font-size:13px;">جارٍ التحميل...</div>
+</div>
+
+<div id="navbar" class="hidden" style="position:sticky;top:0;background:var(--bg);z-index:100;border-bottom:2.5px solid var(--line);">
+  <div style="max-width:1000px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;gap:10px;">
+    <div style="display:flex;align-items:center;gap:8px;cursor:pointer;" onclick="go('discover')">
+      <div style="width:34px;height:34px;background:var(--brand);border:2.5px solid var(--line);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;">V</div>
+      <div style="font-weight:900;font-size:18px;" class="md-show">VentureHub</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="cursor:pointer;" onclick="go('diagnostics')" title="تشخيص المشاكل"><i class="fa-solid fa-stethoscope" style="font-size:17px;color:var(--muted);"></i></div>
+      <div style="position:relative;cursor:pointer;" onclick="go('notifications')">
+        <i class="fa-solid fa-bell" style="font-size:20px;"></i>
+        <span id="notifDot" class="hidden" style="position:absolute;top:-3px;left:-3px;width:9px;height:9px;background:var(--danger);border-radius:50%;border:1.5px solid #fff;"></span>
+      </div>
+      <img id="navAvatar" class="avatar" style="width:34px;height:34px;cursor:pointer;" onclick="go('profile',{uid:currentUser?.uid})">
+    </div>
+  </div>
+  <div class="scrollx md-show" style="max-width:1000px;margin:0 auto;padding:0 14px 10px;display:flex;gap:8px;">
+    <div class="tab-btn" data-nav="discover" onclick="go('discover')">🧭 اكتشف</div>
+    <div class="tab-btn" data-nav="startups" onclick="go('startups')">🚀 المشاريع</div>
+    <div class="tab-btn" data-nav="messages" onclick="go('messages')" style="position:relative;">💬 رسائلي<span id="navMsgDot" class="hidden" style="position:absolute;top:2px;left:2px;width:8px;height:8px;background:var(--danger);border-radius:50%;border:1.5px solid var(--bg);"></span></div>
+    <div class="tab-btn" data-nav="profile" onclick="go('profile',{uid:currentUser?.uid})">👤 حسابي</div>
+  </div>
+</div>
+
+<div id="app" style="max-width:1000px;margin:0 auto;padding:14px 14px 90px;"></div>
+
+<div class="bottom-nav md-hide hidden" id="bottomNav">
+  <div class="bn-item" data-nav="discover" onclick="go('discover')"><i class="fa-solid fa-compass"></i>اكتشف</div>
+  <div class="bn-item" data-nav="startups" onclick="go('startups')"><i class="fa-solid fa-rocket"></i>المشاريع</div>
+  <div class="bn-item" data-nav="messages" onclick="go('messages')" style="position:relative;"><i class="fa-solid fa-message"></i>رسائلي<span id="navMsgDotMobile" class="hidden" style="position:absolute;top:2px;left:22px;width:8px;height:8px;background:var(--danger);border-radius:50%;"></span></div>
+  <div class="bn-item" data-nav="notifications" onclick="go('notifications')"><i class="fa-solid fa-bell"></i>إشعارات</div>
+  <div class="bn-item" data-nav="profile" onclick="go('profile',{uid:currentUser?.uid})"><i class="fa-solid fa-user"></i>حسابي</div>
+</div>
+
+<div id="modalRoot"></div>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ============================================================
+   VentureHub MVP — نسخة مبسّطة ومركّزة على الأساس:
+   بروفايل → اكتشاف أشخاص → نشر فكرة/مشروع → طلب انضمام لفريق → رسائل مباشرة.
+   Schema:
+   users/{uid} { name, email, role, bio, skills[], interests[], location, availability, avatarSeed, createdAt }
+   startups/{id} { founderId, title, tagline, description, stage, neededSkills[], createdAt, status }
+   joinRequests/{startupId}/{uid} { uid, message, status, createdAt }
+   notifications/{uid}/{id} { type, text, fromId, relatedId, read, createdAt }
+   conversations/{id} { members{uid:true}, lastMessage, updatedAt, lastSenderId }
+   messages/{convId}/{id} { senderId, text, createdAt }
+   userConversations/{uid}/{convId} true
+   directConvLookup/{key} convId
+   ============================================================ */
+
+/* ============ FIREBASE ============ */
+const firebaseConfig = {
+  apiKey: "AIzaSyAAM11KB7jbdZC0EiPyOgIawxzGZITgMA8",
+  authDomain: "flash-feedback-9c529.firebaseapp.com",
+  databaseURL: "https://flash-feedback-9c529-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "flash-feedback-9c529",
+  storageBucket: "flash-feedback-9c529.firebasestorage.app",
+  messagingSenderId: "1026286586523",
+  appId: "1:1026286586523:web:b76e33473c260fc4d7143e"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+
+const ROLE_LABELS = {founder:'مؤسس',talent:'موهبة',mentor:'مرشد'};
+const ROLE_ICONS = {founder:'🚀',talent:'💡',mentor:'🧠'};
+const STAGE_LABELS = {idea:'فكرة',mvp:'نموذج أولي',growth:'نمو'};
+const SKILL_SUGGESTIONS = ['برمجة Frontend','برمجة Backend','تصميم UI/UX','تسويق رقمي','مبيعات','إدارة منتج','تمويل واستثمار','محتوى وكتابة','ذكاء اصطناعي','تحليل بيانات','فيديو ومونتاج','قانون وعقود'];
+
+let currentUser=null, myProfile=null, route={name:'landing',params:{}};
+let allUsersCache={};
+let convBadgeUnsub=null, notifUnsub=null, activeMsgUnsub=null, msgListUnsub=null;
+
+/* ============ HELPERS ============ */
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function uid(){return db.ref().push().key;}
+function avatarUrl(u){return (u&&u.avatar)||'https://api.dicebear.com/7.x/initials/svg?seed='+encodeURIComponent((u&&u.name)||'U')+'&backgroundColor=6c4dfb&textColor=ffffff';}
+function toast(msg,type){
+  const wrap=document.getElementById('toastWrap');
+  const el=document.createElement('div');
+  el.className='toast'+(type?(' '+type):'');
+  el.textContent=msg;
+  wrap.appendChild(el);
+  setTimeout(()=>el.remove(),3200);
+}
+function timeAgo(ts){
+  if(!ts)return'';
+  const s=Math.floor((Date.now()-ts)/1000);
+  if(s<60)return'الآن';
+  if(s<3600)return Math.floor(s/60)+' د';
+  if(s<86400)return Math.floor(s/3600)+' س';
+  if(s<604800)return Math.floor(s/86400)+' يوم';
+  return new Date(ts).toLocaleDateString('ar-EG');
+}
+function openModal(html){
+  document.getElementById('modalRoot').innerHTML=`<div class="modal-backdrop" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+      <div class="modal-close"><span onclick="closeModal()">✕</span></div>
+      <div style="padding:6px 20px 24px;">${html}</div>
+    </div>
+  </div>`;
+  document.addEventListener('keydown',escCloseModal);
+}
+function escCloseModal(e){if(e.key==='Escape')closeModal();}
+function closeModal(){document.getElementById('modalRoot').innerHTML='';document.removeEventListener('keydown',escCloseModal);}
+function requireAuth(){if(!currentUser){go('auth');toast('سجّل دخولك أولًا');return false;}return true;}
+async function fetchUserCached(uid){
+  if(!uid)return{};
+  if(allUsersCache[uid])return allUsersCache[uid];
+  try{
+    const snap=await db.ref('users/'+uid).get();
+    const val=snap.val()||{};
+    allUsersCache[uid]=val;
+    return val;
+  }catch(e){console.error('fetchUserCached failed',uid,e);return{};}
+}
+function stopRealtimeListeners(){
+  if(notifUnsub){try{notifUnsub();}catch(e){} notifUnsub=null;}
+  if(convBadgeUnsub){try{convBadgeUnsub();}catch(e){} convBadgeUnsub=null;}
+  if(activeMsgUnsub){try{activeMsgUnsub();}catch(e){} activeMsgUnsub=null;}
+  if(msgListUnsub){try{msgListUnsub();}catch(e){} msgListUnsub=null;}
+}
+
+/* ============ ROUTER ============ */
+function go(name,params={}){
+  route={name,params};
+  render();
+  document.querySelectorAll('[data-nav]').forEach(el=>el.classList.toggle('active',el.dataset.nav===name));
+  window.scrollTo(0,0);
+}
+function render(){
+  const app=document.getElementById('app');
+  const r={
+    landing:renderLanding, auth:renderAuth, onboarding:renderOnboarding,
+    discover:renderDiscover, profile:renderProfile,
+    startups:renderStartups, startupDetail:renderStartupDetail,
+    messages:renderMessages, notifications:renderNotifications,
+    diagnostics:renderDiagnostics
+  };
+  app.innerHTML='';
+  try{(r[route.name]||renderLanding)(app);}
+  catch(e){console.error('render failed for route',route.name,e);app.innerHTML='<div class="card" style="padding:24px;text-align:center;color:var(--danger);">حصل خطأ في عرض الصفحة. افتح 🩺 تشخيص المشاكل.</div>';}
+}
+
+/* ============ AUTH ============ */
+auth.onAuthStateChanged(async(user)=>{
+  currentUser=user;
+  stopRealtimeListeners();
+  document.getElementById('loaderPage').classList.add('hidden');
+  if(user){
+    let snap;
+    try{snap=await db.ref('users/'+user.uid).get();}
+    catch(e){
+      console.error(e);
+      document.getElementById('app').innerHTML='<div class="card" style="margin:30px auto;max-width:640px;padding:24px;text-align:center;color:var(--danger);"><b>تعذر الاتصال بقاعدة البيانات</b><div style="margin-top:8px;color:var(--muted);font-size:13px;">تأكد أن Realtime Database Rules منشورة صح.</div><button class="btn" style="margin-top:14px;" onclick="location.reload()">إعادة المحاولة</button></div>';
+      return;
+    }
+    if(snap.exists()){
+      myProfile=snap.val();
+      document.getElementById('navbar').classList.remove('hidden');
+      document.getElementById('bottomNav').classList.remove('hidden');
+      document.getElementById('navAvatar').src=avatarUrl(myProfile);
+      allUsersCache[user.uid]=myProfile;
+      listenNotifications();
+      listenConvBadge();
+      go('discover');
+    }else{
+      go('onboarding');
+    }
+  }else{
+    myProfile=null;
+    document.getElementById('navbar').classList.add('hidden');
+    document.getElementById('bottomNav').classList.add('hidden');
+    go('landing');
+  }
+});
+function doRegister(email,pass){return auth.createUserWithEmailAndPassword(email,pass);}
+function doLogin(email,pass){return auth.signInWithEmailAndPassword(email,pass);}
+function doLogout(){stopRealtimeListeners();auth.signOut();go('landing');}
+function resetPassword(){
+  const email=(document.getElementById('afEmail')?.value||'').trim();
+  if(!email){toast('اكتب بريدك الإلكتروني في الخانة فوق الأول','error');return;}
+  auth.sendPasswordResetEmail(email).then(()=>toast('تم إرسال رابط إعادة تعيين كلمة المرور لبريدك','success')).catch(()=>toast('تعذر إرسال الرابط، تأكد من صحة البريد','error'));
+}
+
+/* ============ LANDING ============ */
+function renderLanding(app){
+  app.innerHTML=`
+  <div style="padding:30px 0 10px;text-align:center;">
+    <div style="display:inline-flex;align-items:center;gap:10px;margin-bottom:18px;">
+      <div style="width:44px;height:44px;background:var(--brand);border:2.5px solid var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px;">V</div>
+      <div style="font-weight:900;font-size:22px;">VentureHub</div>
+    </div>
+    <h1 style="font-size:32px;font-weight:900;line-height:1.4;margin:0 0 12px;">لاقي اللي شبهك.<br>ابنوا فكرة مع بعض.<br><span style="color:var(--brand);">وحوّلوها منتج.</span></h1>
+    <p style="color:var(--muted);font-size:16px;max-width:460px;margin:0 auto 22px;">منصة عربية تجمع المؤسسين والمواهب والمرشدين عشان يلاقوا بعض ويبنوا فرق حقيقية.</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn btn-brand" style="font-size:16px;padding:12px 26px;" onclick="go('auth',{mode:'register'})">ابدأ مجانًا</button>
+      <button class="btn" style="font-size:16px;padding:12px 26px;" onclick="go('auth',{mode:'login'})">تسجيل الدخول</button>
+    </div>
+  </div>
+  <div class="core-grid" style="margin-top:30px;">
+    <div class="card" style="padding:18px;text-align:center;"><div style="font-size:30px;">🧭</div><b>اكتشف</b><div style="color:var(--muted);font-size:13px;margin-top:4px;">لاقي مؤسسين ومواهب بمهارات تكمّل مشروعك</div></div>
+    <div class="card" style="padding:18px;text-align:center;"><div style="font-size:30px;">🚀</div><b>انشر فكرتك</b><div style="color:var(--muted);font-size:13px;margin-top:4px;">اعرض مشروعك واستقبل طلبات انضمام</div></div>
+    <div class="card" style="padding:18px;text-align:center;"><div style="font-size:30px;">💬</div><b>تواصل مباشرة</b><div style="color:var(--muted);font-size:13px;margin-top:4px;">رسائل مباشرة سريعة وبسيطة</div></div>
+  </div>`;
+}
+
+/* ============ AUTH SCREEN ============ */
+function renderAuth(app){
+  const mode=route.params.mode||'login';
+  app.innerHTML=`
+  <div class="card" style="max-width:440px;margin:20px auto;padding:26px;">
+    <div style="text-align:center;margin-bottom:18px;">
+      <div style="width:44px;height:44px;background:var(--brand);border:2.5px solid var(--line);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px;margin:0 auto 10px;">V</div>
+      <h2 style="font-weight:900;margin:0;">${mode==='register'?'إنشاء حساب':'تسجيل الدخول'}</h2>
+    </div>
+    ${mode==='register'?'<input id="afName" class="input" placeholder="اسمك بالكامل" style="margin-bottom:10px;">':''}
+    <input id="afEmail" class="input" placeholder="البريد الإلكتروني" style="margin-bottom:10px;" type="email">
+    <input id="afPass" class="input" placeholder="كلمة المرور" style="margin-bottom:14px;" type="password">
+    <button class="btn btn-brand" style="width:100%;" id="authSubmitBtn" onclick="submitAuth('${mode}')">${mode==='register'?'إنشاء الحساب':'دخول'}</button>
+    ${mode==='login'?'<div style="text-align:center;margin-top:10px;"><span style="font-size:13px;color:var(--brand);cursor:pointer;" onclick="resetPassword()">نسيت كلمة المرور؟</span></div>':''}
+    <div style="text-align:center;margin-top:16px;font-size:14px;">
+      ${mode==='register'?'عندك حساب بالفعل؟ <b style="color:var(--brand);cursor:pointer;" onclick="go(\'auth\',{mode:\'login\'})">سجّل دخولك</b>':'مستخدم جديد؟ <b style="color:var(--brand);cursor:pointer;" onclick="go(\'auth\',{mode:\'register\'})">أنشئ حساب</b>'}
+    </div>
+  </div>`;
+}
+async function submitAuth(mode){
+  const email=document.getElementById('afEmail').value.trim();
+  const pass=document.getElementById('afPass').value;
+  const name=mode==='register'?document.getElementById('afName').value.trim():'';
+  if(!email||!pass){toast('اكتب البريد وكلمة المرور','error');return;}
+  if(mode==='register'&&!name){toast('اكتب اسمك','error');return;}
+  const btn=document.getElementById('authSubmitBtn');btn.disabled=true;btn.textContent='جارٍ...';
+  try{
+    if(mode==='register'){
+      const cred=await doRegister(email,pass);
+      await db.ref('users/'+cred.user.uid).set({uid:cred.user.uid,name,email,role:'',bio:'',location:'',skills:[],interests:[],availability:'available',createdAt:Date.now()});
+    }else{
+      await doLogin(email,pass);
+    }
+  }catch(e){
+    const msgMap={'auth/email-already-in-use':'البريد ده مستخدم بالفعل','auth/invalid-email':'البريد غير صحيح','auth/weak-password':'كلمة المرور لازم 6 أحرف على الأقل','auth/user-not-found':'مفيش حساب بالبريد ده','auth/wrong-password':'كلمة المرور غلط','auth/invalid-credential':'البريد أو كلمة المرور غلط'};
+    toast(msgMap[e.code]||'حصل خطأ، حاول تاني','error');
+  }
+  btn.disabled=false;btn.textContent=mode==='register'?'إنشاء الحساب':'دخول';
+}
+
+/* ============ ONBOARDING ============ */
+function renderOnboarding(app){
+  if(!currentUser){go('landing');return;}
+  app.innerHTML=`
+  <div class="card" style="max-width:560px;margin:20px auto;padding:26px;">
+    <h2 style="font-weight:900;margin:0 0 4px;">كمّل بياناتك 👋</h2>
+    <div style="color:var(--muted);font-size:13px;margin-bottom:18px;">دي أهم خطوة عشان الناس تلاقيك صح</div>
+    <label style="font-weight:800;font-size:13px;">أنا؟</label>
+    <div style="display:flex;gap:8px;margin:8px 0 16px;flex-wrap:wrap;">
+      ${Object.entries(ROLE_LABELS).map(([k,v])=>`<span class="pill" id="obRole_${k}" onclick="selectOnbRole('${k}')">${ROLE_ICONS[k]} ${v}</span>`).join('')}
+    </div>
+    <label style="font-weight:800;font-size:13px;">نبذة عنك</label>
+    <textarea id="obBio" class="input" rows="3" placeholder="مين انت وبتشتغل في إيه..." style="margin:8px 0 16px;"></textarea>
+    <label style="font-weight:800;font-size:13px;">مهاراتك (اختر اللي يناسبك)</label>
+    <div style="display:flex;gap:8px;margin:8px 0 16px;flex-wrap:wrap;">
+      ${SKILL_SUGGESTIONS.map(s=>`<span class="pill" data-skill="${esc(s)}" onclick="this.classList.toggle('on')">${esc(s)}</span>`).join('')}
+    </div>
+    <label style="font-weight:800;font-size:13px;">مدينتك (اختياري)</label>
+    <input id="obLocation" class="input" placeholder="القاهرة، الرياض، ..." style="margin:8px 0 20px;">
+    <button class="btn btn-brand" style="width:100%;" id="obSubmitBtn" onclick="submitOnboarding()">كمّل ودخول المنصة</button>
+  </div>`;
+}
+let __obRole='';
+function selectOnbRole(role){
+  __obRole=role;
+  Object.keys(ROLE_LABELS).forEach(k=>document.getElementById('obRole_'+k)?.classList.toggle('on',k===role));
+}
+async function submitOnboarding(){
+  if(!__obRole){toast('اختار انت مين (مؤسس / موهبة / مرشد)','error');return;}
+  const bio=document.getElementById('obBio').value.trim();
+  const location=document.getElementById('obLocation').value.trim();
+  const skills=[...document.querySelectorAll('[data-skill].on')].map(e=>e.dataset.skill);
+  const btn=document.getElementById('obSubmitBtn');btn.disabled=true;btn.textContent='جارٍ الحفظ...';
+  try{
+    await db.ref('users/'+currentUser.uid).update({role:__obRole,bio,location,skills});
+    const snap=await db.ref('users/'+currentUser.uid).get();
+    myProfile=snap.val();
+    allUsersCache[currentUser.uid]=myProfile;
+    document.getElementById('navbar').classList.remove('hidden');
+    document.getElementById('bottomNav').classList.remove('hidden');
+    document.getElementById('navAvatar').src=avatarUrl(myProfile);
+    listenNotifications();
+    listenConvBadge();
+    toast('أهلًا بيك في VentureHub 🎉','success');
+    go('discover');
+  }catch(e){console.error(e);toast('تعذر الحفظ، حاول تاني','error');btn.disabled=false;btn.textContent='كمّل ودخول المنصة';}
+}
+
+/* ============ DISCOVER (اكتشف أشخاص) ============ */
+let discoverAllCache=null;
+async function loadDiscoverList(){
+  const grid=document.getElementById('discoverGrid');
+  if(!grid)return;
+  try{
+    if(!discoverAllCache){
+      const snap=await db.ref('users').limitToLast(200).get();
+      const arr=[];snap.forEach(c=>{if(c.key!==currentUser.uid)arr.push({uid:c.key,...c.val()});});
+      discoverAllCache=arr;
+    }
+    renderDiscoverGrid(discoverAllCache);
+  }catch(e){
+    console.error(e);
+    grid.innerHTML='<div class="card" style="padding:24px;text-align:center;color:var(--danger);grid-column:1/-1;">تعذر تحميل الأشخاص<br><button class="btn" style="margin-top:10px;" onclick="discoverAllCache=null;loadDiscoverList()">إعادة المحاولة</button></div>';
+  }
+}
+function renderDiscoverGrid(list){
+  const grid=document.getElementById('discoverGrid');
+  if(!grid)return;
+  const q=(document.getElementById('discoverSearch')?.value||'').trim().toLowerCase();
+  const roleFilter=window.__discoverRoleFilter||'';
+  let filtered=list;
+  if(roleFilter)filtered=filtered.filter(u=>u.role===roleFilter);
+  if(q)filtered=filtered.filter(u=>(u.name||'').toLowerCase().includes(q)||(u.skills||[]).some(s=>s.toLowerCase().includes(q))||(u.bio||'').toLowerCase().includes(q));
+  if(!filtered.length){grid.innerHTML='<div class="card" style="padding:24px;text-align:center;color:var(--muted);grid-column:1/-1;">مفيش نتائج مطابقة</div>';return;}
+  const mySkills=new Set(myProfile?.skills||[]);
+  grid.innerHTML=filtered.map(u=>{
+    const shared=(u.skills||[]).filter(s=>mySkills.has(s));
+    try{
+      return `<div class="card" style="padding:16px;cursor:pointer;" onclick="go('profile',{uid:'${u.uid}'})">
+        <div style="display:flex;gap:10px;align-items:center;">
+          <img class="avatar" style="width:50px;height:50px;" src="${avatarUrl(u)}">
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:800;">${esc(u.name||'مستخدم')}</div>
+            <div style="font-size:12px;color:var(--muted);">${ROLE_ICONS[u.role]||''} ${ROLE_LABELS[u.role]||'عضو'}${u.location?(' · '+esc(u.location)):''}</div>
+          </div>
+        </div>
+        ${u.bio?`<div style="font-size:13px;color:var(--muted);margin-top:10px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${esc(u.bio)}</div>`:''}
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">
+          ${(u.skills||[]).slice(0,3).map(s=>`<span class="badge" style="${shared.includes(s)?'background:var(--accent);color:#fff;border-color:var(--line);':''}">${esc(s)}</span>`).join('')}
+        </div>
+        ${shared.length?`<div style="font-size:11px;color:var(--accent);font-weight:800;margin-top:8px;">✨ بينكم ${shared.length} مهارة مشتركة</div>`:''}
+      </div>`;
+    }catch(err){console.error('تعذر عرض بطاقة مستخدم',u.uid,err);return'';}
+  }).join('');
+}
+function filterDiscover(){renderDiscoverGrid(discoverAllCache||[]);}
+function setDiscoverRoleFilter(role){
+  window.__discoverRoleFilter=role;
+  document.querySelectorAll('[data-role-filter]').forEach(e=>e.classList.toggle('on',e.dataset.roleFilter===role));
+  renderDiscoverGrid(discoverAllCache||[]);
+}
+function renderDiscover(app){
+  if(!requireAuth())return;
+  window.__discoverRoleFilter='';
+  app.innerHTML=`
+  <div style="margin-bottom:14px;">
+    <h2 style="font-weight:900;font-size:22px;margin:0 0 4px;">🧭 اكتشف الناس</h2>
+    <div style="color:var(--muted);font-size:13px;">لاقي مؤسسين ومواهب ومرشدين تقدر تبني معاهم</div>
+  </div>
+  <div class="card" style="padding:14px;margin-bottom:14px;">
+    <input id="discoverSearch" class="input" placeholder="ابحث بالاسم أو المهارة..." oninput="filterDiscover()" style="margin-bottom:10px;">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <span class="pill on" data-role-filter="" onclick="setDiscoverRoleFilter('')">الكل</span>
+      ${Object.entries(ROLE_LABELS).map(([k,v])=>`<span class="pill" data-role-filter="${k}" onclick="setDiscoverRoleFilter('${k}')">${ROLE_ICONS[k]} ${v}</span>`).join('')}
+    </div>
+  </div>
+  <div id="discoverGrid" class="core-grid"><div style="grid-column:1/-1;text-align:center;padding:30px;"><i class="fa-solid fa-spinner spin"></i></div></div>`;
+  loadDiscoverList();
+}
+
+/* ============ PROFILE ============ */
+async function renderProfile(app){
+  if(!requireAuth())return;
+  const targetUid=route.params.uid||currentUser.uid;
+  app.innerHTML='<div style="text-align:center;padding:40px;"><i class="fa-solid fa-spinner spin"></i></div>';
+  let u;
+  try{
+    if(targetUid===currentUser.uid){u=myProfile;}
+    else{const snap=await db.ref('users/'+targetUid).get();u=snap.val();}
+  }catch(e){console.error(e);app.innerHTML='<div class="card" style="padding:24px;text-align:center;color:var(--danger);">تعذر تحميل البروفايل</div>';return;}
+  if(!u){app.innerHTML='<div class="card" style="padding:24px;text-align:center;color:var(--muted);">المستخدم غير موجود</div>';return;}
+  const isMe=targetUid===currentUser.uid;
+  app.innerHTML=`
+  <div class="card" style="padding:20px;">
+    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+      <img class="avatar" style="width:76px;height:76px;" src="${avatarUrl(u)}">
+      <div style="flex:1;min-width:200px;">
+        <div style="font-weight:900;font-size:20px;">${esc(u.name||'مستخدم')}</div>
+        <div style="font-size:13px;color:var(--muted);">${ROLE_ICONS[u.role]||''} ${ROLE_LABELS[u.role]||'عضو'}${u.location?(' · '+esc(u.location)):''}</div>
+      </div>
+      ${isMe?`<button class="btn" onclick="openEditProfile()"><i class="fa-solid fa-pen"></i> تعديل</button><button class="btn btn-ghost" onclick="doLogout()">خروج</button>`
+        :`<button class="btn btn-brand" onclick="startConversation('${targetUid}')"><i class="fa-solid fa-message"></i> راسله</button>`}
+    </div>
+    ${u.bio?`<div style="margin-top:16px;line-height:1.8;">${esc(u.bio)}</div>`:''}
+    ${(u.skills||[]).length?`<div style="margin-top:14px;"><b style="font-size:13px;">المهارات</b><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">${u.skills.map(s=>`<span class="badge">${esc(s)}</span>`).join('')}</div></div>`:''}
+  </div>
+  <div style="margin-top:20px;">
+    <h3 style="font-weight:900;font-size:17px;margin-bottom:10px;">${isMe?'مشاريعي':'مشاريعه'}</h3>
+    <div id="profileStartups" class="core-grid"><div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--muted);"><i class="fa-solid fa-spinner spin"></i></div></div>
+  </div>`;
+  loadUserStartups(targetUid);
+}
+async function loadUserStartups(uid){
+  const el=document.getElementById('profileStartups');
+  if(!el)return;
+  try{
+    const snap=await db.ref('startups').orderByChild('founderId').equalTo(uid).get();
+    const arr=[];snap.forEach(c=>arr.push({id:c.key,...c.val()}));
+    arr.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    el.innerHTML=arr.length?arr.map(s=>{try{return renderStartupCard(s);}catch(e){console.error(e);return'';}}).join(''):'<div style="color:var(--muted);grid-column:1/-1;">لا يوجد مشاريع بعد</div>';
+  }catch(e){console.error(e);el.innerHTML='<div style="color:var(--danger);grid-column:1/-1;">تعذر تحميل المشاريع</div>';}
+}
+function openEditProfile(){
+  openModal(`<h3 style="font-weight:900;margin-bottom:14px;">تعديل البروفايل</h3>
+    <label style="font-weight:800;font-size:13px;">أنا؟</label>
+    <div style="display:flex;gap:8px;margin:8px 0 14px;flex-wrap:wrap;">
+      ${Object.entries(ROLE_LABELS).map(([k,v])=>`<span class="pill ${myProfile.role===k?'on':''}" id="epRole_${k}" onclick="selectEditRole('${k}')">${ROLE_ICONS[k]} ${v}</span>`).join('')}
+    </div>
+    <label style="font-weight:800;font-size:13px;">الاسم</label>
+    <input id="epName" class="input" style="margin:8px 0 14px;" value="${esc(myProfile.name||'')}">
+    <label style="font-weight:800;font-size:13px;">نبذة</label>
+    <textarea id="epBio" class="input" rows="3" style="margin:8px 0 14px;">${esc(myProfile.bio||'')}</textarea>
+    <label style="font-weight:800;font-size:13px;">المدينة</label>
+    <input id="epLocation" class="input" style="margin:8px 0 14px;" value="${esc(myProfile.location||'')}">
+    <label style="font-weight:800;font-size:13px;">المهارات</label>
+    <div style="display:flex;gap:8px;margin:8px 0 18px;flex-wrap:wrap;">
+      ${SKILL_SUGGESTIONS.map(s=>`<span class="pill ${(myProfile.skills||[]).includes(s)?'on':''}" data-skill="${esc(s)}" onclick="this.classList.toggle('on')">${esc(s)}</span>`).join('')}
+    </div>
+    <button class="btn btn-brand" style="width:100%;" id="epSubmitBtn" onclick="submitEditProfile()">حفظ التعديلات</button>`);
+}
+let __epRole='';
+function selectEditRole(role){
+  __epRole=role;
+  Object.keys(ROLE_LABELS).forEach(k=>document.getElementById('epRole_'+k)?.classList.toggle('on',k===role));
+}
+async function submitEditProfile(){
+  __epRole=__epRole||myProfile.role;
+  const name=document.getElementById('epName').value.trim();
+  const bio=document.getElementById('epBio').value.trim();
+  const location=document.getElementById('epLocation').value.trim();
+  const skills=[...document.querySelectorAll('[data-skill].on')].map(e=>e.dataset.skill);
+  if(!name){toast('اكتب اسمك','error');return;}
+  const btn=document.getElementById('epSubmitBtn');btn.disabled=true;btn.textContent='جارٍ الحفظ...';
+  try{
+    await db.ref('users/'+currentUser.uid).update({name,bio,location,skills,role:__epRole});
+    const snap=await db.ref('users/'+currentUser.uid).get();
+    myProfile=snap.val();
+    allUsersCache[currentUser.uid]=myProfile;
+    document.getElementById('navAvatar').src=avatarUrl(myProfile);
+    discoverAllCache=null;
+    closeModal();
+    toast('تم الحفظ','success');
+    go('profile',{uid:currentUser.uid});
+  }catch(e){console.error(e);toast('تعذر الحفظ','error');btn.disabled=false;btn.textContent='حفظ التعديلات';}
+}
+
+/* ============ STARTUPS (الأفكار/المشاريع) ============ */
+function renderStartupCard(s){
+  return `<div class="card" style="padding:16px;cursor:pointer;" onclick="go('startupDetail',{id:'${s.id}'})">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+      <div style="font-weight:900;font-size:16px;">${esc(s.title||'بدون عنوان')}</div>
+      <span class="badge">${STAGE_LABELS[s.stage]||'فكرة'}</span>
+    </div>
+    ${s.tagline?`<div style="color:var(--muted);font-size:13px;margin-top:4px;">${esc(s.tagline)}</div>`:''}
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">
+      ${(s.neededSkills||[]).slice(0,3).map(sk=>`<span class="badge" style="background:var(--soft);">${esc(sk)}</span>`).join('')}
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:10px;">${timeAgo(s.createdAt)}</div>
+  </div>`;
+}
+let startupsAllCache=null;
+async function loadStartupsList(){
+  const grid=document.getElementById('startupsGrid');
+  if(!grid)return;
+  try{
+    if(!startupsAllCache){
+      const snap=await db.ref('startups').orderByChild('createdAt').limitToLast(100).get();
+      const arr=[];snap.forEach(c=>arr.push({id:c.key,...c.val()}));
+      arr.reverse();
+      startupsAllCache=arr.filter(s=>s.status!=='closed');
+    }
+    renderStartupsGrid(startupsAllCache);
+  }catch(e){console.error(e);grid.innerHTML='<div class="card" style="padding:24px;text-align:center;color:var(--danger);grid-column:1/-1;">تعذر تحميل المشاريع<br><button class="btn" style="margin-top:10px;" onclick="startupsAllCache=null;loadStartupsList()">إعادة المحاولة</button></div>';}
+}
+function renderStartupsGrid(list){
+  const grid=document.getElementById('startupsGrid');
+  if(!grid)return;
+  const q=(document.getElementById('startupsSearch')?.value||'').trim().toLowerCase();
+  let filtered=list;
+  if(q)filtered=filtered.filter(s=>(s.title||'').toLowerCase().includes(q)||(s.neededSkills||[]).some(x=>x.toLowerCase().includes(q))||(s.tagline||'').toLowerCase().includes(q));
+  if(!filtered.length){grid.innerHTML='<div class="card" style="padding:24px;text-align:center;color:var(--muted);grid-column:1/-1;">مفيش مشاريع لسه. كن أول واحد ينشر!</div>';return;}
+  grid.innerHTML=filtered.map(s=>{try{return renderStartupCard(s);}catch(e){console.error('تعذر عرض مشروع',s.id,e);return'';}}).join('');
+}
+function filterStartups(){renderStartupsGrid(startupsAllCache||[]);}
+function renderStartups(app){
+  if(!requireAuth())return;
+  app.innerHTML=`
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+    <div><h2 style="font-weight:900;font-size:22px;margin:0;">🚀 المشاريع</h2><div style="color:var(--muted);font-size:13px;">أفكار بتدوّر على فريق</div></div>
+    <button class="btn btn-brand" onclick="openCreateStartup()">+ انشر فكرتك</button>
+  </div>
+  <div class="card" style="padding:14px;margin-bottom:14px;">
+    <input id="startupsSearch" class="input" placeholder="ابحث بالاسم أو المهارة المطلوبة..." oninput="filterStartups()">
+  </div>
+  <div id="startupsGrid" class="core-grid"><div style="grid-column:1/-1;text-align:center;padding:30px;"><i class="fa-solid fa-spinner spin"></i></div></div>`;
+  loadStartupsList();
+}
+function openCreateStartup(){
+  if(!requireAuth())return;
+  openModal(`<h3 style="font-weight:900;margin-bottom:14px;">انشر فكرتك</h3>
+    <label style="font-weight:800;font-size:13px;">اسم المشروع</label>
+    <input id="csTitle" class="input" style="margin:8px 0 14px;" placeholder="اسم قصير ومميز">
+    <label style="font-weight:800;font-size:13px;">جملة تعريفية قصيرة</label>
+    <input id="csTagline" class="input" style="margin:8px 0 14px;" placeholder="في جملة، إيه المشروع؟">
+    <label style="font-weight:800;font-size:13px;">الوصف الكامل</label>
+    <textarea id="csDesc" class="input" rows="4" style="margin:8px 0 14px;" placeholder="اشرح الفكرة، المشكلة اللي بتحلها، وليه محتاج فريق"></textarea>
+    <label style="font-weight:800;font-size:13px;">مرحلة المشروع</label>
+    <div style="display:flex;gap:8px;margin:8px 0 14px;">
+      ${Object.entries(STAGE_LABELS).map(([k,v],i)=>`<span class="pill ${i===0?'on':''}" id="csStage_${k}" onclick="selectCsStage('${k}')">${v}</span>`).join('')}
+    </div>
+    <label style="font-weight:800;font-size:13px;">المهارات المطلوبة في الفريق</label>
+    <div style="display:flex;gap:8px;margin:8px 0 18px;flex-wrap:wrap;">
+      ${SKILL_SUGGESTIONS.map(s=>`<span class="pill" data-skill="${esc(s)}" onclick="this.classList.toggle('on')">${esc(s)}</span>`).join('')}
+    </div>
+    <button class="btn btn-brand" style="width:100%;" id="csSubmitBtn" onclick="submitCreateStartup()">نشر المشروع</button>`);
+  window.__csStage='idea';
+}
+function selectCsStage(stage){
+  window.__csStage=stage;
+  Object.keys(STAGE_LABELS).forEach(k=>document.getElementById('csStage_'+k)?.classList.toggle('on',k===stage));
+}
+async function submitCreateStartup(){
+  const title=document.getElementById('csTitle').value.trim();
+  const tagline=document.getElementById('csTagline').value.trim();
+  const description=document.getElementById('csDesc').value.trim();
+  const neededSkills=[...document.querySelectorAll('#modalRoot [data-skill].on')].map(e=>e.dataset.skill);
+  if(!title){toast('اكتب اسم المشروع','error');return;}
+  const btn=document.getElementById('csSubmitBtn');btn.disabled=true;btn.textContent='جارٍ النشر...';
+  try{
+    const id=uid();
+    await db.ref('startups/'+id).set({founderId:currentUser.uid,title,tagline,description,stage:window.__csStage||'idea',neededSkills,createdAt:Date.now(),status:'open'});
+    startupsAllCache=null;
+    closeModal();
+    toast('تم نشر مشروعك 🎉','success');
+    go('startupDetail',{id});
+  }catch(e){console.error(e);toast('تعذر النشر، حاول تاني','error');btn.disabled=false;btn.textContent='نشر المشروع';}
+}
+async function renderStartupDetail(app){
+  if(!requireAuth())return;
+  const id=route.params.id;
+  app.innerHTML='<div style="text-align:center;padding:40px;"><i class="fa-solid fa-spinner spin"></i></div>';
+  let s;
+  try{const snap=await db.ref('startups/'+id).get();s=snap.exists()?{id,...snap.val()}:null;}
+  catch(e){console.error(e);app.innerHTML='<div class="card" style="padding:24px;text-align:center;color:var(--danger);">تعذر تحميل المشروع</div>';return;}
+  if(!s){app.innerHTML='<div class="card" style="padding:24px;text-align:center;color:var(--muted);">المشروع مش موجود</div>';return;}
+  const founder=await fetchUserCached(s.founderId);
+  const isFounder=s.founderId===currentUser.uid;
+  app.innerHTML=`
+  <div class="card" style="padding:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;">
+      <div>
+        <div style="font-weight:900;font-size:22px;">${esc(s.title)}</div>
+        ${s.tagline?`<div style="color:var(--muted);margin-top:4px;">${esc(s.tagline)}</div>`:''}
+      </div>
+      <span class="badge">${STAGE_LABELS[s.stage]||'فكرة'}</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:14px;cursor:pointer;" onclick="go('profile',{uid:'${s.founderId}'})">
+      <img class="avatar" style="width:34px;height:34px;" src="${avatarUrl(founder)}">
+      <div style="font-size:13px;"><b>${esc(founder.name||'مؤسس')}</b> · مؤسس المشروع</div>
+    </div>
+    ${s.description?`<div style="margin-top:16px;line-height:1.9;white-space:pre-wrap;">${esc(s.description)}</div>`:''}
+    ${(s.neededSkills||[]).length?`<div style="margin-top:16px;"><b style="font-size:13px;">مطلوب في الفريق</b><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;">${s.neededSkills.map(sk=>`<span class="badge">${esc(sk)}</span>`).join('')}</div></div>`:''}
+    <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
+      ${isFounder?`<button class="btn btn-danger" onclick="closeStartup('${s.id}')">${s.status==='closed'?'إعادة فتح المشروع':'إغلاق المشروع'}</button>`
+        :`<button class="btn btn-brand" onclick="openJoinRequest('${s.id}')"><i class="fa-solid fa-handshake"></i> اطلب الانضمام للفريق</button><button class="btn" onclick="startConversation('${s.founderId}')"><i class="fa-solid fa-message"></i> راسل المؤسس</button>`}
+    </div>
+  </div>
+  ${isFounder?`<div style="margin-top:20px;"><h3 style="font-weight:900;font-size:17px;margin-bottom:10px;">طلبات الانضمام</h3><div id="joinRequestsList"><div style="text-align:center;padding:20px;color:var(--muted);"><i class="fa-solid fa-spinner spin"></i></div></div></div>`:''}`;
+  if(isFounder)loadJoinRequests(s.id);
+}
+async function closeStartup(id){
+  try{
+    const snap=await db.ref('startups/'+id+'/status').get();
+    const newStatus=snap.val()==='closed'?'open':'closed';
+    await db.ref('startups/'+id+'/status').set(newStatus);
+    startupsAllCache=null;
+    toast(newStatus==='closed'?'تم إغلاق المشروع':'تم إعادة فتح المشروع','success');
+    go('startupDetail',{id});
+  }catch(e){console.error(e);toast('تعذر التنفيذ','error');}
+}
+function openJoinRequest(startupId){
+  if(!requireAuth())return;
+  openModal(`<h3 style="font-weight:900;margin-bottom:14px;">اطلب الانضمام</h3>
+    <label style="font-weight:800;font-size:13px;">ليه انت مناسب للفريق ده؟</label>
+    <textarea id="jrMsg" class="input" rows="4" style="margin:8px 0 16px;" placeholder="اكتب رسالة قصيرة للمؤسس..."></textarea>
+    <button class="btn btn-brand" style="width:100%;" id="jrSubmitBtn" onclick="submitJoinRequest('${startupId}')">إرسال الطلب</button>`);
+}
+async function submitJoinRequest(startupId){
+  const message=document.getElementById('jrMsg').value.trim();
+  const btn=document.getElementById('jrSubmitBtn');btn.disabled=true;btn.textContent='جارٍ الإرسال...';
+  try{
+    await db.ref('joinRequests/'+startupId+'/'+currentUser.uid).set({uid:currentUser.uid,message,status:'pending',createdAt:Date.now()});
+    const sSnap=await db.ref('startups/'+startupId).get();
+    const s=sSnap.val();
+    if(s)notify(s.founderId,'join_request','طلب الانضمام لفريق مشروعك "'+(s.title||'')+'"',startupId);
+    closeModal();
+    toast('تم إرسال طلبك للمؤسس','success');
+  }catch(e){console.error(e);toast('تعذر إرسال الطلب، ممكن يكون عندك طلب مُرسَل بالفعل','error');btn.disabled=false;btn.textContent='إرسال الطلب';}
+}
+async function loadJoinRequests(startupId){
+  const el=document.getElementById('joinRequestsList');
+  if(!el)return;
+  try{
+    const snap=await db.ref('joinRequests/'+startupId).get();
+    const arr=[];snap.forEach(c=>arr.push({...c.val()}));
+    arr.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    if(!arr.length){el.innerHTML='<div class="card" style="padding:20px;text-align:center;color:var(--muted);">لسه مفيش طلبات انضمام</div>';return;}
+    await Promise.all(arr.map(r=>fetchUserCached(r.uid).catch(()=>{})));
+    el.innerHTML=arr.map(r=>{
+      try{
+        const u=allUsersCache[r.uid]||{};
+        const statusLabel={pending:'معلّق',accepted:'مقبول',rejected:'مرفوض'}[r.status]||'معلّق';
+        const statusColor={pending:'var(--warn)',accepted:'var(--accent)',rejected:'var(--danger)'}[r.status]||'var(--warn)';
+        return `<div class="card" style="padding:14px;margin-bottom:10px;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <img class="avatar" style="width:40px;height:40px;cursor:pointer;" src="${avatarUrl(u)}" onclick="go('profile',{uid:'${r.uid}'})">
+            <div style="flex:1;"><b style="cursor:pointer;" onclick="go('profile',{uid:'${r.uid}'})">${esc(u.name||'مستخدم')}</b><div style="font-size:11px;color:${statusColor};font-weight:800;">${statusLabel}</div></div>
+          </div>
+          ${r.message?`<div style="margin-top:8px;font-size:13px;color:var(--muted);">${esc(r.message)}</div>`:''}
+          ${r.status==='pending'?`<div style="display:flex;gap:8px;margin-top:10px;"><button class="btn btn-brand" style="flex:1;font-size:12px;padding:8px;" onclick="respondJoinRequest('${startupId}','${r.uid}','accepted')">قبول</button><button class="btn" style="flex:1;font-size:12px;padding:8px;" onclick="respondJoinRequest('${startupId}','${r.uid}','rejected')">رفض</button></div>`:''}
+        </div>`;
+      }catch(err){console.error('تعذر عرض طلب انضمام',err);return'';}
+    }).join('');
+  }catch(e){console.error(e);el.innerHTML='<div class="card" style="padding:20px;text-align:center;color:var(--danger);">تعذر تحميل الطلبات</div>';}
+}
+async function respondJoinRequest(startupId,requesterUid,status){
+  try{
+    await db.ref('joinRequests/'+startupId+'/'+requesterUid+'/status').set(status);
+    const sSnap=await db.ref('startups/'+startupId).get();
+    const s=sSnap.val();
+    notify(requesterUid,status==='accepted'?'join_accepted':'join_rejected',status==='accepted'?('تم قبول طلب انضمامك لمشروع "'+(s?.title||'')+'"'):('تم رفض طلب انضمامك لمشروع "'+(s?.title||'')+'"'),startupId);
+    toast(status==='accepted'?'تم القبول':'تم الرفض','success');
+    loadJoinRequests(startupId);
+  }catch(e){console.error(e);toast('تعذر التنفيذ','error');}
+}
+
+/* ============ الرسائل المباشرة (بسيطة وموثوقة) ============ */
+function directKey(a,b){return [a,b].sort().join('_');}
+async function startConversation(otherUid){
+  if(!requireAuth()||!otherUid||otherUid===currentUser.uid)return;
+  try{
+    const key=directKey(currentUser.uid,otherUid);
+    const lookupSnap=await db.ref('directConvLookup/'+key).get();
+    if(lookupSnap.exists()){go('messages',{convId:lookupSnap.val()});return;}
+    const convId=uid();
+    const updates={};
+    updates['conversations/'+convId]={members:{[currentUser.uid]:true,[otherUid]:true},lastMessage:'',updatedAt:Date.now(),lastSenderId:''};
+    updates['userConversations/'+currentUser.uid+'/'+convId]=true;
+    updates['userConversations/'+otherUid+'/'+convId]=true;
+    updates['directConvLookup/'+key]=convId;
+    await db.ref().update(updates);
+    go('messages',{convId});
+  }catch(e){console.error(e);toast('تعذر بدء المحادثة','error');}
+}
+function listenConvBadge(){
+  if(convBadgeUnsub){try{convBadgeUnsub();}catch(e){} convBadgeUnsub=null;}
+  const ucRef=db.ref('userConversations/'+currentUser.uid);
+  const cb=ucRef.on('value',async snap=>{
+    try{
+      const ids=snap.exists()?Object.keys(snap.val()):[];
+      let unread=false;
+      for(const id of ids){
+        try{
+          const cSnap=await db.ref('conversations/'+id).get();
+          const c=cSnap.val();
+          if(c&&c.lastSenderId&&c.lastSenderId!==currentUser.uid){
+            const readSnap=await db.ref('conversations/'+id+'/readBy/'+currentUser.uid).get();
+            if(!readSnap.exists()||readSnap.val()<(c.updatedAt||0)){unread=true;break;}
+          }
+        }catch(e){/* تجاهل خطأ محادثة واحدة عشان الباقي يشتغل */}
+      }
+      document.getElementById('navMsgDot')?.classList.toggle('hidden',!unread);
+      document.getElementById('navMsgDotMobile')?.classList.toggle('hidden',!unread);
+    }catch(e){console.error('convBadge failed',e);}
+  },err=>console.warn('convBadge error',err));
+  convBadgeUnsub=()=>ucRef.off('value',cb);
+}
+function markConvRead(convId,ts){
+  db.ref('conversations/'+convId+'/readBy/'+currentUser.uid).set(ts).catch(()=>{});
+}
+async function renderMessages(app){
+  if(!requireAuth())return;
+  app.innerHTML=`
+  <div class="msg-layout" style="display:grid;grid-template-columns:${route.params.convId?'1fr 2fr':'1fr'};gap:14px;" id="msgLayout">
+    <div class="card ${route.params.convId?'msg-list-mobile-hide':''}" style="padding:10px;height:calc(100vh - 180px);overflow-y:auto;" id="convList">
+      <div style="padding:6px 4px 12px;"><b>الرسائل</b></div>
+      <div id="convItems"><div style="text-align:center;padding:20px;color:var(--muted);"><i class="fa-solid fa-spinner spin"></i></div></div>
+    </div>
+    <div id="convWindow" class="${route.params.convId?'':'hidden'}"></div>
+  </div>`;
+  loadConvList();
+  if(route.params.convId)openConversation(route.params.convId);
+}
+async function loadConvList(){
+  const el=document.getElementById('convItems');
+  if(!el)return;
+  if(msgListUnsub){try{msgListUnsub();}catch(e){} msgListUnsub=null;}
+  const ucRef=db.ref('userConversations/'+currentUser.uid);
+  let convListToken=0;
+  const cb=ucRef.on('value',async snap=>{
+    const myToken=++convListToken;
+    try{
+      const ids=snap.exists()?Object.keys(snap.val()):[];
+      if(!ids.length){if(myToken===convListToken)el.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;">لسه مفيش محادثات.<br>ابدأ من صفحة "اكتشف" أو من أي مشروع.</div>';return;}
+      const convs=[];
+      for(const id of ids){
+        try{const cSnap=await db.ref('conversations/'+id).get();if(cSnap.exists())convs.push({id,...cSnap.val()});}catch(e){/* تجاهل واحدة عشان الباقي يظهر */}
+      }
+      if(myToken!==convListToken)return;
+      convs.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
+      await Promise.all(convs.map(c=>{const otherId=Object.keys(c.members||{}).find(m=>m!==currentUser.uid);return otherId?fetchUserCached(otherId).catch(()=>{}):Promise.resolve();}));
+      if(myToken!==convListToken)return;
+      el.innerHTML=convs.map(c=>{
+        try{
+          const otherId=Object.keys(c.members||{}).find(m=>m!==currentUser.uid);
+          const other=allUsersCache[otherId]||{};
+          const active=route.params.convId===c.id;
+          return `<div onclick="go('messages',{convId:'${c.id}'})" style="display:flex;gap:10px;align-items:center;padding:10px 8px;border-radius:12px;cursor:pointer;background:${active?'var(--soft)':'transparent'};">
+            <img class="avatar" style="width:42px;height:42px;" src="${avatarUrl(other)}">
+            <div style="flex:1;min-width:0;">
+              <div style="font-weight:800;font-size:14px;">${esc(other.name||'مستخدم')}</div>
+              <div style="font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(c.lastMessage||'ابدأ المحادثة')}</div>
+            </div>
+          </div>`;
+        }catch(err){console.error('تعذر عرض محادثة',c.id,err);return'';}
+      }).join('');
+    }catch(e){console.error('فشل تحميل قائمة المحادثات',e);if(myToken===convListToken)el.innerHTML='<div style="text-align:center;padding:20px;color:var(--danger);font-size:13px;">تعذر تحميل المحادثات</div>';}
+  },err=>{console.error(err);el.innerHTML='<div style="text-align:center;padding:20px;color:var(--danger);font-size:13px;">تعذر تحميل المحادثات</div>';});
+  msgListUnsub=()=>ucRef.off('value',cb);
+}
+function renderMessageBubble(m,convId){
+  const mine=m.senderId===currentUser.uid;
+  const sender=allUsersCache[m.senderId]||{};
+  return `<div class="msg-row ${mine?'mine':'theirs'}">
+    ${!mine?`<img class="avatar msg-avatar" src="${avatarUrl(sender)}">`:''}
+    <div style="max-width:min(78%,520px);">
+      <div class="msg-bubble">${esc(m.text||'')}</div>
+      <div class="msg-meta" style="text-align:${mine?'left':'right'};">${mine?'أنت':esc(sender.name||'')} · ${timeAgo(m.createdAt)}</div>
+    </div>
+    ${mine?`<img class="avatar msg-avatar" src="${avatarUrl(myProfile)}">`:''}
+  </div>`;
+}
+function openConversation(convId){
+  if(!requireAuth()||!convId)return;
+  markConvRead(convId,Date.now());
+  const layout=document.getElementById('msgLayout');
+  if(layout)layout.style.gridTemplateColumns='1fr 2fr';
+  document.getElementById('convList')?.classList.add('msg-list-mobile-hide');
+  document.getElementById('convWindow')?.classList.remove('hidden');
+  const win=document.getElementById('convWindow');
+  if(!win)return;
+  win.innerHTML='<div class="card" style="display:flex;align-items:center;justify-content:center;height:calc(100vh - 180px);"><i class="fa-solid fa-spinner spin"></i></div>';
+  db.ref('conversations/'+convId).once('value').then(async cs=>{
+    const c=cs.val();
+    if(!c||!c.members||!c.members[currentUser.uid]){win.innerHTML='<div class="card" style="padding:30px;text-align:center;color:var(--muted);">لا يمكنك فتح هذه المحادثة</div>';return;}
+    const otherId=Object.keys(c.members).find(m=>m!==currentUser.uid);
+    const other=otherId?await fetchUserCached(otherId):{};
+    win.innerHTML=`<div class="card" style="display:flex;flex-direction:column;height:calc(100vh - 180px);">
+      <div style="padding:12px 14px;border-bottom:2.5px solid var(--line);display:flex;align-items:center;gap:10px;">
+        <div class="md-hide" style="cursor:pointer;padding:4px;" onclick="go('messages')" title="رجوع"><i class="fa-solid fa-arrow-right"></i></div>
+        <img class="avatar" style="width:42px;height:42px;cursor:pointer;" src="${avatarUrl(other)}" onclick="go('profile',{uid:'${otherId}'})">
+        <div style="cursor:pointer;" onclick="go('profile',{uid:'${otherId}'})"><div style="font-weight:900;">${esc(other.name||'مستخدم')}</div><div style="font-size:11px;color:var(--muted);">${ROLE_LABELS[other.role]||''}</div></div>
+      </div>
+      <div id="msgBody" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:6px;"></div>
+      <div style="display:flex;gap:8px;padding:10px;border-top:2.5px solid var(--line);">
+        <input id="msgInput" class="input" placeholder="اكتب رسالة..." onkeydown="if(event.key==='Enter')sendMessage('${convId}')">
+        <button class="btn btn-brand" onclick="sendMessage('${convId}')"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </div>`;
+    if(activeMsgUnsub){try{activeMsgUnsub();}catch(e){} activeMsgUnsub=null;}
+    const msgRef=db.ref('messages/'+convId).orderByChild('createdAt');
+    let msgRenderToken=0;
+    const msgCb=msgRef.on('value',async snap=>{
+      const myToken=++msgRenderToken;
+      try{
+        const arr=[];snap.forEach(c2=>arr.push({id:c2.key,...c2.val()}));
+        await Promise.all(arr.map(m=>fetchUserCached(m.senderId).catch(()=>{})));
+        if(myToken!==msgRenderToken)return;
+        const body=document.getElementById('msgBody');
+        if(!body)return;
+        body.innerHTML=arr.map(m=>{
+          try{return renderMessageBubble(m,convId);}
+          catch(errRow){console.error('تعذر عرض رسالة',m&&m.id,errRow);return `<div style="text-align:center;color:var(--danger);font-size:11px;padding:4px;">⚠️ تعذر عرض رسالة</div>`;}
+        }).join('')||'<div style="text-align:center;color:var(--muted);padding:30px;">ابدأ أول رسالة.</div>';
+        body.scrollTop=body.scrollHeight;
+        markConvRead(convId,Date.now());
+      }catch(errAll){
+        console.error('فشل تحديث شاشة الرسائل بالكامل',errAll);
+        const body=document.getElementById('msgBody');
+        if(body)body.innerHTML='<div style="text-align:center;color:var(--danger);padding:30px;">حصل خطأ غير متوقع. افتح 🩺 تشخيص المشاكل.</div>';
+      }
+    },err=>{console.error(err);const body=win.querySelector('#msgBody');if(body)body.innerHTML='<div style="text-align:center;color:var(--danger);padding:30px;">تعذر تحميل الرسائل</div>';});
+    activeMsgUnsub=()=>msgRef.off('value',msgCb);
+  }).catch(e=>{console.error(e);win.innerHTML='<div class="card" style="padding:30px;text-align:center;color:var(--danger);">تعذر فتح المحادثة</div>';});
+}
+async function sendMessage(convId){
+  if(!requireAuth()||!convId)return;
+  const input=document.getElementById('msgInput');
+  if(!input)return;
+  const text=input.value.trim();
+  if(!text)return;
+  const btn=input.nextElementSibling;
+  if(btn)btn.disabled=true;
+  try{
+    const convSnap=await db.ref('conversations/'+convId).get();
+    const conv=convSnap.val();
+    if(!conv||!conv.members||!conv.members[currentUser.uid]){toast('لا يمكنك إرسال رسالة هنا','error');return;}
+    const now=Date.now();
+    const mid=uid();
+    await db.ref('messages/'+convId+'/'+mid).set({senderId:currentUser.uid,text,createdAt:now});
+    await db.ref('conversations/'+convId).update({lastMessage:text,updatedAt:now,lastSenderId:currentUser.uid});
+    markConvRead(convId,now);
+    input.value='';
+    Object.keys(conv.members||{}).filter(id=>id!==currentUser.uid).forEach(id=>notify(id,'message','أرسل لك '+(myProfile?.name||'شخص')+' رسالة جديدة',convId));
+  }catch(e){console.error(e);toast('تعذر إرسال الرسالة، تأكد من اتصالك بالإنترنت','error');}
+  finally{if(btn)btn.disabled=false;}
+}
+
+/* ============ الإشعارات ============ */
+function notify(targetUid,type,text,relatedId){
+  if(!targetUid||targetUid===currentUser?.uid)return;
+  db.ref('notifications/'+targetUid+'/'+uid()).set({type,text,fromId:currentUser.uid,relatedId:relatedId||'',read:false,createdAt:Date.now()}).catch(e=>console.warn('notify failed',e));
+}
+function listenNotifications(){
+  if(notifUnsub){try{notifUnsub();}catch(e){} notifUnsub=null;}
+  const nRef=db.ref('notifications/'+currentUser.uid).orderByChild('read').equalTo(false);
+  const nCb=nRef.on('value',snap=>{
+    document.getElementById('notifDot')?.classList.toggle('hidden',!snap.exists());
+  },err=>console.warn('notifications badge error',err));
+  notifUnsub=()=>nRef.off('value',nCb);
+}
+function notifIcon(t){return {join_request:'🤝',join_accepted:'✅',join_rejected:'❌',message:'✉️'}[t]||'🔔';}
+async function renderNotifications(app){
+  if(!requireAuth())return;
+  app.innerHTML='<h2 style="font-weight:900;font-size:22px;margin-bottom:14px;">🔔 الإشعارات</h2><div id="notifList"><div style="text-align:center;padding:30px;"><i class="fa-solid fa-spinner spin"></i></div></div>';
+  const el=document.getElementById('notifList');
+  try{
+    const snap=await db.ref('notifications/'+currentUser.uid).orderByChild('createdAt').limitToLast(50).get();
+    const arr=[];snap.forEach(c=>arr.push({id:c.key,...c.val()}));
+    arr.reverse();
+    if(!arr.length){el.innerHTML='<div class="card" style="padding:30px;text-align:center;color:var(--muted);">لا توجد إشعارات بعد</div>';return;}
+    await Promise.all(arr.map(n=>fetchUserCached(n.fromId).catch(()=>{})));
+    el.innerHTML=arr.map(n=>{
+      try{
+        const from=allUsersCache[n.fromId]||{};
+        return `<div class="card" style="padding:14px;margin-bottom:10px;display:flex;gap:10px;align-items:center;${n.read?'opacity:.65;':''}cursor:pointer;" onclick="openNotifTarget('${n.id}','${n.type}','${n.relatedId||''}','${n.fromId||''}')">
+          <div style="font-size:22px;">${notifIcon(n.type)}</div>
+          <div style="flex:1;"><div style="font-size:14px;"><b>${esc(from.name||'شخص')}</b> ${esc(n.text||'')}</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">${timeAgo(n.createdAt)}</div></div>
+        </div>`;
+      }catch(err){console.error('تعذر عرض إشعار',n.id,err);return'';}
+    }).join('');
+    db.ref('notifications/'+currentUser.uid).orderByChild('read').equalTo(false).get().then(s=>{
+      const updates={};s.forEach(c=>updates[c.key+'/read']=true);
+      if(Object.keys(updates).length)db.ref('notifications/'+currentUser.uid).update(updates).catch(()=>{});
+    });
+  }catch(e){console.error(e);el.innerHTML='<div class="card" style="padding:30px;text-align:center;color:var(--danger);">تعذر تحميل الإشعارات</div>';}
+}
+function openNotifTarget(id,type,relatedId,fromId){
+  if(type==='message'){go('messages');return;}
+  if((type==='join_request'||type==='join_accepted'||type==='join_rejected')&&relatedId){go('startupDetail',{id:relatedId});return;}
+  if(fromId)go('profile',{uid:fromId});
+}
+
+/* ============ صفحة تشخيص المشاكل ============ */
+function diagRow(label,status,detail){
+  const icon=status==='ok'?'✅':status==='fail'?'❌':'⏳';
+  const color=status==='ok'?'var(--accent)':status==='fail'?'var(--danger)':'var(--muted)';
+  return `<div style="display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1.5px solid var(--line);">
+    <span style="font-size:16px;">${icon}</span>
+    <div style="flex:1;"><b style="font-size:13.5px;">${esc(label)}</b>${detail?`<div style="font-size:12px;color:${color};margin-top:2px;font-family:monospace;direction:ltr;text-align:right;white-space:pre-wrap;">${esc(detail)}</div>`:''}</div>
+  </div>`;
+}
+function renderDiagnostics(app){
+  if(!requireAuth())return;
+  app.innerHTML=`
+  <div class="card" style="padding:18px;max-width:640px;margin:0 auto;">
+    <h2 style="font-weight:900;font-size:20px;margin-bottom:4px;">🩺 تشخيص المشاكل</h2>
+    <div style="color:var(--muted);font-size:13px;margin-bottom:14px;">اضغط "ابدأ الفحص" وانتظر شوية، وبعدين انسخ النتيجة وابعتها لو فيه مشكلة.</div>
+    <button class="btn btn-brand" id="diagRunBtn" onclick="runDiagnostics()">▶️ ابدأ الفحص</button>
+    <button class="btn" id="diagCopyBtn" style="display:none;" onclick="copyDiagResult()">📋 انسخ النتيجة</button>
+    <div id="diagResults" style="margin-top:16px;"></div>
+  </div>`;
+}
+let __diagText='';
+async function runDiagnostics(){
+  const box=document.getElementById('diagResults');
+  const btn=document.getElementById('diagRunBtn');
+  btn.disabled=true;btn.textContent='جارٍ الفحص...';
+  document.getElementById('diagCopyBtn').style.display='none';
+  const lines=[];
+  const add=(label,status,detail)=>{lines.push({label,status,detail});box.innerHTML=lines.map(l=>diagRow(l.label,l.status,l.detail)).join('');};
+  add('تسجيل الدخول','ok',currentUser?('مسجّل دخول: '+currentUser.uid):'غير مسجل');
+  try{const s=await db.ref('users/'+currentUser.uid).get();add('قراءة ملفك الشخصي (users)',s.exists()?'ok':'fail',s.exists()?'موجود':'الملف مش موجود');}catch(e){add('قراءة ملفك الشخصي (users)','fail',e.code||e.message);}
+  try{await db.ref('startups').limitToLast(1).get();add('قراءة المشاريع (startups)','ok');}catch(e){add('قراءة المشاريع (startups)','fail',e.code||e.message);}
+  try{
+    const testId='diag_'+Date.now();
+    const ref=db.ref('notifications/'+currentUser.uid+'/'+testId);
+    await ref.set({type:'diag',text:'اختبار',fromId:currentUser.uid,read:true,createdAt:Date.now()});
+    const back=await ref.get();
+    await ref.remove();
+    add('اختبار الكتابة والقراءة (write+read)',back.exists()?'ok':'fail',back.exists()?'الكتابة والقراءة شغالين':'الكتابة نجحت بس القراءة رجعت فاضية');
+  }catch(e){add('اختبار الكتابة والقراءة (write+read)','fail',e.code||e.message);}
+  try{
+    const ucSnap=await db.ref('userConversations/'+currentUser.uid).get();
+    const convIds=ucSnap.exists()?Object.keys(ucSnap.val()):[];
+    add('قراءة قائمة محادثاتك','ok',convIds.length?('عدد المحادثات: '+convIds.length):'مفيش محادثات لسه');
+    if(convIds.length){
+      const cid=convIds[0];
+      try{
+        const testMid='diag_'+Date.now();
+        const mref=db.ref('messages/'+cid+'/'+testMid);
+        await mref.set({senderId:currentUser.uid,text:'رسالة اختبار تلقائية',createdAt:Date.now()});
+        const back=await mref.get();
+        await mref.remove();
+        add('اختبار إرسال رسالة حقيقية',back.exists()?'ok':'fail',back.exists()?'الإرسال والقراءة شغالين 100%':'فشل');
+      }catch(e){add('اختبار إرسال رسالة حقيقية','fail',e.code||e.message);}
+    }
+  }catch(e){add('قراءة قائمة محادثاتك','fail',e.code||e.message);}
+  btn.disabled=false;btn.textContent='🔁 أعد الفحص';
+  __diagText='نتيجة تشخيص VentureHub\n'+lines.map(l=>`${l.status==='ok'?'OK':'FAIL'} - ${l.label}${l.detail?(' | '+l.detail):''}`).join('\n');
+  document.getElementById('diagCopyBtn').style.display='inline-block';
+}
+function copyDiagResult(){navigator.clipboard.writeText(__diagText).then(()=>toast('تم نسخ النتيجة','success')).catch(()=>toast('تعذر النسخ','error'));}
+
+window.addEventListener('resize',()=>{});
+</script>
+</body>
+</html>
