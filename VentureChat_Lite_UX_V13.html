@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<title>الدردشة الخاصة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f3ee;--paper:#fff;--ink:#171512;--muted:#77716a;--line:#171512;
+  --brand:#6c4dfb;--soft:#eeeae3;--theirs:#eef0e3;--danger:#e5484d;--ok:#13a673;
+  --shadow:3px 3px 0 var(--line);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;height:100dvh;overflow:hidden;font-family:Cairo,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,textarea{font:inherit}
+.hidden{display:none!important}
+#app{height:100%;display:flex;flex-direction:column}
+
+/* ---- name screen ---- */
+.screen{height:100%;display:grid;place-items:center;padding:20px;overflow-y:auto}
+.card{width:min(420px,100%);background:var(--paper);border:2px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:30px}
+.card .logo{width:46px;height:46px;border:2px solid var(--line);border-radius:13px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:900;font-size:20px;margin-bottom:14px}
+.card h1{margin:0 0 4px;font-size:20px}
+.card .muted{color:var(--muted);font-size:13px;margin:0 0 18px}
+.field{width:100%;border:2px solid var(--line);border-radius:13px;padding:12px 14px;margin:8px 0 16px;outline:none;background:#fff}
+.field:focus{box-shadow:2px 2px 0 var(--brand)}
+.field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}
+.primary{width:100%;border:2px solid var(--line);border-radius:13px;padding:12px;background:var(--brand);color:#fff;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--line)}
+.primary:active{transform:translate(2px,2px);box-shadow:none}
+
+/* ---- chat screen ---- */
+.chat-card{width:100%;max-width:780px;margin:auto;display:flex;flex:1;flex-direction:column;height:100%;min-height:0;overflow:hidden}
+.chat-header{flex:0 0 auto;z-index:20;background:rgba(245,243,238,.96);backdrop-filter:blur(10px);border-bottom:2px solid var(--line);padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.person{display:flex;align-items:center;gap:10px}
+.person h1{margin:0;font-size:15px}
+.avatar{width:36px;height:36px;border-radius:50%;border:2px solid var(--line);background:var(--soft);display:grid;place-items:center;font-weight:800;flex:0 0 auto}
+#connectionState{font-size:11px;color:var(--muted)}
+#connectionState.online{color:var(--ok)}
+#connectionState.offline{color:var(--danger)}
+.ghost{border:2px solid var(--line);background:#fff;border-radius:11px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;box-shadow:2px 2px 0 var(--line)}
+.ghost:active{transform:translate(2px,2px);box-shadow:none}
+
+.status{flex:0 0 auto;padding:9px 14px;font-size:12.5px;border-bottom:1px solid transparent}
+.status.info{color:#725d1d;background:#fff9e8;border-bottom-color:#eee0ad}
+.status.error{color:#9b1c1c;background:#fff1f1;border-bottom-color:#ffd7d7}
+
+.messages{flex:1 1 auto;min-height:0;padding:16px 14px 10px;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:2px}
+.empty{text-align:center;color:var(--muted);padding:60px 15px;font-size:13px}
+
+.message-row{display:flex;margin:5px 0}
+.message-row.mine{justify-content:flex-start}
+.message-row.theirs{justify-content:flex-end}
+.message{max-width:min(80%,540px);padding:9px 12px;border-radius:16px;background:var(--theirs);border:2px solid var(--line);box-shadow:1px 1px 0 rgba(0,0,0,.05)}
+.message-row.mine .message{background:var(--brand);color:#fff;border-radius:16px 16px 5px 16px}
+.message-row.theirs .message{border-radius:16px 16px 16px 5px}
+.message-top{display:flex;gap:9px;align-items:baseline;margin-bottom:4px}
+.sender{font-weight:800;font-size:11.5px}
+.time{font-size:10px;color:var(--muted)}
+.mine .time{color:rgba(255,255,255,.75)}
+.message-text{font-size:14px;line-height:1.65;word-break:break-word;white-space:pre-wrap}
+.message-image{display:block;max-width:100%;max-height:340px;border-radius:11px;margin-top:6px;border:2px solid var(--line);cursor:pointer}
+.quoted{border-right:3px solid var(--brand);background:rgba(0,0,0,.06);padding:5px 8px;margin-bottom:6px;border-radius:6px;font-size:11.5px}
+.mine .quoted{background:rgba(255,255,255,.18);border-right-color:#fff}
+.quoted strong{display:block;font-size:11px}
+.quoted span{display:block;color:inherit;opacity:.8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.reply-btn{border:0;background:transparent;padding:4px 0 0;margin-top:2px;font-size:11px;cursor:pointer;color:var(--muted);font-weight:700}
+.mine .reply-btn{color:rgba(255,255,255,.85)}
+
+.reply-bar{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 14px;background:var(--soft);border-top:2px solid var(--line)}
+.reply-bar strong{display:block;font-size:11px;color:var(--brand)}
+.reply-bar span{display:block;font-size:12.5px;max-width:78vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.reply-bar button{border:0;background:transparent;font-size:22px;line-height:1;cursor:pointer;color:var(--muted)}
+
+.image-preview{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:9px 14px;border-top:2px solid var(--line);background:#fff}
+.image-preview img{width:56px;height:56px;object-fit:cover;border-radius:10px;border:2px solid var(--line)}
+.image-preview button{border:2px solid var(--line);background:var(--soft);padding:6px 10px;border-radius:9px;cursor:pointer;font-size:12px;font-weight:700}
+
+.composer{flex:0 0 auto;display:flex;align-items:flex-end;gap:7px;padding:9px 14px;background:rgba(255,255,255,.98);border-top:2px solid var(--line)}
+.attach{height:44px;width:44px;border:2px solid var(--line);border-radius:13px;background:#fff;display:grid;place-items:center;cursor:pointer;flex:0 0 auto;font-size:20px;box-shadow:2px 2px 0 var(--line)}
+.attach:active{transform:translate(2px,2px);box-shadow:none}
+#messageInput{flex:1;min-height:44px;max-height:120px;resize:none;border:2px solid var(--line);border-radius:14px;padding:11px 13px;outline:none;background:#fff}
+#messageInput:focus{box-shadow:2px 2px 0 var(--brand)}
+.send{height:44px;min-width:60px;border:2px solid var(--line);border-radius:13px;background:var(--brand);color:#fff;font-weight:800;cursor:pointer;box-shadow:2px 2px 0 var(--line);flex:0 0 auto}
+.send:active{transform:translate(2px,2px);box-shadow:none}
+.send:disabled,.attach:disabled{opacity:.5;cursor:not-allowed}
+.hint{flex:0 0 auto;text-align:center;font-size:10.5px;color:var(--muted);padding:6px 10px 10px}
+
+#toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:100;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast-item{background:var(--ink);color:#fff;border-radius:12px;padding:9px 16px;font-size:13px;box-shadow:var(--shadow);animation:toastIn .18s ease-out}
+.toast-item.error{background:var(--danger)}
+@keyframes toastIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+.lightbox{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.85);display:grid;place-items:center;padding:20px}
+.lightbox img{max-width:100%;max-height:100%;border-radius:10px}
+
+@media(max-width:600px){.message{max-width:86%}.card{box-shadow:none;border:none}}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+<div id="toast"></div>
+<style id="mobile-debug-css">
+#mobileDebug{position:fixed;inset:auto 10px 10px 10px;z-index:9999;background:#111;color:#fff;border:2px solid #fff;border-radius:14px;box-shadow:4px 4px 0 #000;display:none;font-family:monospace;direction:ltr;text-align:left;max-height:55vh;overflow:hidden}
+#mobileDebug.open{display:block}
+#mobileDebugHead{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:#222;position:sticky;top:0}
+#mobileDebugHead strong{font-size:13px}
+#mobileDebugBtns{display:flex;gap:5px}
+#mobileDebugBtns button{border:1px solid #fff;background:#333;color:#fff;border-radius:7px;padding:4px 7px;font-size:11px}
+#mobileDebugBody{padding:8px;overflow:auto;max-height:47vh;white-space:pre-wrap;word-break:break-word;font-size:11px;line-height:1.5}
+.dbg-ok{color:#7ee787}.dbg-err{color:#ff7b72}.dbg-info{color:#79c0ff}
+#mobileDebugToggle{position:fixed;left:10px;bottom:10px;z-index:9998;border:2px solid #111;background:#fff;color:#111;border-radius:12px;padding:8px 10px;font-weight:800;box-shadow:2px 2px 0 #111}
+</style>
+
+<button id="mobileDebugToggle" type="button">🐞 Debug</button>
+<section id="mobileDebug" aria-label="Debug panel">
+  <div id="mobileDebugHead">
+    <strong>Mobile Debug</strong>
+    <div id="mobileDebugBtns">
+      <button id="mobileDebugCopy" type="button">نسخ</button>
+      <button id="mobileDebugClear" type="button">مسح</button>
+      <button id="mobileDebugClose" type="button">×</button>
+    </div>
+  </div>
+  <div id="mobileDebugBody"></div>
+</section>
+<script>
+(function(){
+  const panel = document.getElementById("mobileDebug");
+  const body = document.getElementById("mobileDebugBody");
+  const toggle = document.getElementById("mobileDebugToggle");
+  const close = document.getElementById("mobileDebugClose");
+  const clear = document.getElementById("mobileDebugClear");
+  const copy = document.getElementById("mobileDebugCopy");
+
+  function add(type, msg){
+    const row = document.createElement("div");
+    row.className = type === "error" ? "dbg-err" : type === "ok" ? "dbg-ok" : "dbg-info";
+    row.textContent = "[" + new Date().toLocaleTimeString("ar-EG") + "] " + msg;
+    body.appendChild(row);
+    body.scrollTop = body.scrollHeight;
+  }
+  window.__mobileDebug = {
+    log: m => add("info", String(m)),
+    ok: m => add("ok", "OK: " + String(m)),
+    error: m => add("error", "ERROR: " + String(m)),
+    open: () => panel.classList.add("open")
+  };
+
+  toggle.onclick = () => panel.classList.toggle("open");
+  close.onclick = () => panel.classList.remove("open");
+  clear.onclick = () => body.innerHTML = "";
+  copy.onclick = async () => {
+    const text = body.innerText || "";
+    try {
+      await navigator.clipboard.writeText(text);
+      add("ok", "تم نسخ سجل الأخطاء");
+    } catch(e) {
+      add("error", "تعذر النسخ: " + e.message);
+    }
+  };
+
+  window.addEventListener("error", e => {
+    window.__mobileDebug.error(
+      "JS: " + (e.message || "Unknown error") +
+      (e.filename ? " | " + e.filename : "") +
+      (e.lineno ? " | line " + e.lineno : "")
+    );
+    window.__mobileDebug.open();
+  });
+
+  window.addEventListener("unhandledrejection", e => {
+    const r = e.reason;
+    window.__mobileDebug.error("Promise: " + (r && r.message ? r.message : String(r)));
+    window.__mobileDebug.open();
+  });
+
+  window.__mobileDebug.log("صفحة Debug جاهزة");
+})();
+</script>
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import {
+  getAuth, signInAnonymously, onAuthStateChanged,
+  setPersistence, browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import {
+  getDatabase, ref, push, set, query, limitToLast,
+  onValue, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAAM11KB7jbdZC0EiPyOgIawxzGZITgMA8",
+  authDomain: "flash-feedback-9c529.firebaseapp.com",
+  databaseURL: "https://flash-feedback-9c529-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "flash-feedback-9c529",
+  storageBucket: "flash-feedback-9c529.firebasestorage.app",
+  messagingSenderId: "1026286586523",
+  appId: "1:1026286586523:web:b76e33473c260fc4d7143e",
+  measurementId: "G-R93914YBXY"
+};
+
+const IMGBB_API_KEY = "6f37986ae1bde5e1969879a2a142a35c";
+const CHAT_PATH = "chats/private-chat/messages";
+
+window.__mobileDebug?.log("بدء تهيئة Firebase...");
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+window.__mobileDebug?.ok("Firebase App + Auth + Database تم تهيئتهم");
+
+let currentUser = null;
+let myName = localStorage.getItem("chat_name") || "";
+let unsubscribeMessages = null;
+let selectedImage = null;
+let replyingTo = null;
+let opening = false;
+let forceScrollNext = false;
+
+const $ = id => document.getElementById(id);
+
+// التقاط أي خطأ JS غير متوقع وعرضه كـ toast — عشان نقدر نشخّص المشكلة من غير أدوات مطورين على الموبايل
+window.addEventListener("error", e => {
+  toast(`خطأ JS: ${e.message}`, "error");
+});
+window.addEventListener("unhandledrejection", e => {
+  toast(`خطأ غير متوقع: ${e.reason?.message || e.reason || "unknown"}`, "error");
+});
+
+function esc(v = "") {
+  return String(v).replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
+}
+
+function timeOf(v) {
+  if (!v) return "";
+  const d = new Date(v);
+  return Number.isNaN(d.getTime()) ? "" :
+    d.toLocaleTimeString("ar-EG", {hour:"2-digit", minute:"2-digit"});
+}
+
+function status(msg, type="info") {
+  const e = $("status");
+  if (!e) return;
+  if (!msg) { e.className = "status hidden"; e.textContent = ""; return; }
+  e.textContent = msg;
+  e.className = `status ${type}`;
+}
+
+function toast(msg, type="info") {
+  const box = $("toast");
+  if (!box) return;
+  const el = document.createElement("div");
+  el.className = `toast-item ${type === "error" ? "error" : ""}`;
+  el.textContent = msg;
+  box.appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+
+function authError(e) {
+  if (e?.code === "auth/operation-not-allowed")
+    return "Anonymous غير مفعّل في Firebase. افتح Authentication → Sign-in method → فعّل Anonymous.";
+  if (e?.code === "auth/network-request-failed")
+    return "فشل الاتصال بـ Firebase. تحقق من الإنترنت ثم أعد المحاولة.";
+  return `تعذر الاتصال بالمحادثة (${e?.code || "unknown"}). ${e?.message || ""}`;
+}
+
+function nameScreen() {
+  $("app").innerHTML = `
+    <section class="screen">
+      <div class="card">
+        <div class="logo">C</div>
+        <h1>الدردشة الخاصة</h1>
+        <p class="muted">اكتب اسمك للبدء في المحادثة.</p>
+        <form id="nameForm">
+          <div class="field" style="border:none;padding:0;margin:0">
+            <label>اسمك</label>
+            <input id="nameInput" class="field" maxlength="60" required autocomplete="name" placeholder="اكتب اسمك...">
+          </div>
+          <button class="primary" type="submit">دخول إلى المحادثة</button>
+        </form>
+      </div>
+    </section>`;
+  $("nameInput").value = myName;
+  $("nameInput").focus();
+  $("nameForm").onsubmit = async e => {
+    e.preventDefault();
+    myName = $("nameInput").value.trim().replace(/\s+/g," ").slice(0,60);
+    if (!myName) return;
+    localStorage.setItem("chat_name", myName);
+    openChat();
+  };
+}
+
+function chatScreen() {
+  $("app").innerHTML = `
+    <section class="chat-card">
+      <header class="chat-header">
+        <div class="person">
+          <div class="avatar">${esc(myName.charAt(0).toUpperCase())}</div>
+          <div><h1>${esc(myName)}</h1><span id="connectionState">جاري الاتصال...</span></div>
+        </div>
+        <span style="font-size:10px;color:#fff;background:#e5484d;padding:3px 8px;border-radius:8px;font-weight:800">TEST-V7</span>
+        <button id="changeNameBtn" class="ghost" type="button">تغيير الاسم</button>
+      </header>
+      <div id="status" class="status info hidden">جاري تجهيز المحادثة...</div>
+      <main id="messages" class="messages" aria-live="polite"></main>
+      <div id="replyBar" class="reply-bar hidden">
+        <div><strong>الرد على</strong><span id="replyText"></span></div>
+        <button id="cancelReply" type="button">×</button>
+      </div>
+      <div id="imagePreview" class="image-preview hidden">
+        <img id="previewImg" alt="معاينة">
+        <button id="removeImage" type="button">إزالة</button>
+      </div>
+      <form id="messageForm" class="composer">
+        <label class="attach" title="إرفاق صورة">
+          <input id="imageInput" type="file" accept="image/*" hidden>
+          <span>＋</span>
+        </label>
+        <textarea id="messageInput" maxlength="2000" rows="1" placeholder="اكتب رسالة..."></textarea>
+        <button class="send" type="submit">إرسال</button>
+      </form>
+      <div class="hint">Enter للإرسال • Shift+Enter لسطر جديد • اضغط "رد" تحت أي رسالة للرد عليها</div>
+      <div class="hint" id="debugInfo" style="padding-top:0"></div>
+    </section>`;
+
+  $("changeNameBtn").onclick = () => {
+    if (unsubscribeMessages) unsubscribeMessages();
+    unsubscribeMessages = null;
+    nameScreen();
+  };
+  $("cancelReply").onclick = clearReply;
+  $("removeImage").onclick = clearImage;
+  $("imageInput").onchange = selectImage;
+  $("messageForm").onsubmit = async e => { e.preventDefault(); await sendMessage(); };
+  $("messageInput").oninput = e => {
+    e.target.style.height = "auto";
+    e.target.style.height = Math.min(120, e.target.scrollHeight) + "px";
+  };
+  $("messageInput").onkeydown = e => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      $("messageForm").requestSubmit();
+    }
+  };
+}
+
+function setReply(m) {
+  replyingTo = {
+    messageId: m.id,
+    senderName: m.senderName || "مستخدم",
+    text: m.text || (m.imageUrl ? "صورة" : "")
+  };
+  $("replyText").textContent = `${replyingTo.senderName}: ${replyingTo.text.slice(0,100)}`;
+  $("replyBar").classList.remove("hidden");
+  $("messageInput").focus();
+}
+
+function clearReply() {
+  replyingTo = null;
+  $("replyBar")?.classList.add("hidden");
+}
+
+function clearImage() {
+  selectedImage = null;
+  if ($("imageInput")) $("imageInput").value = "";
+
+  const preview = $("previewImg");
+  if (preview?.dataset.objectUrl) {
+    URL.revokeObjectURL(preview.dataset.objectUrl);
+    delete preview.dataset.objectUrl;
+  }
+
+  if (preview) preview.removeAttribute("src");
+  $("imagePreview")?.classList.add("hidden");
+}
+
+function openLightbox(url) {
+  const box = document.createElement("div");
+  box.className = "lightbox";
+  box.innerHTML = `<img src="${esc(url)}" alt="صورة">`;
+  box.onclick = () => box.remove();
+  document.body.appendChild(box);
+}
+
+async function compressImage(file, maxWidth=1600, quality=.82) {
+  if (!file || typeof file !== "object") {
+    throw new Error("لم يتم اختيار ملف.");
+  }
+
+  if (!file.type || !file.type.startsWith("image/")) {
+    throw new Error("الملف المختار ليس صورة.");
+  }
+
+  if (file.size > 15 * 1024 * 1024) {
+    throw new Error("حجم الصورة أكبر من 15MB.");
+  }
+
+  // طريقة أكثر توافقًا مع متصفحات الهاتف:
+  // نستخدم Object URL بدل FileReader لقراءة الصورة.
+  const objectUrl = URL.createObjectURL(file);
+
+  try {
+    const img = new Image();
+    img.decoding = "async";
+    img.src = objectUrl;
+
+    // decode() أسرع وأكثر ثباتًا على المتصفحات الحديثة،
+    // مع fallback إلى onload للمتصفحات التي لا تدعمه.
+    if (typeof img.decode === "function") {
+      try {
+        await img.decode();
+      } catch {
+        await new Promise((resolve, reject) => {
+          img.onload = resolve;
+          img.onerror = () => reject(new Error("تعذر فتح الصورة على الهاتف."));
+        });
+      }
+    } else {
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = () => reject(new Error("تعذر فتح الصورة على الهاتف."));
+      });
+    }
+
+    if (!img.naturalWidth || !img.naturalHeight) {
+      throw new Error("تعذر قراءة أبعاد الصورة.");
+    }
+
+    const ratio = Math.min(1, maxWidth / img.naturalWidth);
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(img.naturalWidth * ratio));
+    canvas.height = Math.max(1, Math.round(img.naturalHeight * ratio));
+
+    const ctx = canvas.getContext("2d", { alpha: false });
+    if (!ctx) throw new Error("المتصفح لا يدعم معالجة الصور.");
+
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise((resolve, reject) => {
+      canvas.toBlob(
+        b => b ? resolve(b) : reject(new Error("فشل تحويل الصورة.")),
+        "image/jpeg",
+        quality
+      );
+    });
+
+    return blob;
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
+}
+
+async function uploadImgBB(file) {
+  const blob = await compressImage(file);
+  const b64 = await new Promise((resolve,reject) => {
+    const r = new FileReader();
+    r.onloadend = () => resolve(String(r.result).split(",")[1]);
+    r.onerror = reject;
+    r.readAsDataURL(blob);
+  });
+  const f = new FormData();
+  f.append("image", b64);
+  window.__mobileDebug?.log("بدء رفع الصورة إلى ImgBB...");
+  let res;
+  try {
+    res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+      method:"POST",
+      body:f
+    });
+  } catch (networkErr) {
+    throw new Error("تعذر الاتصال بخدمة رفع الصور ImgBB. تحقق من الإنترنت أو جرّب شبكة أخرى.");
+  }
+  const data = await res.json().catch(() => null);
+  if (!res.ok || !data?.success)
+    throw new Error(data?.error?.message || "فشل رفع الصورة.");
+  return {
+    url:data.data.url,
+    displayUrl:data.data.display_url || data.data.url,
+    thumbnail:data.data.thumb?.url || data.data.url
+  };
+}
+
+async function selectImage(e) {
+  const file = e.target.files?.[0];
+
+  if (!file) {
+    clearImage();
+    return;
+  }
+
+  try {
+    window.__mobileDebug?.log(
+      `تم اختيار صورة: ${file.name || "بدون اسم"} | ${Math.round(file.size / 1024)}KB | ${file.type || "نوع غير معروف"}`
+    );
+
+    selectedImage = file;
+
+    const previewBlob = await compressImage(file, 900, .8);
+    const previewUrl = URL.createObjectURL(previewBlob);
+
+    const preview = $("previewImg");
+    if (preview) {
+      if (preview.dataset.objectUrl) {
+        URL.revokeObjectURL(preview.dataset.objectUrl);
+      }
+      preview.dataset.objectUrl = previewUrl;
+      preview.src = previewUrl;
+    }
+
+    $("imagePreview").classList.remove("hidden");
+    window.__mobileDebug?.ok("تم تجهيز الصورة للرفع");
+  } catch(err) {
+    selectedImage = null;
+    e.target.value = "";
+    window.__mobileDebug?.error("قراءة الصورة: " + (err?.message || err));
+    toast(err?.message || "تعذر قراءة الصورة.", "error");
+  }
+}
+
+function renderMessages(snapshot) {
+  const box = $("messages");
+  if (!box) return;
+
+  const rows = [];
+  snapshot.forEach(child => {
+    const value = child.val();
+    if (value && typeof value === "object") {
+      rows.push({ id: child.key, ...value });
+    }
+  });
+
+  // Firebase قد يرجع createdAt كـ null أثناء serverTimestamp الأولي.
+  // نحافظ على ترتيب Firebase بدل الاعتماد على createdAt.
+  if (!rows.length) {
+    box.innerHTML = `<div class="empty">لا توجد رسائل بعد. ابدأ المحادثة!</div>`;
+    const dbg0 = $("debugInfo");
+    if (dbg0) dbg0.textContent =
+      `عدد الرسائل: 0 • آخر تحديث: ${new Date().toLocaleTimeString("ar-EG")}`;
+    return;
+  }
+
+  const nearBottom =
+    box.scrollHeight - box.scrollTop - box.clientHeight < 150;
+
+  const fragment = document.createDocumentFragment();
+
+  rows.forEach(m => {
+    try {
+      const mine = String(m.senderId || "") === String(currentUser?.uid || "");
+      const article = document.createElement("article");
+      article.className = `message-row ${mine ? "mine" : "theirs"}`;
+
+      const message = document.createElement("div");
+      message.className = "message";
+
+      const top = document.createElement("div");
+      top.className = "message-top";
+
+      const sender = document.createElement("span");
+      sender.className = "sender";
+      sender.textContent = m.senderName || "مستخدم";
+
+      const time = document.createElement("span");
+      time.className = "time";
+      time.textContent = timeOf(m.createdAt);
+
+      top.append(sender, time);
+      message.appendChild(top);
+
+      if (m.replyTo) {
+        const quoted = document.createElement("div");
+        quoted.className = "quoted";
+
+        const strong = document.createElement("strong");
+        strong.textContent = m.replyTo.senderName || "مستخدم";
+
+        const span = document.createElement("span");
+        span.textContent = m.replyTo.text || "صورة";
+
+        quoted.append(strong, span);
+        message.appendChild(quoted);
+      }
+
+      if (m.text) {
+        const text = document.createElement("div");
+        text.className = "message-text";
+        text.textContent = m.text;
+        message.appendChild(text);
+      }
+
+      if (m.imageUrl) {
+        const img = document.createElement("img");
+        img.className = "message-image";
+        img.src = m.displayUrl || m.imageUrl;
+        img.alt = "صورة";
+        img.loading = "lazy";
+        img.dataset.full = m.imageUrl;
+        img.onclick = () => openLightbox(m.imageUrl);
+        message.appendChild(img);
+      }
+
+      const replyBtn = document.createElement("button");
+      replyBtn.className = "reply-btn";
+      replyBtn.type = "button";
+      replyBtn.textContent = "↩ رد";
+      replyBtn.onclick = () => setReply(m);
+
+      message.appendChild(replyBtn);
+      article.appendChild(message);
+      fragment.appendChild(article);
+
+    } catch (rowErr) {
+      window.__mobileDebug?.error(
+        `فشل عرض الرسالة ${m.id}: ${rowErr?.message || rowErr}`
+      );
+    }
+  });
+
+  box.replaceChildren(fragment);
+
+  // إعادة تسجيل تفاصيل العدد الحقيقي المعروض.
+  const renderedCount = box.querySelectorAll(".message-row").length;
+  window.__mobileDebug?.log(
+    `عرض ${renderedCount} من ${rows.length} رسالة`
+  );
+
+  const dbg = $("debugInfo");
+  if (dbg) {
+    dbg.textContent =
+      `عدد الرسائل: ${renderedCount} • آخر تحديث: ${new Date().toLocaleTimeString("ar-EG")}`;
+  }
+
+  if (nearBottom || forceScrollNext) {
+    box.scrollTop = box.scrollHeight;
+    forceScrollNext = false;
+  }
+}
+
+function subscribe() {
+  if (unsubscribeMessages) unsubscribeMessages();
+  const q = query(ref(db,CHAT_PATH),limitToLast(200));
+  let firstLoad = true;
+  window.__mobileDebug?.log("بدء الاستماع إلى: " + CHAT_PATH);
+  unsubscribeMessages = onValue(q, snapshot => {
+    try {
+      window.__mobileDebug?.ok("Firebase أعاد بيانات: " + snapshot.size + " رسالة");
+      renderMessages(snapshot);
+    } catch(renderErr) {
+      toast(`خطأ في عرض الرسائل: ${renderErr?.message || renderErr}`, "error");
+      status(`خطأ في عرض الرسائل: ${renderErr?.message || renderErr}`, "error");
+      console.error("renderMessages crashed:", renderErr);
+    }
+    firstLoad = false;
+  }, e => {
+    $("connectionState").textContent = "تعذر الاتصال";
+    $("connectionState").className = "offline";
+    status(`تعذر تحميل الرسائل (${e?.code || "unknown"}). راجع Firebase Realtime Database Rules.`, "error");
+    window.__mobileDebug?.error("قراءة Firebase: " + (e?.code || "") + " | " + (e?.message || e));
+    window.__mobileDebug?.open();
+  });
+
+  // مؤشر حقيقي لحالة الاتصال اللحظي (WebSocket) بفايربيز — مستقل عن نجاح تسجيل الدخول
+  onValue(ref(db,".info/connected"), snap => {
+    const el = $("connectionState");
+    if (!el) return;
+    if (snap.val() === true) {
+      el.textContent = "متصل";
+      el.className = "online";
+    } else if (!firstLoad) {
+      el.textContent = "انقطع الاتصال اللحظي - جاري إعادة المحاولة...";
+      el.className = "offline";
+    }
+  });
+}
+
+async function ensureAuth() {
+  window.__mobileDebug?.log("فحص تسجيل الدخول المجهول...");
+  await setPersistence(auth, browserLocalPersistence);
+  if (auth.currentUser) return auth.currentUser;
+  const result = await signInAnonymously(auth);
+  window.__mobileDebug?.ok("Anonymous Auth نجح: " + result.user.uid);
+  return result.user;
+}
+
+async function openChat() {
+  if (opening) return;
+  if (!myName) return nameScreen();
+  opening = true;
+  chatScreen();
+  try {
+    currentUser = await ensureAuth();
+    window.__mobileDebug?.ok("المستخدم الحالي: " + currentUser.uid);
+    $("connectionState").textContent = "متصل";
+    $("connectionState").className = "online";
+    status("");
+    subscribe();
+  } catch(e) {
+    $("connectionState").textContent = "غير متصل";
+    $("connectionState").className = "offline";
+    status(authError(e), "error");
+    window.__mobileDebug?.error("Auth: " + (e?.code || "") + " | " + (e?.message || e));
+    window.__mobileDebug?.open();
+  } finally {
+    opening = false;
+  }
+}
+
+async function sendMessage() {
+  if (!currentUser) return status("انتظر حتى يتم الاتصال بالمحادثة.","error");
+  const input = $("messageInput");
+  const text = input.value.trim();
+  if (!text && !selectedImage) return;
+
+  const btn = document.querySelector(".send");
+  const attachBtn = document.querySelector(".attach");
+  btn.disabled = true;
+  if (attachBtn) attachBtn.setAttribute("aria-disabled","true");
+  try {
+    let image = null;
+    if (selectedImage) {
+      status("جاري رفع الصورة...","info");
+      try {
+        image = await uploadImgBB(selectedImage);
+      } catch(imgErr) {
+        throw new Error(`فشل رفع الصورة: ${imgErr?.message || "تحقق من الإنترنت أو حاول بصورة أصغر"}`);
+      }
+    }
+    const messageRef = push(ref(db,CHAT_PATH));
+    const payload = {
+      senderId:currentUser.uid,
+      senderName:myName,
+      text:text.slice(0,2000),
+      imageUrl:image?.url || "",
+      displayUrl:image?.displayUrl || "",
+      thumbnail:image?.thumbnail || "",
+      createdAt:serverTimestamp()
+    };
+    if (replyingTo) {
+      payload.replyTo = {
+        messageId:replyingTo.messageId,
+        senderName:replyingTo.senderName,
+        text:replyingTo.text.slice(0,200)
+      };
+    }
+    await set(messageRef,payload);
+    input.value = "";
+    input.style.height = "auto";
+    clearImage();
+    clearReply();
+    status("");
+    forceScrollNext = true;
+    input.focus();
+  } catch(e) {
+    let reason = e?.message || "خطأ غير معروف";
+    if (e?.code === "PERMISSION_DENIED" || /permission/i.test(reason))
+      reason = "الصلاحيات (Firebase Rules) بترفض الكتابة. راجع Realtime Database Rules.";
+    status(`فشل إرسال الرسالة: ${reason}`,"error");
+    window.__mobileDebug?.error("إرسال الرسالة: " + reason + " | code=" + (e?.code || "none"));
+    window.__mobileDebug?.open();
+    toast(`فشل الإرسال: ${reason}`,"error");
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+onAuthStateChanged(auth, user => { currentUser = user || null; window.__mobileDebug?.log(user ? "Auth state: " + user.uid : "Auth state: لا يوجد مستخدم"); });
+openChat();
+</script>
+
+<style>
+  /* VentureChat Lite UX layer */
+  :root{--vc-accent:#5b7c6f;--vc-accent-2:#78998a;--vc-bg:#f5f2eb;--vc-card:#fffdf9}
+  body{background:var(--vc-bg)}
+  .vc-settings-btn{border:0;background:transparent;font-size:22px;cursor:pointer;padding:8px;border-radius:12px}
+  .vc-settings-btn:active{transform:scale(.94)}
+  .vc-menu{position:fixed;inset:0;background:rgba(15,23,20,.28);backdrop-filter:blur(4px);display:none;align-items:flex-end;z-index:9999}
+  .vc-menu.open{display:flex}
+  .vc-sheet{width:100%;background:var(--vc-card);border-radius:22px 22px 0 0;padding:18px;box-shadow:0 -10px 40px rgba(0,0,0,.15);animation:vcUp .18s ease}
+  @keyframes vcUp{from{transform:translateY(20px);opacity:.7}to{transform:none;opacity:1}}
+  .vc-sheet h3{margin:0 0 12px;font-size:18px}
+  .vc-item{width:100%;border:0;background:#f3f1eb;margin:7px 0;padding:13px 14px;border-radius:14px;text-align:right;font:inherit;cursor:pointer}
+  .vc-item.danger{color:#b42318}
+  .vc-mention{color:var(--vc-accent);font-weight:700}
+  .vc-mention-list{position:absolute;bottom:64px;right:8px;left:8px;max-height:190px;overflow:auto;background:white;border:1px solid #e7e2d8;border-radius:16px;box-shadow:0 12px 35px rgba(0,0,0,.12);display:none;z-index:100}
+  .vc-mention-list.open{display:block}
+  .vc-mention-user{padding:11px 13px;display:flex;align-items:center;gap:9px;cursor:pointer}
+  .vc-mention-user:hover{background:#f5f2eb}
+  .vc-avatar{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#dce7e1;color:#355447;font-weight:700}
+  .vc-toast{position:fixed;bottom:82px;left:50%;transform:translateX(-50%) translateY(12px);background:#202522;color:white;padding:10px 15px;border-radius:14px;font-size:13px;opacity:0;pointer-events:none;transition:.2s;z-index:10001}
+  .vc-toast.show{opacity:1;transform:translateX(-50%)}
+  .vc-accounts{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px}
+  .vc-account{padding:8px 11px;border-radius:12px;background:#eef2ef;font-size:13px}
+  .vc-add{background:var(--vc-accent);color:white}
+</style>
+
+<div id="vcSettings" class="vc-menu" aria-hidden="true">
+  <div class="vc-sheet" role="dialog" aria-modal="true">
+    <h3>الإعدادات</h3>
+    <div id="vcAccounts" class="vc-accounts"></div>
+    <button class="vc-item vc-add" id="vcAddAccount">＋ إضافة حساب</button>
+    <button class="vc-item" id="vcChangeName">تغيير اسم الحساب الحالي</button>
+    <button class="vc-item danger" id="vcDeleteAccount">حذف الحساب الحالي</button>
+    <button class="vc-item" id="vcCloseSettings">إغلاق</button>
+  </div>
+</div>
+<div id="vcMentionList" class="vc-mention-list"></div>
+<div id="vcToast" class="vc-toast"></div>
+
+<script>
+(function(){
+  const toastEl=document.getElementById('vcToast');
+  const settings=document.getElementById('vcSettings');
+  const mentionList=document.getElementById('vcMentionList');
+  let toastTimer;
+
+  function toast(msg){
+    toastEl.textContent=msg; toastEl.classList.add('show');
+    clearTimeout(toastTimer); toastTimer=setTimeout(()=>toastEl.classList.remove('show'),2200);
+  }
+  window.vcToast=toast;
+
+  function currentName(){
+    return localStorage.getItem('chatUserName') || localStorage.getItem('userName') || '';
+  }
+  function accounts(){
+    try{return JSON.parse(localStorage.getItem('vcAccounts')||'[]')}catch{return []}
+  }
+  function saveAccounts(a){localStorage.setItem('vcAccounts',JSON.stringify(a.slice(0,5)))}
+  function renderAccounts(){
+    const box=document.getElementById('vcAccounts'); box.innerHTML='';
+    accounts().forEach(name=>{
+      const b=document.createElement('button'); b.className='vc-account'; b.textContent=name;
+      b.onclick=()=>{localStorage.setItem('chatUserName',name);location.reload()};
+      box.appendChild(b);
+    });
+  }
+
+  window.vcOpenSettings=()=>{renderAccounts();settings.classList.add('open');settings.setAttribute('aria-hidden','false')};
+  document.getElementById('vcCloseSettings').onclick=()=>settings.classList.remove('open');
+  settings.addEventListener('click',e=>{if(e.target===settings)settings.classList.remove('open')});
+
+  document.getElementById('vcAddAccount').onclick=()=>{
+    const name=prompt('اكتب اسم الحساب الجديد');
+    if(!name||!name.trim())return;
+    const n=name.trim();
+    const a=accounts().filter(x=>x!==n); a.unshift(n); saveAccounts(a);
+    localStorage.setItem('chatUserName',n);
+    toast('تمت إضافة الحساب');
+    setTimeout(()=>location.reload(),400);
+  };
+
+  document.getElementById('vcChangeName').onclick=()=>{
+    const name=prompt('اكتب الاسم الجديد',currentName());
+    if(!name||!name.trim())return;
+    const n=name.trim();
+    localStorage.setItem('chatUserName',n);
+    const a=accounts().filter(x=>x!==n);a.unshift(n);saveAccounts(a);
+    location.reload();
+  };
+
+  document.getElementById('vcDeleteAccount').onclick=async()=>{
+    if(!confirm('حذف الحساب الحالي؟ سيتم تسجيل الخروج من هذا الحساب على هذا الجهاز.'))return;
+    const old=currentName();
+    const a=accounts().filter(x=>x!==old);saveAccounts(a);
+    localStorage.removeItem('chatUserName');
+    localStorage.removeItem('userName');
+    try{
+      if(window.firebase && window.firebase.auth && window.firebase.auth().currentUser){
+        await window.firebase.auth().signOut();
+      }
+    }catch(e){}
+    toast('تم حذف الحساب من هذا الجهاز');
+    setTimeout(()=>location.reload(),500);
+  };
+
+  // Create a lightweight settings button in an existing header if possible.
+  function injectSettingsButton(){
+    const candidates=[document.querySelector('header'),document.querySelector('.header'),document.querySelector('.topbar'),document.body];
+    const target=candidates.find(Boolean);
+    if(!target)return;
+    if(document.getElementById('vcSettingsBtn'))return;
+    const b=document.createElement('button');
+    b.id='vcSettingsBtn';b.className='vc-settings-btn';b.title='الإعدادات';b.textContent='⚙';
+    b.onclick=window.vcOpenSettings;
+    target.appendChild(b);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',injectSettingsButton);else injectSettingsButton();
+
+  // Mention helper: works with a textarea/input if the original page exposes one.
+  function findComposer(){
+    return document.querySelector('textarea')||document.querySelector('input[type="text"]');
+  }
+  function closeMentions(){mentionList.classList.remove('open');mentionList.innerHTML=''}
+  function mentionQuery(el){
+    const v=el.value||'', m=v.match(/@([^\s@]*)$/);
+    if(!m){closeMentions();return}
+    const q=m[1].toLowerCase();
+    const names=accounts().filter(n=>n.toLowerCase().includes(q)).slice(0,8);
+    if(!names.length){closeMentions();return}
+    mentionList.innerHTML='';
+    names.forEach(name=>{
+      const row=document.createElement('div');row.className='vc-mention-user';
+      row.innerHTML='<span class="vc-avatar">'+name.trim().charAt(0).toUpperCase()+'</span><span>@'+name+'</span>';
+      row.onclick=()=>{
+        el.value=(el.value||'').replace(/@([^\s@]*)$/,'@'+name+' ');
+        el.dispatchEvent(new Event('input',{bubbles:true}));closeMentions();el.focus();
+      };
+      mentionList.appendChild(row);
+    });
+    mentionList.classList.add('open');
+  }
+  setTimeout(()=>{
+    const el=findComposer();
+    if(!el)return;
+    el.addEventListener('input',()=>mentionQuery(el));
+    el.addEventListener('keydown',e=>{if(e.key==='Escape')closeMentions()});
+  },700);
+
+  // Expose a tiny formatter for future message rendering.
+  window.vcFormatMentions=function(text){
+    return String(text||'').replace(/@([A-Za-z0-9_\u0600-\u06FF]+)/g,'<span class="vc-mention">@$1</span>');
+  };
+
+  // Keep a local list of names without changing Firebase schema.
+  const n=currentName();
+  if(n){
+    const a=accounts().filter(x=>x!==n);a.unshift(n);saveAccounts(a);
+  }
+})();
+</script>
+
+</body>
+</html>
