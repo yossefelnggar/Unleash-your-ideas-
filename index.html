@@ -30,7 +30,7 @@ button,input,textarea{font:inherit}
 .primary:active{transform:translate(2px,2px);box-shadow:none}
 
 /* ---- chat screen ---- */
-.chat-card{width:100%;max-width:780px;margin:auto;display:flex;flex:1;flex-direction:column;height:100%;min-height:0;overflow:hidden}
+.chat-card{width:100%;max-width:780px;margin:auto;display:flex;flex:1;flex-direction:column;height:100%;min-height:0;overflow:hidden;position:relative}
 .chat-header{flex:0 0 auto;z-index:20;background:rgba(245,243,238,.96);backdrop-filter:blur(10px);border-bottom:2px solid var(--line);padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .person{display:flex;align-items:center;gap:10px}
 .person h1{margin:0;font-size:15px}
@@ -172,6 +172,31 @@ mark{background:#ffe58a;color:inherit;border-radius:3px}
 html[data-theme="dark"] mark{background:#6c5a1d}
 
 .chat-actions .icon-btn.active{background:var(--vc-soft)}
+
+/* ---- jump to replied message ---- */
+.quoted{cursor:pointer}
+@keyframes msgFlash{0%{background:#ffe9a8}100%{background:transparent}}
+.message-row.flash .message{animation:msgFlash 1.4s ease}
+.mine.flash .message{animation:none}
+.mine.flash{animation:msgFlashMine 1.4s ease}
+@keyframes msgFlashMine{0%{filter:brightness(1.35)}100%{filter:none}}
+
+/* ---- scroll to bottom button ---- */
+.scroll-down-btn{position:absolute;bottom:78px;left:50%;transform:translateX(-50%);border:2px solid var(--line);background:#fff;color:var(--ink);width:42px;height:42px;border-radius:50%;box-shadow:var(--shadow);display:none;align-items:center;justify-content:center;font-size:17px;cursor:pointer;z-index:12}
+.scroll-down-btn.show{display:flex}
+.scroll-down-btn .badge{position:absolute;top:-6px;left:-6px;background:var(--danger);color:#fff;font-size:10px;font-weight:800;border-radius:10px;min-width:17px;height:17px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--paper)}
+html[data-theme="dark"] .scroll-down-btn{background:#221f1a;color:var(--ink)}
+
+/* ---- jumbo emoji-only messages ---- */
+.message-text.jumbo{font-size:38px;line-height:1.25}
+.message.jumbo-bubble{background:transparent!important;border:0!important;box-shadow:none!important;padding:2px 4px!important}
+.mine .message-text.jumbo{color:inherit}
+
+/* ---- double-tap heart pop ---- */
+.floating-heart{position:fixed;z-index:300;font-size:34px;pointer-events:none;animation:heartPop .9s ease-out forwards}
+@keyframes heartPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}100%{opacity:0;transform:translate(-50%,-120%) scale(1)}}
+
+.messages{position:relative}
 </style>
 
 </head>
@@ -212,7 +237,7 @@ const firebaseConfig = {
   measurementId: "G-R93914YBXY"
 };
 
-const IMGBB_API_KEY = "6f37986ae1bde5e1969879a2a142a35c";
+const IMGBB_API_KEY = "0dade31c18202a2a4fd8b847ab3ef9e";
 const CHAT_PATH = "chats/private-chat/messages";
 
 void("بدء تهيئة Firebase...");
@@ -234,6 +259,7 @@ let typingTimeout = null;
 let isTypingNow = false;
 let lastKnownMessageCount = null;
 let unreadCount = 0;
+let inChatUnread = 0;
 const BASE_TITLE = document.title;
 
 const $ = id => document.getElementById(id);
@@ -334,6 +360,7 @@ function chatScreen() {
       </div>
       <div id="status" class="status info hidden">جاري تجهيز المحادثة...</div>
       <main id="messages" class="messages" aria-live="polite"></main>
+      <button id="scrollDownBtn" class="scroll-down-btn" type="button" title="النزول لآخر رسالة">↓<span id="scrollDownBadge" class="badge hidden"></span></button>
       <div id="typingBar" class="typing-bar"></div>
       <div id="replyBar" class="reply-bar hidden">
         <div><strong>الرد على</strong><span id="replyText"></span></div>
@@ -359,7 +386,7 @@ function chatScreen() {
           <button class="send" id="sendBtn" type="submit">إرسال</button>
         </form>
       </div>
-      <div class="hint">Enter للإرسال • Shift+Enter لسطر جديد • اسحب الرسالة للرد</div>
+      <div class="hint">Enter للإرسال • دبل تاب على الرسالة لتفاعل ❤️ سريع • اضغط على الاقتباس للذهاب للرسالة الأصلية</div>
     </section>
 
     <div id="vcSettings" class="vc-panel" aria-hidden="true">
@@ -416,6 +443,34 @@ function chatScreen() {
     searchQuery = e.target.value.trim().toLowerCase();
     applySearchFilter();
   };
+
+  inChatUnread = 0;
+  const msgBox = $("messages");
+  $("scrollDownBtn").onclick = () => {
+    msgBox.scrollTop = msgBox.scrollHeight;
+    inChatUnread = 0;
+    updateScrollDownBtn();
+  };
+  msgBox.addEventListener("scroll", () => {
+    const nearBottom = msgBox.scrollHeight - msgBox.scrollTop - msgBox.clientHeight < 150;
+    if (nearBottom) { inChatUnread = 0; }
+    updateScrollDownBtn(nearBottom);
+  });
+}
+
+function updateScrollDownBtn(nearBottomOverride){
+  const btn = $("scrollDownBtn");
+  const msgBox = $("messages");
+  if(!btn || !msgBox) return;
+  const nearBottom = nearBottomOverride !== undefined
+    ? nearBottomOverride
+    : (msgBox.scrollHeight - msgBox.scrollTop - msgBox.clientHeight < 150);
+  btn.classList.toggle("show", !nearBottom);
+  const badge = $("scrollDownBadge");
+  if(badge){
+    if(inChatUnread > 0){ badge.textContent = inChatUnread > 9 ? "9+" : inChatUnread; badge.classList.remove("hidden"); }
+    else badge.classList.add("hidden");
+  }
 }
 
 function applyThemeButton(){
@@ -714,12 +769,67 @@ function playDing(){
     o.start(); o.stop(dingCtx.currentTime + .35);
   }catch(e){}
 }
+function playSendSound(){
+  try{
+    dingCtx = dingCtx || new (window.AudioContext||window.webkitAudioContext)();
+    const o = dingCtx.createOscillator();
+    const g = dingCtx.createGain();
+    o.type = "sine"; o.frequency.setValueAtTime(520, dingCtx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(760, dingCtx.currentTime + .09);
+    g.gain.setValueAtTime(0.08, dingCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, dingCtx.currentTime + .16);
+    o.connect(g); g.connect(dingCtx.destination);
+    o.start(); o.stop(dingCtx.currentTime + .16);
+  }catch(e){}
+}
 document.addEventListener("visibilitychange", () => {
   if(!document.hidden){
     unreadCount = 0;
     document.title = BASE_TITLE;
   }
 });
+
+/* ---- jump to the original message from a reply quote ---- */
+function jumpToMessage(id){
+  const el = document.getElementById(`msg-${id}`);
+  if(!el){
+    toast("الرسالة الأصلية غير متاحة (قديمة جدًا أو محذوفة)","info");
+    return;
+  }
+  el.scrollIntoView({behavior:"smooth", block:"center"});
+  el.classList.add("flash");
+  setTimeout(()=>el.classList.remove("flash"), 1400);
+}
+
+/* ---- double-tap heart reaction (زي واتساب) ---- */
+function spawnHeart(x, y){
+  const el = document.createElement("div");
+  el.className = "floating-heart";
+  el.textContent = "❤️";
+  el.style.left = x + "px";
+  el.style.top = y + "px";
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), 900);
+}
+
+/* ---- جعل الرسائل المكوّنة من إيموجي فقط أكبر حجمًا (زي واتساب) ---- */
+const EMOJI_ONLY_RE = /^[\p{Extended_Pictographic}\u200d\ufe0f\s]+$/u;
+function isEmojiOnlyShort(text){
+  if(!text) return false;
+  const trimmed = text.trim();
+  if(!trimmed || !EMOJI_ONLY_RE.test(trimmed)) return false;
+  return Array.from(trimmed.replace(/\s+/g,"")).length <= 6;
+}
+
+/* ---- نسخ نص الرسالة ---- */
+async function copyMessageText(text){
+  try{
+    await navigator.clipboard.writeText(text || "");
+    toast("تم نسخ النص");
+  }catch(e){
+    toast("تعذر نسخ النص","error");
+  }
+}
 
 function clearImage() {
   selectedImage = null;
@@ -889,6 +999,7 @@ function renderMessages(snapshot) {
   });
 
   // إشعار/عداد غير مقروء عند وصول رسالة جديدة فعلاً (مش أول تحميل ولا تعديل/حذف)
+  const nearBottomBefore = box.scrollHeight - box.scrollTop - box.clientHeight < 150;
   if (lastKnownMessageCount !== null && rows.length > lastKnownMessageCount) {
     const last = rows[rows.length - 1];
     const isMine = String(last?.senderId || "") === String(currentUser?.uid || "");
@@ -896,6 +1007,9 @@ function renderMessages(snapshot) {
       unreadCount++;
       document.title = `(${unreadCount}) ${BASE_TITLE}`;
       playDing();
+    }
+    if (!isMine && !nearBottomBefore) {
+      inChatUnread++;
     }
   }
   lastKnownMessageCount = rows.length;
@@ -905,13 +1019,14 @@ function renderMessages(snapshot) {
     return;
   }
 
-  const nearBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 150;
+  const nearBottom = nearBottomBefore;
   const fragment = document.createDocumentFragment();
 
   rows.forEach(m => {
     const mine = String(m.senderId || "") === String(currentUser?.uid || "");
     const article = document.createElement("article");
     article.className = `message-row ${mine ? "mine" : "theirs"}`;
+    article.id = `msg-${m.id}`;
 
     const message = document.createElement("div");
     message.className = `message${m.deleted ? " deleted" : ""}`;
@@ -933,29 +1048,40 @@ function renderMessages(snapshot) {
     }
     message.appendChild(top);
 
-    if (mine && !m.deleted) {
+    if (!m.deleted) {
       const more = document.createElement("button");
       more.type = "button";
       more.className = "msg-more";
       more.textContent = "⋯";
       const menu = document.createElement("div");
       menu.className = "msg-menu";
-      const editBtn = document.createElement("button");
-      editBtn.type = "button";
-      editBtn.textContent = "✏️ تعديل";
-      editBtn.onclick = () => { menu.classList.remove("open"); startEdit(m); };
-      const delBtn = document.createElement("button");
-      delBtn.type = "button";
-      delBtn.className = "danger";
-      delBtn.textContent = "🗑 حذف";
-      delBtn.onclick = () => { menu.classList.remove("open"); deleteMessage(m); };
-      menu.append(editBtn, delBtn);
-      more.onclick = (e) => {
-        e.stopPropagation();
-        document.querySelectorAll(".msg-menu.open").forEach(x => { if(x!==menu) x.classList.remove("open"); });
-        menu.classList.toggle("open");
-      };
-      message.append(more, menu);
+      if (m.text) {
+        const copyBtn = document.createElement("button");
+        copyBtn.type = "button";
+        copyBtn.textContent = "📋 نسخ النص";
+        copyBtn.onclick = () => { menu.classList.remove("open"); copyMessageText(m.text); };
+        menu.appendChild(copyBtn);
+      }
+      if (mine) {
+        const editBtn = document.createElement("button");
+        editBtn.type = "button";
+        editBtn.textContent = "✏️ تعديل";
+        editBtn.onclick = () => { menu.classList.remove("open"); startEdit(m); };
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "danger";
+        delBtn.textContent = "🗑 حذف";
+        delBtn.onclick = () => { menu.classList.remove("open"); deleteMessage(m); };
+        menu.append(editBtn, delBtn);
+      }
+      if (menu.children.length) {
+        more.onclick = (e) => {
+          e.stopPropagation();
+          document.querySelectorAll(".msg-menu.open").forEach(x => { if(x!==menu) x.classList.remove("open"); });
+          menu.classList.toggle("open");
+        };
+        message.append(more, menu);
+      }
     }
 
     if(m.deleted){
@@ -971,6 +1097,8 @@ function renderMessages(snapshot) {
     if(m.replyTo){
       const quoted=document.createElement("div");
       quoted.className="quoted";
+      quoted.title="اضغط للذهاب إلى الرسالة الأصلية";
+      quoted.onclick=()=>jumpToMessage(m.replyTo.messageId);
       const strong=document.createElement("strong");
       strong.textContent=m.replyTo.senderName||"مستخدم";
       const span=document.createElement("span");
@@ -981,7 +1109,9 @@ function renderMessages(snapshot) {
 
     if(m.text){
       const text=document.createElement("div");
-      text.className="message-text";
+      const jumbo = isEmojiOnlyShort(m.text);
+      text.className = jumbo ? "message-text jumbo" : "message-text";
+      if (jumbo) message.classList.add("jumbo-bubble");
       text.innerHTML=highlightMatch(messageTextWithMentions(m.text), searchQuery);
       message.appendChild(text);
     }
@@ -996,6 +1126,18 @@ function renderMessages(snapshot) {
       img.onclick=()=>openLightbox(m.imageUrl);
       message.appendChild(img);
     }
+
+    // دبل تاب/دبل كليك على الرسالة = تفاعل ❤️ سريع زي واتساب
+    let lastTap = 0;
+    message.addEventListener("click", (e) => {
+      if (e.target.closest(".msg-more") || e.target.closest(".msg-menu") || e.target.closest(".quoted") || e.target.closest(".reply-btn") || e.target.closest(".reaction") || e.target.closest(".quick-react") || e.target.closest(".message-image") || e.target.closest("a")) return;
+      const now = Date.now();
+      if (now - lastTap < 320) {
+        toggleReaction(m.id, "❤️");
+        spawnHeart(e.clientX, e.clientY);
+      }
+      lastTap = now;
+    });
 
     const quick=document.createElement("div");
     quick.className="quick-react";
@@ -1034,7 +1176,10 @@ function renderMessages(snapshot) {
 
   box.replaceChildren(fragment);
   applySearchFilter();
-  if(nearBottom || forceScrollNext){
+  const willScrollToBottom = nearBottom || forceScrollNext;
+  if (willScrollToBottom) inChatUnread = 0;
+  updateScrollDownBtn(willScrollToBottom);
+  if(willScrollToBottom){
     box.scrollTop=box.scrollHeight;
     forceScrollNext=false;
   }
@@ -1081,121 +1226,4 @@ function subscribe() {
 }
 
 async function ensureAuth() {
-  void("فحص تسجيل الدخول المجهول...");
-  await setPersistence(auth, browserLocalPersistence);
-  if (auth.currentUser) return auth.currentUser;
-  const result = await signInAnonymously(auth);
-  void("Anonymous Auth نجح: " + result.user.uid);
-  return result.user;
-}
-
-async function openChat() {
-  if (opening) return;
-  if (!myName) return nameScreen();
-  opening = true;
-  chatScreen();
-  try {
-    currentUser = await ensureAuth();
-    await set(ref(db,"chatUsers/"+currentUser.uid),{name:myName,updatedAt:serverTimestamp()});
-    subscribeChatUsers();
-    subscribeTyping();
-    onDisconnect(ref(db,`typing/${currentUser.uid}`)).remove().catch(()=>{});
-    void("المستخدم الحالي: " + currentUser.uid);
-    $("connectionState").textContent = "متصل";
-    $("connectionState").className = "online";
-    status("");
-    lastKnownMessageCount = null;
-    subscribe();
-  } catch(e) {
-    $("connectionState").textContent = "غير متصل";
-    $("connectionState").className = "offline";
-    status(authError(e), "error");
-    void("Auth: " + (e?.code || "") + " | " + (e?.message || e));
-  } finally {
-    opening = false;
-  }
-}
-
-async function sendMessage() {
-  if (!currentUser) return status("انتظر حتى يتم الاتصال بالمحادثة.","error");
-  const input = $("messageInput");
-  const text = input.value.trim();
-
-  if (editingMessageId) {
-    if (!text) return;
-    const btn = document.querySelector(".send");
-    btn.disabled = true;
-    try {
-      await update(ref(db,`${CHAT_PATH}/${editingMessageId}`),{
-        text:text.slice(0,2000),
-        editedAt:serverTimestamp()
-      });
-      clearEdit();
-      status("");
-    } catch(e) {
-      toast("تعذر حفظ التعديل","error");
-    } finally {
-      btn.disabled = false;
-    }
-    return;
-  }
-
-  if (!text && !selectedImage) return;
-
-  const btn = document.querySelector(".send");
-  const attachBtn = document.querySelector(".attach");
-  btn.disabled = true;
-  if (attachBtn) attachBtn.setAttribute("aria-disabled","true");
-  try {
-    let image = null;
-    if (selectedImage) {
-      status("جاري رفع الصورة...","info");
-      try {
-        image = await uploadImgBB(selectedImage);
-      } catch(imgErr) {
-        throw new Error(`فشل رفع الصورة: ${imgErr?.message || "تحقق من الإنترنت أو حاول بصورة أصغر"}`);
-      }
-    }
-    const messageRef = push(ref(db,CHAT_PATH));
-    const payload = {
-      senderId:currentUser.uid,
-      senderName:myName,
-      text:text.slice(0,2000),
-      imageUrl:image?.url || "",
-      displayUrl:image?.displayUrl || "",
-      thumbnail:image?.thumbnail || "",
-      createdAt:serverTimestamp()
-    };
-    if (replyingTo) {
-      payload.replyTo = {
-        messageId:replyingTo.messageId,
-        senderName:replyingTo.senderName,
-        text:replyingTo.text.slice(0,200)
-      };
-    }
-    await set(messageRef,payload);
-    input.value = "";
-    input.style.height = "auto";
-    clearImage();
-    clearReply();
-    stopTyping();
-    status("");
-    forceScrollNext = true;
-    input.focus();
-  } catch(e) {
-    let reason = e?.message || "خطأ غير معروف";
-    if (e?.code === "PERMISSION_DENIED" || /permission/i.test(reason))
-      reason = "الصلاحيات (Firebase Rules) بترفض الكتابة. راجع Realtime Database Rules.";
-    status(`فشل إرسال الرسالة: ${reason}`,"error");
-    void("إرسال الرسالة: " + reason + " | code=" + (e?.code || "none"));
-    toast(`فشل الإرسال: ${reason}`,"error");
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-onAuthStateChanged(auth, user => { currentUser = user || null; void(user ? "Auth state: " + user.uid : "Auth state: لا يوجد مستخدم"); });
-openChat();
-</script>
-</body>
-</html>
+  void("فحص تسجيل الدخول المجهو
