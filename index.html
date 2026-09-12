@@ -133,8 +133,57 @@ button,input,textarea{font:inherit}
 @media(max-width:520px){.vc-sheet{border-left:0;border-right:0}.vc-emoji{grid-template-columns:repeat(5,1fr)}}
 </style>
 
+<style id="venturechat-v15">
+/* ---- dark mode ---- */
+html[data-theme="dark"]{--bg:#171512;--paper:#221f1a;--ink:#f2ede4;--muted:#a39c8f;--line:#3a352c;--soft:#2a261f;--theirs:#2a261f}
+html[data-theme="dark"] #messageInput,html[data-theme="dark"] .field,html[data-theme="dark"] .image-preview,html[data-theme="dark"] .composer,html[data-theme="dark"] .attach,html[data-theme="dark"] .vc-sheet,html[data-theme="dark"] .vc-emoji,html[data-theme="dark"] .vc-mention-list{background:#221f1a;color:var(--ink)}
+html[data-theme="dark"] .vc-action{background:#2a261f;color:var(--ink)}
+html[data-theme="dark"] .vc-account{background:#221f1a;color:var(--ink)}
+html[data-theme="dark"] .chat-header{background:rgba(23,21,18,.96)}
+html[data-theme="dark"] .reaction,html[data-theme="dark"] .quick-react button{background:#2a261f;color:var(--ink)}
+html[data-theme="dark"] .msg-menu{background:#221f1a;color:var(--ink)}
+html[data-theme="dark"] .toast-item{background:#3a352c;color:#f2ede4}
+html[data-theme="dark"] .empty,html[data-theme="dark"] .icon-btn{color:var(--ink)}
+
+/* ---- message actions (edit/delete) ---- */
+.message{position:relative}
+.msg-more{position:absolute;top:6px;left:6px;border:0;background:transparent;cursor:pointer;font-size:14px;opacity:.6;padding:2px 5px;border-radius:8px}
+.mine .msg-more{color:#fff}
+.msg-more:active{opacity:1;background:rgba(0,0,0,.08)}
+.msg-menu{position:absolute;top:26px;left:4px;background:#fff;border:1px solid var(--vc-border);border-radius:12px;box-shadow:0 8px 22px rgba(0,0,0,.15);z-index:15;display:none;overflow:hidden;min-width:110px}
+.msg-menu.open{display:block}
+.msg-menu button{display:block;width:100%;border:0;background:transparent;padding:10px 12px;text-align:right;cursor:pointer;font-size:12.5px;font-weight:700}
+.msg-menu button:active{background:#f3f0ea}
+.msg-menu button.danger{color:#b42318}
+.message.deleted .message-text{color:var(--muted);font-style:italic}
+.edited-tag{font-size:10px;color:var(--muted);margin-inline-start:4px}
+.mine .edited-tag{color:rgba(255,255,255,.7)}
+
+/* ---- typing indicator ---- */
+.typing-bar{flex:0 0 auto;padding:4px 14px;font-size:11.5px;color:var(--muted);min-height:20px}
+
+/* ---- search ---- */
+.search-bar{flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:2px solid var(--line);background:var(--paper)}
+.search-bar input{flex:1;border:2px solid var(--line);border-radius:11px;padding:8px 11px;outline:none;background:#fff}
+html[data-theme="dark"] .search-bar input{background:#221f1a;color:var(--ink)}
+.search-bar button{border:0;background:transparent;font-size:18px;cursor:pointer;color:var(--muted)}
+.message-row.search-hide{display:none}
+mark{background:#ffe58a;color:inherit;border-radius:3px}
+html[data-theme="dark"] mark{background:#6c5a1d}
+
+.chat-actions .icon-btn.active{background:var(--vc-soft)}
+</style>
+
 </head>
 <body>
+<script>
+try{
+  const savedTheme = localStorage.getItem("chat_theme");
+  if(savedTheme === "dark" || (!savedTheme && matchMedia("(prefers-color-scheme: dark)").matches)){
+    document.documentElement.setAttribute("data-theme","dark");
+  }
+}catch(e){}
+</script>
 
 <div id="app"></div>
 <div id="toast"></div>
@@ -149,7 +198,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import {
   getDatabase, ref, push, set, update, remove, query, limitToLast,
-  onValue, serverTimestamp
+  onValue, onDisconnect, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -179,6 +228,13 @@ let selectedImage = null;
 let replyingTo = null;
 let opening = false;
 let forceScrollNext = false;
+let editingMessageId = null;
+let searchQuery = "";
+let typingTimeout = null;
+let isTypingNow = false;
+let lastKnownMessageCount = null;
+let unreadCount = 0;
+const BASE_TITLE = document.title;
 
 const $ = id => document.getElementById(id);
 
@@ -266,15 +322,26 @@ function chatScreen() {
           <div><h1>${esc(myName)}</h1><span id="connectionState">جاري الاتصال...</span></div>
         </div>
         <div class="chat-actions">
+          <button id="searchBtn" class="icon-btn" type="button" title="بحث">🔎</button>
+          <button id="themeBtn" class="icon-btn" type="button" title="الوضع الليلي">🌙</button>
           <button id="emojiBtn" class="icon-btn" type="button" title="إيموجي">☺</button>
           <button id="settingsBtn" class="icon-btn" type="button" title="الحساب والإعدادات">⋮</button>
         </div>
       </header>
+      <div id="searchBar" class="search-bar hidden">
+        <input id="searchInput" type="text" placeholder="ابحث في الرسائل..." autocomplete="off">
+        <button id="searchClose" type="button">×</button>
+      </div>
       <div id="status" class="status info hidden">جاري تجهيز المحادثة...</div>
       <main id="messages" class="messages" aria-live="polite"></main>
+      <div id="typingBar" class="typing-bar"></div>
       <div id="replyBar" class="reply-bar hidden">
         <div><strong>الرد على</strong><span id="replyText"></span></div>
         <button id="cancelReply" type="button">×</button>
+      </div>
+      <div id="editBar" class="reply-bar hidden">
+        <div><strong>تعديل الرسالة</strong><span>اكتب التعديل ثم اضغط حفظ</span></div>
+        <button id="cancelEdit" type="button">×</button>
       </div>
       <div id="imagePreview" class="image-preview hidden">
         <img id="previewImg" alt="معاينة">
@@ -289,7 +356,7 @@ function chatScreen() {
             <span>＋</span>
           </label>
           <textarea id="messageInput" maxlength="2000" rows="1" placeholder="اكتب رسالة..."></textarea>
-          <button class="send" type="submit">إرسال</button>
+          <button class="send" id="sendBtn" type="submit">إرسال</button>
         </form>
       </div>
       <div class="hint">Enter للإرسال • Shift+Enter لسطر جديد • اسحب الرسالة للرد</div>
@@ -311,6 +378,7 @@ function chatScreen() {
   setupLiteUX();
 
   $("cancelReply").onclick = clearReply;
+  $("cancelEdit").onclick = clearEdit;
   $("removeImage").onclick = clearImage;
   $("imageInput").onchange = selectImage;
   $("messageForm").onsubmit = async e => { e.preventDefault(); await sendMessage(); };
@@ -318,14 +386,55 @@ function chatScreen() {
     e.target.style.height = "auto";
     e.target.style.height = Math.min(120, e.target.scrollHeight) + "px";
     updateMentionSuggestions();
+    notifyTyping();
   };
   $("messageInput").onkeydown = e => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       $("messageForm").requestSubmit();
     }
-    if (e.key === "Escape") closeMentionSuggestions();
+    if (e.key === "Escape") { closeMentionSuggestions(); if(editingMessageId) clearEdit(); }
   };
+  $("messageInput").onblur = stopTyping;
+
+  applyThemeButton();
+  $("themeBtn").onclick = toggleTheme;
+
+  $("searchBtn").onclick = () => {
+    const bar = $("searchBar");
+    bar.classList.toggle("hidden");
+    if(!bar.classList.contains("hidden")){ $("searchInput").value=""; $("searchInput").focus(); }
+    else { searchQuery=""; applySearchFilter(); }
+  };
+  $("searchClose").onclick = () => {
+    $("searchBar").classList.add("hidden");
+    $("searchInput").value="";
+    searchQuery="";
+    applySearchFilter();
+  };
+  $("searchInput").oninput = e => {
+    searchQuery = e.target.value.trim().toLowerCase();
+    applySearchFilter();
+  };
+}
+
+function applyThemeButton(){
+  const btn=$("themeBtn");
+  if(!btn)return;
+  const dark = document.documentElement.getAttribute("data-theme")==="dark";
+  btn.textContent = dark ? "☀️" : "🌙";
+  btn.classList.toggle("active",dark);
+}
+function toggleTheme(){
+  const dark = document.documentElement.getAttribute("data-theme")==="dark";
+  if(dark){
+    document.documentElement.removeAttribute("data-theme");
+    localStorage.setItem("chat_theme","light");
+  } else {
+    document.documentElement.setAttribute("data-theme","dark");
+    localStorage.setItem("chat_theme","dark");
+  }
+  applyThemeButton();
 }
 
 
@@ -371,6 +480,7 @@ function setupLiteUX(){
     localStorage.setItem("chat_name",clean);
     myName=clean;
     closeSettings();
+    stopTyping();
     if(unsubscribeMessages) unsubscribeMessages();
     unsubscribeMessages=null;
     openChat();
@@ -393,6 +503,7 @@ function setupLiteUX(){
     const old=myName;
     saveLocalAccounts(getLocalAccounts().filter(x=>x!==old));
     localStorage.removeItem("chat_name");
+    stopTyping();
     try{
       if(currentUser){
         await remove(ref(db,"chatUsers/"+currentUser.uid));
@@ -425,6 +536,7 @@ function renderAccountsUI(){
       myName=name;
       localStorage.setItem("chat_name",name);
       closeSettings();
+      stopTyping();
       if(unsubscribeMessages)unsubscribeMessages();
       unsubscribeMessages=null;
       openChat();
@@ -471,8 +583,10 @@ function updateMentionSuggestions(){
 }
 
 function messageTextWithMentions(text){
-  const safe=esc(text||"");
-  return safe.replace(/@([A-Za-z0-9_\u0600-\u06FF]+)/g,'<span class="vc-mention">@$1</span>');
+  let safe=esc(text||"");
+  safe = safe.replace(/(https?:\/\/[^\s<]+[^\s<.,)])/g,'<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+  safe = safe.replace(/@([A-Za-z0-9_\u0600-\u06FF]+)/g,'<span class="vc-mention">@$1</span>');
+  return safe;
 }
 async function toggleReaction(messageId,emoji){
   if(!currentUser)return;
@@ -485,6 +599,7 @@ async function toggleReaction(messageId,emoji){
 }
 
 function setReply(m) {
+  if (editingMessageId) clearEdit();
   replyingTo = {
     messageId: m.id,
     senderName: m.senderName || "مستخدم",
@@ -499,6 +614,112 @@ function clearReply() {
   replyingTo = null;
   $("replyBar")?.classList.add("hidden");
 }
+
+function startEdit(m){
+  if(!m.id) return;
+  clearReply();
+  editingMessageId = m.id;
+  const input = $("messageInput");
+  input.value = m.text || "";
+  input.style.height = "auto";
+  input.style.height = Math.min(120, input.scrollHeight) + "px";
+  input.focus();
+  $("editBar")?.classList.remove("hidden");
+  const sendBtn = $("sendBtn");
+  if(sendBtn) sendBtn.textContent = "حفظ";
+}
+
+function clearEdit(){
+  editingMessageId = null;
+  $("editBar")?.classList.add("hidden");
+  const sendBtn = $("sendBtn");
+  if(sendBtn) sendBtn.textContent = "إرسال";
+  const input = $("messageInput");
+  if(input){ input.value=""; input.style.height="auto"; }
+}
+
+async function deleteMessage(m){
+  if(!m.id || !currentUser) return;
+  if(!confirm("هل تريد حذف هذه الرسالة؟")) return;
+  try{
+    await update(ref(db,`${CHAT_PATH}/${m.id}`),{
+      text:"", imageUrl:"", displayUrl:"", thumbnail:"",
+      deleted:true, deletedAt:serverTimestamp()
+    });
+  }catch(e){
+    toast("تعذر حذف الرسالة","error");
+  }
+}
+
+/* ---- typing indicator ---- */
+function notifyTyping(){
+  if(!currentUser) return;
+  if(!isTypingNow){
+    isTypingNow = true;
+    set(ref(db,`typing/${currentUser.uid}`),{name:myName, ts:serverTimestamp()}).catch(()=>{});
+  }
+  clearTimeout(typingTimeout);
+  typingTimeout = setTimeout(stopTyping, 2500);
+}
+function stopTyping(){
+  if(!isTypingNow || !currentUser) return;
+  isTypingNow = false;
+  clearTimeout(typingTimeout);
+  remove(ref(db,`typing/${currentUser.uid}`)).catch(()=>{});
+}
+function subscribeTyping(){
+  onValue(ref(db,"typing"), snap => {
+    const bar = $("typingBar");
+    if(!bar) return;
+    const now = Date.now();
+    const val = snap.val() || {};
+    const names = Object.entries(val)
+      .filter(([uid,v]) => uid !== currentUser?.uid && v?.name && (!v.ts || now - v.ts < 6000))
+      .map(([,v]) => v.name);
+    if(!names.length){ bar.textContent=""; return; }
+    if(names.length===1) bar.textContent = `${names[0]} يكتب الآن...`;
+    else bar.textContent = `${names.slice(0,2).join("، ")} يكتبون الآن...`;
+  });
+}
+
+/* ---- search ---- */
+function highlightMatch(html, q){
+  if(!q) return html;
+  try{
+    const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")})`,"gi");
+    return html.replace(re, "<mark>$1</mark>");
+  }catch{ return html; }
+}
+function applySearchFilter(){
+  const box = $("messages");
+  if(!box) return;
+  box.querySelectorAll(".message-row").forEach(row=>{
+    if(!searchQuery){ row.classList.remove("search-hide"); return; }
+    const text = (row.textContent||"").toLowerCase();
+    row.classList.toggle("search-hide", !text.includes(searchQuery));
+  });
+}
+
+/* ---- notifications for background tab ---- */
+let dingCtx = null;
+function playDing(){
+  try{
+    dingCtx = dingCtx || new (window.AudioContext||window.webkitAudioContext)();
+    const o = dingCtx.createOscillator();
+    const g = dingCtx.createGain();
+    o.type = "sine"; o.frequency.value = 880;
+    g.gain.setValueAtTime(0.12, dingCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, dingCtx.currentTime + .35);
+    o.connect(g); g.connect(dingCtx.destination);
+    o.start(); o.stop(dingCtx.currentTime + .35);
+  }catch(e){}
+}
+document.addEventListener("visibilitychange", () => {
+  if(!document.hidden){
+    unreadCount = 0;
+    document.title = BASE_TITLE;
+  }
+});
 
 function clearImage() {
   selectedImage = null;
@@ -667,6 +888,18 @@ function renderMessages(snapshot) {
     if (value && typeof value === "object") rows.push({ id: child.key, ...value });
   });
 
+  // إشعار/عداد غير مقروء عند وصول رسالة جديدة فعلاً (مش أول تحميل ولا تعديل/حذف)
+  if (lastKnownMessageCount !== null && rows.length > lastKnownMessageCount) {
+    const last = rows[rows.length - 1];
+    const isMine = String(last?.senderId || "") === String(currentUser?.uid || "");
+    if (!isMine && document.hidden) {
+      unreadCount++;
+      document.title = `(${unreadCount}) ${BASE_TITLE}`;
+      playDing();
+    }
+  }
+  lastKnownMessageCount = rows.length;
+
   if (!rows.length) {
     box.innerHTML = `<div class="empty">لا توجد رسائل بعد. ابدأ المحادثة!</div>`;
     return;
@@ -681,7 +914,7 @@ function renderMessages(snapshot) {
     article.className = `message-row ${mine ? "mine" : "theirs"}`;
 
     const message = document.createElement("div");
-    message.className = "message";
+    message.className = `message${m.deleted ? " deleted" : ""}`;
 
     const top = document.createElement("div");
     top.className = "message-top";
@@ -692,7 +925,48 @@ function renderMessages(snapshot) {
     time.className = "time";
     time.textContent = timeOf(m.createdAt);
     top.append(sender,time);
+    if(m.editedAt){
+      const edited=document.createElement("span");
+      edited.className="edited-tag";
+      edited.textContent="(معدّلة)";
+      top.appendChild(edited);
+    }
     message.appendChild(top);
+
+    if (mine && !m.deleted) {
+      const more = document.createElement("button");
+      more.type = "button";
+      more.className = "msg-more";
+      more.textContent = "⋯";
+      const menu = document.createElement("div");
+      menu.className = "msg-menu";
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.textContent = "✏️ تعديل";
+      editBtn.onclick = () => { menu.classList.remove("open"); startEdit(m); };
+      const delBtn = document.createElement("button");
+      delBtn.type = "button";
+      delBtn.className = "danger";
+      delBtn.textContent = "🗑 حذف";
+      delBtn.onclick = () => { menu.classList.remove("open"); deleteMessage(m); };
+      menu.append(editBtn, delBtn);
+      more.onclick = (e) => {
+        e.stopPropagation();
+        document.querySelectorAll(".msg-menu.open").forEach(x => { if(x!==menu) x.classList.remove("open"); });
+        menu.classList.toggle("open");
+      };
+      message.append(more, menu);
+    }
+
+    if(m.deleted){
+      const text=document.createElement("div");
+      text.className="message-text";
+      text.textContent="🚫 تم حذف هذه الرسالة";
+      message.appendChild(text);
+      article.appendChild(message);
+      fragment.appendChild(article);
+      return;
+    }
 
     if(m.replyTo){
       const quoted=document.createElement("div");
@@ -708,7 +982,7 @@ function renderMessages(snapshot) {
     if(m.text){
       const text=document.createElement("div");
       text.className="message-text";
-      text.innerHTML=messageTextWithMentions(m.text);
+      text.innerHTML=highlightMatch(messageTextWithMentions(m.text), searchQuery);
       message.appendChild(text);
     }
 
@@ -759,11 +1033,16 @@ function renderMessages(snapshot) {
   });
 
   box.replaceChildren(fragment);
+  applySearchFilter();
   if(nearBottom || forceScrollNext){
     box.scrollTop=box.scrollHeight;
     forceScrollNext=false;
   }
 }
+
+document.addEventListener("click", () => {
+  document.querySelectorAll(".msg-menu.open").forEach(m => m.classList.remove("open"));
+});
 
 function subscribe() {
   if (unsubscribeMessages) unsubscribeMessages();
@@ -785,7 +1064,6 @@ function subscribe() {
     $("connectionState").className = "offline";
     status(`تعذر تحميل الرسائل (${e?.code || "unknown"}). راجع Firebase Realtime Database Rules.`, "error");
     void("قراءة Firebase: " + (e?.code || "") + " | " + (e?.message || e));
-    void();
   });
 
   // مؤشر حقيقي لحالة الاتصال اللحظي (WebSocket) بفايربيز — مستقل عن نجاح تسجيل الدخول
@@ -820,17 +1098,19 @@ async function openChat() {
     currentUser = await ensureAuth();
     await set(ref(db,"chatUsers/"+currentUser.uid),{name:myName,updatedAt:serverTimestamp()});
     subscribeChatUsers();
+    subscribeTyping();
+    onDisconnect(ref(db,`typing/${currentUser.uid}`)).remove().catch(()=>{});
     void("المستخدم الحالي: " + currentUser.uid);
     $("connectionState").textContent = "متصل";
     $("connectionState").className = "online";
     status("");
+    lastKnownMessageCount = null;
     subscribe();
   } catch(e) {
     $("connectionState").textContent = "غير متصل";
     $("connectionState").className = "offline";
     status(authError(e), "error");
     void("Auth: " + (e?.code || "") + " | " + (e?.message || e));
-    void();
   } finally {
     opening = false;
   }
@@ -840,6 +1120,26 @@ async function sendMessage() {
   if (!currentUser) return status("انتظر حتى يتم الاتصال بالمحادثة.","error");
   const input = $("messageInput");
   const text = input.value.trim();
+
+  if (editingMessageId) {
+    if (!text) return;
+    const btn = document.querySelector(".send");
+    btn.disabled = true;
+    try {
+      await update(ref(db,`${CHAT_PATH}/${editingMessageId}`),{
+        text:text.slice(0,2000),
+        editedAt:serverTimestamp()
+      });
+      clearEdit();
+      status("");
+    } catch(e) {
+      toast("تعذر حفظ التعديل","error");
+    } finally {
+      btn.disabled = false;
+    }
+    return;
+  }
+
   if (!text && !selectedImage) return;
 
   const btn = document.querySelector(".send");
@@ -878,6 +1178,7 @@ async function sendMessage() {
     input.style.height = "auto";
     clearImage();
     clearReply();
+    stopTyping();
     status("");
     forceScrollNext = true;
     input.focus();
@@ -887,7 +1188,6 @@ async function sendMessage() {
       reason = "الصلاحيات (Firebase Rules) بترفض الكتابة. راجع Realtime Database Rules.";
     status(`فشل إرسال الرسالة: ${reason}`,"error");
     void("إرسال الرسالة: " + reason + " | code=" + (e?.code || "none"));
-    void();
     toast(`فشل الإرسال: ${reason}`,"error");
   } finally {
     btn.disabled = false;
